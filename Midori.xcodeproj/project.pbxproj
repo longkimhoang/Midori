@@ -11,6 +11,7 @@
 		4FB78DA62B8C9269009639A3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA52B8C9269009639A3 /* ContentView.swift */; };
 		4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DA72B8C926A009639A3 /* Assets.xcassets */; };
 		4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */; };
+		4FB78DB62B8C9705009639A3 /* APIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB78DB52B8C9705009639A3 /* APIClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,8 @@
 		4FB78DA72B8C926A009639A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FB78DA92B8C926A009639A3 /* Midori.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Midori.entitlements; sourceTree = "<group>"; };
 		4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4FB78DB32B8C9451009639A3 /* APIClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = APIClient; sourceTree = "<group>"; };
+		4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APIClient.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB78DB62B8C9705009639A3 /* APIClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,8 +40,11 @@
 		4FB78D972B8C9269009639A3 = {
 			isa = PBXGroup;
 			children = (
+				4FB78DB32B8C9451009639A3 /* APIClient */,
+				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,
 				4FB78DA12B8C9269009639A3 /* Products */,
+				4FB78DB72B8F4032009639A3 /* Test Plans */,
 			);
 			sourceTree = "<group>";
 		};
@@ -69,6 +76,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		4FB78DB42B8C9705009639A3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4FB78DB72B8F4032009639A3 /* Test Plans */ = {
+			isa = PBXGroup;
+			children = (
+				4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */,
+			);
+			path = "Test Plans";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -85,6 +107,9 @@
 			dependencies = (
 			);
 			name = Midori;
+			packageProductDependencies = (
+				4FB78DB52B8C9705009639A3 /* APIClient */,
+			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
 			productType = "com.apple.product-type.application";
@@ -294,6 +319,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.longkimhoang.Midori;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_DOCUMENTATION_COMPILER = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -332,6 +358,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.longkimhoang.Midori;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_DOCUMENTATION_COMPILER = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -373,6 +400,13 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4FB78DB52B8C9705009639A3 /* APIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = APIClient;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4FB78D982B8C9269009639A3 /* Project object */;
 }

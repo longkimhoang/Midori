@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "4759D437-1C36-4158-8BE9-EEC36DB433DD",
+      "name" : "Default",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:APIClient",
+        "identifier" : "CommonTests",
+        "name" : "CommonTests"
+      }
+    }
+  ],
+  "version" : 1
+}
