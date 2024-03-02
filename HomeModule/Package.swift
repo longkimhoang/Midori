@@ -6,8 +6,9 @@ import PackageDescription
 let package = Package(
   name: "HomeModule",
   defaultLocalization: "en",
+  platforms: [.macOS(.v14), .iOS(.v17)],
   products: [
-    .library(name: "HomeUI", targets: ["HomeUI"]),
+    .library(name: "HomeUI", targets: ["HomeUI"])
   ],
   targets: [
     .target(name: "HomeUI"),
