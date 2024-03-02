@@ -18,6 +18,6 @@ package struct APIDateFormatConverter: DateFormatConverter {
   }
 }
 
-package extension DateFormatConverter where Self == APIDateFormatConverter {
+extension DateFormatConverter where Self == APIDateFormatConverter {
   package static var api: Self { APIDateFormatConverter() }
 }
