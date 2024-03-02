@@ -7,7 +7,7 @@ let package = Package(
   name: "APIClient",
   platforms: [.macOS(.v14), .iOS(.v17)],
   products: [
-    .library(name: "APIClient", targets: ["APIClient"])
+    .library(name: "APIClient", targets: ["APIClient"]),
   ],
   dependencies: [
     .package(url: "https://github.com/SwiftyLab/MetaCodable.git", from: "1.2.1"),

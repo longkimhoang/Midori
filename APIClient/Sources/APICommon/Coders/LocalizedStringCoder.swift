@@ -8,7 +8,6 @@
 import MetaCodable
 
 package struct LocalizedStringCoder: HelperCoder {
-
   package init() {}
 
   package func decode(from decoder: Decoder) throws -> LocalizedString {

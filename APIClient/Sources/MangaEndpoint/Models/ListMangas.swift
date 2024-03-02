@@ -21,7 +21,6 @@ public struct ListMangas {
 // MARK: - Request
 
 extension ListMangas {
-
   @Codable
   @MemberInit
   public struct Parameters {
@@ -34,7 +33,6 @@ extension ListMangas {
     @Codable
     @MemberInit
     public struct Order {
-
       public typealias SortOrder = APICommon.SortOrder
 
       public let latestUploadChapter: SortOrder?

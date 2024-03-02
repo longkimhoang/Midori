@@ -11,7 +11,6 @@ import XCTest
 @testable import APICommon
 
 final class LocalizedStringCoderTests: XCTestCase {
-
   @Codable
   struct TestData {
     @CodedBy(LocalizedStringCoder())
@@ -20,12 +19,12 @@ final class LocalizedStringCoderTests: XCTestCase {
 
   func testDecode() throws {
     let json = """
-      {
-        "string": {
-          "vi": "A localized string"
-        }
+    {
+      "string": {
+        "vi": "A localized string"
       }
-      """.data(using: .utf8)!
+    }
+    """.data(using: .utf8)!
 
     let decoded = try JSONDecoder().decode(TestData.self, from: json)
     let string = try XCTUnwrap(decoded.string)
@@ -35,10 +34,10 @@ final class LocalizedStringCoderTests: XCTestCase {
 
   func testDecodeError() {
     let json = """
-      {
-        "string": {}
-      }
-      """.data(using: .utf8)!
+    {
+      "string": {}
+    }
+    """.data(using: .utf8)!
 
     XCTAssertThrowsError(try JSONDecoder().decode(TestData.self, from: json))
   }

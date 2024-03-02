@@ -30,7 +30,8 @@ extension UICollectionViewLayout {
     configuration.interSectionSpacing = 20
 
     return UICollectionViewCompositionalLayout(
-      sectionProvider: sectionProvider, configuration: configuration)
+      sectionProvider: sectionProvider, configuration: configuration
+    )
   }
 }
 #endif

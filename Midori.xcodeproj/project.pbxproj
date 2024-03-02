@@ -16,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
 		4FB78DA02B8C9269009639A3 /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB78DA32B8C9269009639A3 /* MidoriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidoriApp.swift; sourceTree = "<group>"; };
@@ -40,6 +41,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F9132AF2B93716C00CB7747 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4F9132AE2B93712C00CB7747 /* .swiftformat */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		4FB78D972B8C9269009639A3 = {
 			isa = PBXGroup;
 			children = (
@@ -48,6 +57,7 @@
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,
 				4FB78DA12B8C9269009639A3 /* Products */,
+				4F9132AF2B93716C00CB7747 /* Supporting Files */,
 				4FB78DB72B8F4032009639A3 /* Test Plans */,
 			);
 			sourceTree = "<group>";
@@ -144,7 +154,7 @@
 			);
 			mainGroup = 4FB78D972B8C9269009639A3;
 			packageReferences = (
-				4FB78DB22B8C9300009639A3 /* XCRemoteSwiftPackageReference "swift-format" */,
+				4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */,
 			);
 			productRefGroup = 4FB78DA12B8C9269009639A3 /* Products */;
 			projectDirPath = "";
@@ -396,12 +406,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4FB78DB22B8C9300009639A3 /* XCRemoteSwiftPackageReference "swift-format" */ = {
+		4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-format.git";
+			repositoryURL = "https://github.com/nicklockwood/SwiftFormat.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 509.0.0;
+				minimumVersion = 0.53.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

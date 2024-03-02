@@ -9,7 +9,6 @@ import Foundation
 import HelperCoders
 
 package struct APIDateFormatConverter: DateFormatConverter {
-
   package func string(from date: Date) -> String {
     date.formatted(.iso8601.year().month().day().time(includingFractionalSeconds: false))
   }
@@ -19,6 +18,6 @@ package struct APIDateFormatConverter: DateFormatConverter {
   }
 }
 
-extension DateFormatConverter where Self == APIDateFormatConverter {
+package extension DateFormatConverter where Self == APIDateFormatConverter {
   package static var api: Self { APIDateFormatConverter() }
 }
