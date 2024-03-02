@@ -9,6 +9,8 @@ import MetaCodable
 
 package struct LocalizedStringCoder: HelperCoder {
 
+  package init() {}
+
   package func decode(from decoder: Decoder) throws -> LocalizedString {
     let container = try decoder.singleValueContainer()
     let dict = try container.decode([String: String].self)

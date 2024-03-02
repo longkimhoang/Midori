@@ -15,23 +15,34 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "Common",
+      name: "APICommon",
       dependencies: [
         .product(name: "MetaCodable", package: "MetaCodable"),
         .product(name: "HelperCoders", package: "MetaCodable"),
       ]
     ),
-    .testTarget(name: "CommonTests", dependencies: [.target(name: "Common")]),
+    .testTarget(
+      name: "APICommonTests",
+      dependencies: [.target(name: "APICommon")]
+    ),
     .target(
       name: "MangaEndpoint",
       dependencies: [
-        .target(name: "Common"),
+        .target(name: "APICommon"),
+        .target(name: "APIModels"),
         .product(name: "Alamofire", package: "Alamofire"),
       ]
     ),
     .target(
       name: "APIClient",
       dependencies: [.target(name: "MangaEndpoint")]
+    ),
+    .target(
+      name: "APIModels",
+      dependencies: [
+        .target(name: "APICommon"),
+        .product(name: "MetaCodable", package: "MetaCodable"),
+      ]
     ),
   ]
 )

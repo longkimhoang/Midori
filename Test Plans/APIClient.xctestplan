@@ -16,8 +16,8 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:APIClient",
-        "identifier" : "CommonTests",
-        "name" : "CommonTests"
+        "identifier" : "APICommonTests",
+        "name" : "APICommonTests"
       }
     }
   ],

@@ -5,7 +5,8 @@
 //  Created by Long Kim on 28/02/2024.
 //
 
-import Common
+import APICommon
+import APIModels
 import Foundation
 import HelperCoders
 import MetaCodable
@@ -14,6 +15,7 @@ import MetaCodable
 public struct ListMangas {
   public let limit: Int
   public let offset: Int
+  @CodedAt("data") public let mangas: [Manga]
 }
 
 // MARK: - Request
@@ -21,6 +23,7 @@ public struct ListMangas {
 extension ListMangas {
 
   @Codable
+  @MemberInit
   public struct Parameters {
     public let limit: Int?
     public let offset: Int?
@@ -32,7 +35,7 @@ extension ListMangas {
     @MemberInit
     public struct Order {
 
-      public typealias SortOrder = Common.SortOrder
+      public typealias SortOrder = APICommon.SortOrder
 
       public let latestUploadChapter: SortOrder?
       public let followedCount: SortOrder?

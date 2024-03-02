@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F97207F2B930AF10028B950 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F97207E2B930AF10028B950 /* HomeUI */; };
 		4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA32B8C9269009639A3 /* MidoriApp.swift */; };
 		4FB78DA62B8C9269009639A3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA52B8C9269009639A3 /* ContentView.swift */; };
 		4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DA72B8C926A009639A3 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
 		4FB78DA02B8C9269009639A3 /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB78DA32B8C9269009639A3 /* MidoriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidoriApp.swift; sourceTree = "<group>"; };
 		4FB78DA52B8C9269009639A3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -31,6 +33,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FB78DB62B8C9705009639A3 /* APIClient in Frameworks */,
+				4F97207F2B930AF10028B950 /* HomeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +44,7 @@
 			isa = PBXGroup;
 			children = (
 				4FB78DB32B8C9451009639A3 /* APIClient */,
+				4F97207D2B9309C40028B950 /* HomeModule */,
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,
 				4FB78DA12B8C9269009639A3 /* Products */,
@@ -109,6 +113,7 @@
 			name = Midori;
 			packageProductDependencies = (
 				4FB78DB52B8C9705009639A3 /* APIClient */,
+				4F97207E2B930AF10028B950 /* HomeUI */,
 			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
@@ -402,6 +407,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F97207E2B930AF10028B950 /* HomeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeUI;
+		};
 		4FB78DB52B8C9705009639A3 /* APIClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = APIClient;
