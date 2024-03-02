@@ -20,24 +20,28 @@ public struct ListMangas {
 
 // MARK: - Request
 
+@Codable
+@MemberInit
+public struct ListMangasParameters {
+  public typealias Order = ListMangasSortOrder
+
+  public let limit: Int?
+  public let offset: Int?
+  @Default(true) public let hasAvailableChapters: Bool
+  @CodedBy(DateCoder(formatter: .api)) public let createdAtSince: Date?
+  public let order: Order?
+}
+
+@Codable
+@MemberInit
+public struct ListMangasSortOrder {
+  public typealias SortOrder = APICommon.SortOrder
+
+  public let latestUploadChapter: SortOrder?
+  public let followedCount: SortOrder?
+  public let createdAt: SortOrder?
+}
+
 extension ListMangas {
-  @Codable
-  @MemberInit
-  public struct Parameters {
-    public let limit: Int?
-    public let offset: Int?
-    @Default(true) public let hasAvailableChapters: Bool
-    @CodedBy(DateCoder(formatter: .api)) public let createdAtSince: Date?
-    public let order: Order?
-
-    @Codable
-    @MemberInit
-    public struct Order {
-      public typealias SortOrder = APICommon.SortOrder
-
-      public let latestUploadChapter: SortOrder?
-      public let followedCount: SortOrder?
-      public let createdAt: SortOrder?
-    }
-  }
+  public typealias Parameters = ListMangasParameters
 }

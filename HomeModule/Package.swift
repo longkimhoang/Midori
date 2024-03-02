@@ -10,8 +10,14 @@ let package = Package(
   products: [
     .library(name: "HomeUI", targets: ["HomeUI"]),
   ],
+  dependencies: [
+    .package(path: "APIClient"),
+  ],
   targets: [
-    .target(name: "HomeUI"),
-    .target(name: "UseCases"),
+    .target(name: "HomeUI", dependencies: [.target(name: "HomeUseCases")]),
+    .target(
+      name: "HomeUseCases",
+      dependencies: [.product(name: "APIClient", package: "APIClient")]
+    ),
   ]
 )
