@@ -5,19 +5,46 @@
 //  Created by Long Kim on 02/03/2024.
 //
 
+import Dependencies
 import Foundation
-import HomeUseCases
+import HomeDomain
 import SwiftUI
 
+enum FetchResult<Success> {
+  case loading
+  case success(Success)
+  case failure(Error)
+}
+
 public struct HomeView: View {
+  @Dependency(HomeDataProvider.self) var homeDataProvider
+  @State private var result: FetchResult<HomeData> = .loading
+
   public init() {}
 
   public var body: some View {
-    EmptyView()
-      .task {
-        do {
-          let homeData = try await RetrieveHomeDataUseCase().execute()
-        } catch {}
+    NavigationStack {
+      switch result {
+      case .loading:
+        ContentUnavailableView {
+          ProgressView()
+            .controlSize(.large)
+        } description: {
+          Text("Loading...")
+        }
+      case let .success(data):
+        HomeCollectionView(data: data)
+      case let .failure(error):
+        Text(error.localizedDescription)
       }
+    }
+    .task {
+      do {
+        let homeData = try await homeDataProvider.retrieveHomeData()
+        result = .success(homeData)
+      } catch {
+        result = .failure(error)
+      }
+    }
   }
 }

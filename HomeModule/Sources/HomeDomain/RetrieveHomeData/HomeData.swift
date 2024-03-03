@@ -10,8 +10,10 @@ import Foundation
 
 package struct HomeData {
   package let popular: [Manga]
+  package let recentlyAdded: [Manga]
 
-  package init(popular: [Manga]) {
+  package init(popular: [Manga], recentlyAdded: [Manga]) {
     self.popular = popular
+    self.recentlyAdded = recentlyAdded
   }
 }
