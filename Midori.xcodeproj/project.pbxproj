@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F1DA12D2B94B71200DF7BAB /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1DA12C2B94B71200DF7BAB /* Persistence */; };
 		4F97207F2B930AF10028B950 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F97207E2B930AF10028B950 /* HomeUI */; };
+		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
 		4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA32B8C9269009639A3 /* MidoriApp.swift */; };
 		4FB78DA62B8C9269009639A3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA52B8C9269009639A3 /* ContentView.swift */; };
 		4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DA72B8C926A009639A3 /* Assets.xcassets */; };
@@ -33,6 +35,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */,
+				4F1DA12D2B94B71200DF7BAB /* Persistence in Frameworks */,
 				4F97207F2B930AF10028B950 /* HomeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,6 +127,8 @@
 			name = Midori;
 			packageProductDependencies = (
 				4F97207E2B930AF10028B950 /* HomeUI */,
+				4F1DA12C2B94B71200DF7BAB /* Persistence */,
+				4FB269992B94C8C6005BDD14 /* Dependencies */,
 			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
@@ -154,6 +160,7 @@
 			mainGroup = 4FB78D972B8C9269009639A3;
 			packageReferences = (
 				4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */,
+				4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 			);
 			productRefGroup = 4FB78DA12B8C9269009639A3 /* Products */;
 			projectDirPath = "";
@@ -413,12 +420,29 @@
 				minimumVersion = 0.53.3;
 			};
 		};
+		4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F1DA12C2B94B71200DF7BAB /* Persistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Persistence;
+		};
 		4F97207E2B930AF10028B950 /* HomeUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeUI;
+		};
+		4FB269992B94C8C6005BDD14 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

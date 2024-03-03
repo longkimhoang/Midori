@@ -6,8 +6,12 @@
 //
 
 import CoreData
+import Dependencies
 import Foundation
+import os.log
 import System
+
+private let logger = Logger(subsystem: "com.longkimhoang.Midori", category: "Persistence")
 
 public struct PersistenceController {
   public let container: NSPersistentContainer
@@ -23,5 +27,18 @@ public struct PersistenceController {
     if inMemory, let description = container.persistentStoreDescriptions.first {
       description.url = URL(filePath: FilePath("/dev/null"))
     }
+
+    container.loadPersistentStores { description, error in
+      if let error {
+        logger.error("Failed to initialize store \(description) with error \(error)")
+      } else {
+        logger.debug("Initialized store \(description)")
+      }
+    }
   }
+}
+
+extension PersistenceController: DependencyKey {
+  public static let liveValue = try! PersistenceController()
+  public static let previewValue = try! PersistenceController(inMemory: true)
 }

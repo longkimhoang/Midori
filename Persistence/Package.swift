@@ -9,7 +9,16 @@ let package = Package(
   products: [
     .library(name: "Persistence", targets: ["Persistence"]),
   ],
+  dependencies: [
+    .package(
+      url: "https://github.com/pointfreeco/swift-dependencies.git",
+      .upToNextMajor(from: "1.2.1")
+    ),
+  ],
   targets: [
-    .target(name: "Persistence"),
+    .target(
+      name: "Persistence",
+      dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]
+    ),
   ]
 )

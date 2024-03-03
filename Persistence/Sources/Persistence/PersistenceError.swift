@@ -9,5 +9,4 @@ import Foundation
 
 public enum PersistenceError: Error {
   case dataModelNotFound
-  case initializationFailed(Error)
 }
