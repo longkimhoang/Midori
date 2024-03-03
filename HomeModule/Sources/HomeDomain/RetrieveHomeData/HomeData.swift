@@ -5,8 +5,8 @@
 //  Created by Long Kim on 02/03/2024.
 //
 
-import APIClient
 import Foundation
+import Persistence
 
 package struct HomeData {
   package let popular: [Manga]

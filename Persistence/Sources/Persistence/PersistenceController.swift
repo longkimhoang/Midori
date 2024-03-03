@@ -35,10 +35,20 @@ public struct PersistenceController {
         logger.debug("Initialized store \(description)")
       }
     }
+
+    container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+    container.viewContext.automaticallyMergesChangesFromParent = true
   }
 }
 
 extension PersistenceController: DependencyKey {
   public static let liveValue = try! PersistenceController()
   public static let previewValue = try! PersistenceController(inMemory: true)
+}
+
+extension DependencyValues {
+  public var persistenceController: PersistenceController {
+    get { self[PersistenceController.self] }
+    set { self[PersistenceController.self] = newValue }
+  }
 }

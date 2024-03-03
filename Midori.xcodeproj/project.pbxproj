@@ -10,6 +10,7 @@
 		4F1DA12D2B94B71200DF7BAB /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1DA12C2B94B71200DF7BAB /* Persistence */; };
 		4F97207F2B930AF10028B950 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F97207E2B930AF10028B950 /* HomeUI */; };
 		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
+		4FB2699D2B94CDAF005BDD14 /* Domain in Resources */ = {isa = PBXBuildFile; fileRef = 4FB2699C2B94CDAF005BDD14 /* Domain */; };
 		4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA32B8C9269009639A3 /* MidoriApp.swift */; };
 		4FB78DA62B8C9269009639A3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA52B8C9269009639A3 /* ContentView.swift */; };
 		4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DA72B8C926A009639A3 /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 		4F09A0222B94B248000978B5 /* Persistence */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Persistence; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
+		4FB2699C2B94CDAF005BDD14 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		4FB78DA02B8C9269009639A3 /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB78DA32B8C9269009639A3 /* MidoriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidoriApp.swift; sourceTree = "<group>"; };
 		4FB78DA52B8C9269009639A3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				4FB78DB32B8C9451009639A3 /* APIClient */,
+				4FB2699C2B94CDAF005BDD14 /* Domain */,
 				4F97207D2B9309C40028B950 /* HomeModule */,
 				4F09A0222B94B248000978B5 /* Persistence */,
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
@@ -176,6 +179,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB2699D2B94CDAF005BDD14 /* Domain in Resources */,
 				4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */,
 				4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */,
 			);

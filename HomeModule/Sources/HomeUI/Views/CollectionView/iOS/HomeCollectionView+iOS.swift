@@ -6,6 +6,7 @@
 //
 
 #if os(iOS)
+import CoreData
 import Foundation
 import HomeDomain
 import SwiftUI
@@ -23,7 +24,7 @@ struct HomeCollectionView: UIViewRepresentable {
   func updateUIView(_: UICollectionView, context: Context) {
     var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, UUID>()
     snapshot.appendSections([.popular])
-    snapshot.appendItems(data.popular.map(\.id), toSection: .popular)
+    snapshot.appendItems(data.popular.compactMap(\.mangaID), toSection: .popular)
     context.coordinator.dataSource.apply(snapshot)
   }
 

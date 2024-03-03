@@ -5,10 +5,16 @@
 //  Created by Long Kim on 02/03/2024.
 //
 
+import Algorithms
 import APIClient
+import CoreData
 import Dependencies
 import DependenciesMacros
-import Foundation
+import IdentifiedCollections
+import ModelImporters
+import Persistence
+
+private typealias Manga = Persistence.Manga
 
 @DependencyClient
 package struct HomeDataProvider {
@@ -18,17 +24,46 @@ package struct HomeDataProvider {
 extension HomeDataProvider: DependencyKey {
   package static var liveValue: HomeDataProvider {
     HomeDataProvider(retrieveHomeData: {
-      async let popularMangas = try await MangaEndpoint.listMangas(parameters: ListMangasParameters(
-        createdAtSince: .lastMonth,
-        order: ListMangasSortOrder(followedCount: .descending)
-      ))
+      @Dependency(\.persistenceController.container.viewContext) var viewContext
+      @Dependency(\.mangaImporter) var mangaImporter
 
-      async let recentMangas = try await MangaEndpoint.listMangas(parameters: ListMangasParameters(
-        limit: 15,
-        order: ListMangasSortOrder(createdAt: .descending)
-      ))
+      async let popularMangas = try await MangaEndpoint
+        .listMangas(parameters: ListMangasParameters(
+          createdAtSince: .lastMonth,
+          order: ListMangasSortOrder(followedCount: .descending)
+        ))
 
-      return try await HomeData(popular: popularMangas.mangas, recentlyAdded: recentMangas.mangas)
+      async let recentMangas = try await MangaEndpoint
+        .listMangas(parameters: ListMangasParameters(
+          limit: 15,
+          order: ListMangasSortOrder(createdAt: .descending)
+        ))
+
+      let mangas = try await chain(popularMangas.mangas, recentMangas.mangas)
+      try await mangaImporter.importMangas(mangas)
+
+      // Fetch the models into view context
+      let mangaIDs = Set(mangas.map(\.id))
+      let request = Manga.fetchRequest()
+      request.predicate = NSPredicate(format: "mangaID IN %@", mangaIDs)
+
+      let fetchedMangas = try await viewContext.perform {
+        let fetchResult = try viewContext.fetch(request)
+        return IdentifiedArray(
+          fetchResult,
+          id: \.mangaID,
+          uniquingIDsWith: { $1 }
+        )
+      }
+
+      func getMappedMangas(from listMangas: ListMangas) -> [Manga] {
+        listMangas.mangas.compactMap { fetchedMangas[id: $0.id] }
+      }
+
+      return try await HomeData(
+        popular: getMappedMangas(from: popularMangas),
+        recentlyAdded: getMappedMangas(from: recentMangas)
+      )
     })
   }
 }
