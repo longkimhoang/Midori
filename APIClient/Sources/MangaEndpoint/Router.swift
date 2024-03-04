@@ -35,7 +35,7 @@ enum Router: URLRequestConvertible {
     switch self {
     case let .listMangas(parameters):
       let defaultParameters = [
-        "includes": ["cover_art", "artist"],
+        "includes": ["cover_art", "artist", "author"],
       ]
       request = try URLEncodedFormParameterEncoder.default.encode(parameters, into: request)
       request = try URLEncodedFormParameterEncoder.default.encode(defaultParameters, into: request)

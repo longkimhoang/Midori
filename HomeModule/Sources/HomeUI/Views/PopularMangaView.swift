@@ -19,11 +19,12 @@ struct PopularMangaView: View {
         .clipShape(.rect(cornerRadius: 8))
 
       VStack(alignment: .leading) {
-        Text(manga.mangaID.uuidString)
-          .font(.title3)
+        Text(manga.title)
+          .font(.headline)
           .lineLimit(4)
 
-        Text("Artist name here")
+        Text(manga.artist.name)
+          .font(.subheadline)
           .foregroundStyle(.secondary)
       }
 

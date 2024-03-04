@@ -35,9 +35,6 @@ public struct PersistenceController {
         logger.debug("Initialized store \(description)")
       }
     }
-
-    container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-    container.viewContext.automaticallyMergesChangesFromParent = true
   }
 }
 

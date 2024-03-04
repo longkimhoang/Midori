@@ -16,6 +16,10 @@ let package = Package(
       url: "https://github.com/pointfreeco/swift-dependencies.git",
       .upToNextMajor(from: "1.2.1")
     ),
+    .package(
+      url: "https://github.com/pointfreeco/swift-identified-collections.git",
+      .upToNextMajor(from: "1.0.0")
+    ),
   ],
   targets: [
     .target(
@@ -24,6 +28,7 @@ let package = Package(
         .product(name: "APIClient", package: "APIClient"),
         .product(name: "Persistence", package: "Persistence"),
         .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
       ]
     ),
   ]

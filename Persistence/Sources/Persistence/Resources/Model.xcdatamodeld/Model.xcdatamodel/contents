@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23D60" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Author" representedClassName="Author" syncable="YES">
+        <attribute name="authorID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="imageURL" optional="YES" attributeType="URI"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="mangas" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Manga" inverseName="artist" inverseEntity="Manga"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="authorID"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="Manga" representedClassName="Manga" syncable="YES">
         <attribute name="mangaID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="mangas" inverseEntity="Author"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="mangaID"/>

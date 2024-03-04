@@ -11,7 +11,17 @@ import Foundation
 @objc(Manga)
 public final class Manga: NSManagedObject {
   @NSManaged public var mangaID: UUID
+  @NSManaged public var title: String
 }
+
+// MARK: - Relationships
+
+extension Manga {
+  @NSManaged public var artist: Author
+  @NSManaged public var author: Author?
+}
+
+// MARK: - Conformance
 
 extension Manga: Identifiable {
   public var id: NSManagedObjectID { objectID }

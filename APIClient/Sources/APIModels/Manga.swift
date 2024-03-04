@@ -24,3 +24,15 @@ public struct Manga {
   @CodedBy(RelationshipCoder())
   public let relationships: [Reference]
 }
+
+extension Manga {
+  public var author: Author? {
+    relationships.lazy.compactMap(\.author).first
+  }
+
+  public var artist: Author? {
+    relationships.lazy.compactMap(\.artist).first
+  }
+}
+
+extension Manga: Identifiable {}
