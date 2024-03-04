@@ -19,12 +19,13 @@ extension NSCollectionLayoutSection {
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let groupSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1),
-      heightDimension: .absolute(200)
+      heightDimension: .estimated(200)
     )
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 8
     section.orthogonalScrollingBehavior = .groupPaging
+    section.boundarySupplementaryItems = [.sectionTitle]
 
     return section
   }

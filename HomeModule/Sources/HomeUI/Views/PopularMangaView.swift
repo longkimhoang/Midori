@@ -14,33 +14,51 @@ struct PopularMangaView: View {
   let manga: Manga
 
   var body: some View {
-    HStack(alignment: .top, spacing: 16) {
-      WebImage(url: coverThumbnailURL) { imagePhase in
-        switch imagePhase {
-        case let .success(image):
-          image
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(width: 140, height: 200, alignment: .center)
-        default:
-          Rectangle().fill(.fill.secondary)
-            .frame(width: 140, height: 200, alignment: .center)
+    ZStack {
+      GeometryReader { geometry in
+        WebImage(url: coverThumbnailURL)
+          .resizable()
+          .aspectRatio(contentMode: .fill)
+          .frame(width: geometry.size.width, height: geometry.size.height)
+      }
+
+      GeometryReader { geometry in
+        HStack(alignment: .top, spacing: 16) {
+          WebImage(url: coverThumbnailURL) { imagePhase in
+            Group {
+              switch imagePhase {
+              case let .success(image):
+                image
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+              default:
+                Rectangle().fill(.fill.secondary)
+              }
+            }
+            .frame(
+              width: geometry.size.height * 0.7,
+              height: geometry.size.height
+            )
+          }
+          .clipShape(.rect(cornerRadius: 8))
+
+          VStack(alignment: .leading) {
+            Text(manga.title)
+              .font(.title2)
+              .lineLimit(3)
+
+            Text(manga.artist.name)
+              .font(.title3)
+              .foregroundStyle(.secondary)
+          }
+
+          Spacer()
         }
       }
-      .clipShape(.rect(cornerRadius: 8))
-
-      VStack(alignment: .leading) {
-        Text(manga.title)
-          .font(.title)
-          .lineLimit(3)
-
-        Text(manga.artist.name)
-          .font(.title2)
-          .foregroundStyle(.secondary)
-      }
-
-      Spacer()
+      .padding()
+      .background(.regularMaterial)
     }
+    .clipShape(.rect(cornerRadius: 16))
   }
 
   private var coverThumbnailURL: URL? {

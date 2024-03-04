@@ -51,6 +51,7 @@ struct HomeCollectionView: UIViewRepresentable {
         cell.contentConfiguration = UIHostingConfiguration {
           PopularMangaView(manga: item)
         }
+        .margins(.horizontal, 16)
       }
 
       dataSource =
@@ -74,6 +75,32 @@ struct HomeCollectionView: UIViewRepresentable {
             return nil
           }
         }
+
+      let sectionTitleRegistration = UICollectionView
+        .SupplementaryRegistration<SectionTitleView>(
+          elementKind: SupplementaryItemKind
+            .sectionTitle
+        ) { sectionTitleView, _, indexPath in
+          guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
+          switch section {
+          case .popular:
+            sectionTitleView.configure(title: String(localized: "Popular new titles"))
+          default:
+            break
+          }
+        }
+
+      dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+        switch elementKind {
+        case SupplementaryItemKind.sectionTitle:
+          collectionView.dequeueConfiguredReusableSupplementary(
+            using: sectionTitleRegistration,
+            for: indexPath
+          )
+        default:
+          nil
+        }
+      }
     }
   }
 }

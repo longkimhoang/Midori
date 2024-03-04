@@ -24,19 +24,25 @@ public struct HomeView: View {
 
   public var body: some View {
     NavigationStack {
-      switch result {
-      case .loading:
-        ContentUnavailableView {
-          ProgressView()
-            .controlSize(.large)
-        } description: {
-          Text("Loading...")
+      Group {
+        switch result {
+        case .loading:
+          ContentUnavailableView {
+            ProgressView()
+              .controlSize(.large)
+          } description: {
+            Text("Loading...")
+          }
+        case let .success(data):
+          HomeCollectionView(data: data)
+          #if os(iOS)
+            .ignoresSafeArea()
+          #endif
+        case let .failure(error):
+          Text(error.localizedDescription)
         }
-      case let .success(data):
-        HomeCollectionView(data: data)
-      case let .failure(error):
-        Text(error.localizedDescription)
       }
+      .navigationTitle("Home")
     }
     .task {
       do {

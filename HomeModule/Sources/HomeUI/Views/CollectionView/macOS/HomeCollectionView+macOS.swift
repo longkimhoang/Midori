@@ -48,6 +48,12 @@ struct HomeCollectionView: NSViewRepresentable {
         forItemWithIdentifier: .popularManga
       )
 
+      collectionView.register(
+        SectionTitleViewHost.self,
+        forSupplementaryViewOfKind: SupplementaryItemKind.sectionTitle,
+        withIdentifier: .sectionTitle
+      )
+
       dataSource =
         NSCollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
@@ -70,6 +76,32 @@ struct HomeCollectionView: NSViewRepresentable {
             return nil
           }
         }
+
+      dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+        switch elementKind {
+        case SupplementaryItemKind.sectionTitle:
+          guard let sectionTitleView = collectionView.makeSupplementaryView(
+            ofKind: SupplementaryItemKind.sectionTitle,
+            withIdentifier: .sectionTitle,
+            for: indexPath
+          ) as? SectionTitleViewHost,
+            let section = SectionIdentifier(rawValue: indexPath.section)
+          else {
+            return nil
+          }
+
+          switch section {
+          case .popular:
+            sectionTitleView.configure(title: String(localized: "Popular new titles"))
+          default:
+            break
+          }
+
+          return sectionTitleView
+        default:
+          return nil
+        }
+      }
     }
   }
 }
@@ -79,6 +111,8 @@ struct HomeCollectionView: NSViewRepresentable {
 extension NSUserInterfaceItemIdentifier {
   fileprivate static let popularManga =
     NSUserInterfaceItemIdentifier("HomeCollectionView.popularManga")
+  fileprivate static let sectionTitle =
+    NSUserInterfaceItemIdentifier("HomeCollectionView.sectionTitle")
 }
 
 private final class PopularMangaCollectionViewItem: NSCollectionViewItem {
@@ -92,7 +126,7 @@ private final class PopularMangaCollectionViewItem: NSCollectionViewItem {
       hostingView.translatesAutoresizingMaskIntoConstraints = false
       view.addSubview(hostingView)
       hostingView.snp.makeConstraints { make in
-        make.edges.equalToSuperview()
+        make.edges.equalToSuperview().inset(16)
       }
     }
   }

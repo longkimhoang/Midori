@@ -12,12 +12,12 @@ import SwiftUI
 
 @main
 struct MidoriApp: App {
-  @Dependency(PersistenceController.self) var persistenceController
+  @Dependency(\.persistenceController.container.viewContext) var viewContext
 
   var body: some Scene {
     WindowGroup {
       ContentView()
     }
-    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+    .environment(\.managedObjectContext, viewContext)
   }
 }
