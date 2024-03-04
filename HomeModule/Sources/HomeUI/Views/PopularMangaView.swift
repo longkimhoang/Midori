@@ -7,8 +7,8 @@
 
 import Foundation
 import Persistence
-import SwiftUI
 import SDWebImageSwiftUI
+import SwiftUI
 
 struct PopularMangaView: View {
   let manga: Manga
@@ -17,7 +17,7 @@ struct PopularMangaView: View {
     HStack(alignment: .top, spacing: 16) {
       WebImage(url: coverThumbnailURL) { imagePhase in
         switch imagePhase {
-        case .success(let image):
+        case let .success(image):
           image
             .resizable()
             .aspectRatio(contentMode: .fill)

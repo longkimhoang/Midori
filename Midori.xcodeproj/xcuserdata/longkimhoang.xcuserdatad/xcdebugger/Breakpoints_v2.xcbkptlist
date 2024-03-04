@@ -26,6 +26,38 @@
                   </ActionContent>
                </BreakpointActionProxy>
             </Actions>
+            <Locations>
+               <Location
+                  uuid = "F4B19544-3726-4F00-90BB-5F6A59316089 - c9fd34280ca1a19f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.NSManagedObject) -&gt; Swift.Bool in closure #2 () throws -&gt; Swift.Array&lt;__C.NSManagedObjectID&gt; in ModelImporters.MangaImporter.importMangas&lt;&#x3c4;_0_0 where &#x3c4;_0_0: Swift.Collection, &#x3c4;_0_0.Element == APIModels.Manga&gt;(&#x3c4;_0_0) async throws -&gt; ()"
+                  moduleName = "Midori"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/longkimhoang/Documents/Projects/Midori.nosync/Domain/Sources/ModelImporters/MangaImporter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "988">
+               </Location>
+               <Location
+                  uuid = "F4B19544-3726-4F00-90BB-5F6A59316089 - c9fd34280ca1a19f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.NSManagedObject) -&gt; Swift.Bool in closure #2 () throws -&gt; Swift.Array&lt;__C.NSManagedObjectID&gt; in ModelImporters.MangaImporter.importMangas&lt;&#x3c4;_0_0 where &#x3c4;_0_0: Swift.Collection, &#x3c4;_0_0.Element == APIModels.Manga&gt;(&#x3c4;_0_0) async throws -&gt; ()"
+                  moduleName = "Midori"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/longkimhoang/Documents/Projects/Midori.nosync/Domain/Sources/ModelImporters/MangaImporter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "1148">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
