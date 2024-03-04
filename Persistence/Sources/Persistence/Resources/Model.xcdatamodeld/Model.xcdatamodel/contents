@@ -4,7 +4,7 @@
         <attribute name="authorID" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="imageURL" optional="YES" attributeType="URI"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="mangas" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Manga" inverseName="artist" inverseEntity="Manga"/>
+        <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Manga" inverseName="artist" inverseEntity="Manga"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="authorID"/>
@@ -12,6 +12,7 @@
         </uniquenessConstraints>
     </entity>
     <entity name="Manga" representedClassName="Manga" syncable="YES">
+        <attribute name="coverImageURL" optional="YES" attributeType="URI"/>
         <attribute name="mangaID" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="mangas" inverseEntity="Author"/>

@@ -12,6 +12,7 @@ import Foundation
 public final class Manga: NSManagedObject {
   @NSManaged public var mangaID: UUID
   @NSManaged public var title: String
+  @NSManaged public var coverImageURL: URL?
 }
 
 // MARK: - Relationships

@@ -8,27 +8,43 @@
 import Foundation
 import Persistence
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct PopularMangaView: View {
   let manga: Manga
 
   var body: some View {
     HStack(alignment: .top, spacing: 16) {
-      Color.secondary
-        .aspectRatio(1 / 1.42, contentMode: .fit)
-        .clipShape(.rect(cornerRadius: 8))
+      WebImage(url: coverThumbnailURL) { imagePhase in
+        switch imagePhase {
+        case .success(let image):
+          image
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 140, height: 200, alignment: .center)
+        default:
+          Rectangle().fill(.fill.secondary)
+            .frame(width: 140, height: 200, alignment: .center)
+        }
+      }
+      .clipShape(.rect(cornerRadius: 8))
 
       VStack(alignment: .leading) {
         Text(manga.title)
-          .font(.headline)
-          .lineLimit(4)
+          .font(.title)
+          .lineLimit(3)
 
         Text(manga.artist.name)
-          .font(.subheadline)
+          .font(.title2)
           .foregroundStyle(.secondary)
       }
 
       Spacer()
     }
+  }
+
+  private var coverThumbnailURL: URL? {
+    guard let coverImageURL = manga.coverImageURL else { return nil }
+    return URL(string: coverImageURL.absoluteString + ".256.jpg")
   }
 }

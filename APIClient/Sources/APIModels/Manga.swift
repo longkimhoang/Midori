@@ -26,6 +26,12 @@ public struct Manga {
 }
 
 extension Manga {
+  public var coverImageURL: URL? {
+    guard let cover = relationships.lazy.compactMap(\.cover).first else { return nil }
+    return URL(string: "https://uploads.mangadex.org/covers")?
+      .appending(components: id.uuidString.lowercased(), cover.fileName)
+  }
+
   public var author: Author? {
     relationships.lazy.compactMap(\.author).first
   }

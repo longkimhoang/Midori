@@ -25,6 +25,11 @@ public enum Reference {
 }
 
 extension Reference {
+  public var cover: Cover? {
+    guard case let .cover(cover) = self else { return nil }
+    return cover
+  }
+
   public var author: Author? {
     guard case let .author(author) = self else { return nil }
     return author
