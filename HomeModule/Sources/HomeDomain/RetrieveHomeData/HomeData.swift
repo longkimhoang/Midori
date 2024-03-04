@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import IdentifiedCollections
 import Persistence
 
 package struct HomeData {
-  package let popular: [Manga]
-  package let recentlyAdded: [Manga]
+  package typealias Mangas = IdentifiedArrayOf<Manga>
 
-  package init(popular: [Manga], recentlyAdded: [Manga]) {
+  package let popular: Mangas
+  package let recentlyAdded: Mangas
+
+  package init(popular: Mangas, recentlyAdded: Mangas) {
     self.popular = popular
     self.recentlyAdded = recentlyAdded
   }

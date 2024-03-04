@@ -9,6 +9,7 @@
 import CoreData
 import Foundation
 import HomeDomain
+import Persistence
 import SwiftUI
 
 struct HomeCollectionView: UIViewRepresentable {
@@ -22,41 +23,55 @@ struct HomeCollectionView: UIViewRepresentable {
   }
 
   func updateUIView(_: UICollectionView, context: Context) {
-    var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, UUID>()
+    context.coordinator.homeData = data
+
+    var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, NSManagedObjectID>()
     snapshot.appendSections([.popular])
-    snapshot.appendItems(data.popular.compactMap(\.mangaID), toSection: .popular)
+    snapshot.appendItems(data.popular.map(\.id), toSection: .popular)
     context.coordinator.dataSource.apply(snapshot)
   }
 
   func makeCoordinator() -> Coordinator {
-    Coordinator()
+    Coordinator(homeData: data)
   }
 
   final class Coordinator {
-    var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, UUID>!
+    var homeData: HomeData
+    var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, NSManagedObjectID>!
+
+    init(homeData: HomeData) {
+      self.homeData = homeData
+    }
 
     func setupDataSource(for collectionView: UICollectionView) {
       let popularMangaCellRegistration = UICollectionView.CellRegistration<
         UICollectionViewCell,
-        UUID
+        Manga
       > { cell, _, item in
         cell.contentConfiguration = UIHostingConfiguration {
-          PopularMangaView(id: item)
+          PopularMangaView(manga: item)
         }
       }
 
       dataSource =
-        UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        UICollectionViewDiffableDataSource(collectionView: collectionView) {
+          [weak self] collectionView, indexPath, itemIdentifier in
+          guard let self else { return nil }
+
           let section = SectionIdentifier(rawValue: indexPath.section)
-          return switch section {
+          switch section {
           case .popular:
-            collectionView.dequeueConfiguredReusableCell(
+            guard let manga = homeData.popular[id: itemIdentifier] else {
+              return nil
+            }
+
+            return collectionView.dequeueConfiguredReusableCell(
               using: popularMangaCellRegistration,
               for: indexPath,
-              item: itemIdentifier
+              item: manga
             )
           default:
-            nil
+            return nil
           }
         }
     }

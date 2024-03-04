@@ -18,7 +18,7 @@ private typealias Manga = Persistence.Manga
 
 @DependencyClient
 package struct HomeDataProvider {
-  package var retrieveHomeData: () async throws -> HomeData
+  package var retrieveHomeData: @MainActor () async throws -> HomeData
 }
 
 extension HomeDataProvider: DependencyKey {
@@ -43,21 +43,14 @@ extension HomeDataProvider: DependencyKey {
       try await mangaImporter.importMangas(mangas)
 
       // Fetch the models into view context
-      let mangaIDs = Set(mangas.map(\.id))
-      let request = Manga.fetchRequest()
-      request.predicate = NSPredicate(format: "mangaID IN %@", mangaIDs)
-
-      let fetchedMangas = try await viewContext.perform {
-        let fetchResult = try viewContext.fetch(request)
-        return IdentifiedArray(
-          fetchResult,
-          id: \.mangaID,
-          uniquingIDsWith: { $1 }
-        )
-      }
-
-      func getMappedMangas(from listMangas: ListMangas) -> [Manga] {
-        listMangas.mangas.compactMap { fetchedMangas[id: $0.id] }
+      func getMappedMangas(from listMangas: ListMangas) throws -> HomeData.Mangas {
+        let mangaIDs = listMangas.mangas.map(\.id)
+        let request = NSFetchRequest<Manga>(entityName: "Manga")
+        let predicate = #Predicate<Manga> {
+          mangaIDs.contains($0.mangaID)
+        }
+        request.predicate = NSPredicate(predicate)
+        return try IdentifiedArray(uniqueElements: viewContext.fetch(request))
       }
 
       return try await HomeData(

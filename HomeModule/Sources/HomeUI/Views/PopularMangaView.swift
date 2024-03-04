@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Persistence
 import SwiftUI
 
 struct PopularMangaView: View {
-  let id: UUID
+  let manga: Manga
 
   var body: some View {
     HStack(alignment: .top, spacing: 16) {
@@ -18,7 +19,7 @@ struct PopularMangaView: View {
         .clipShape(.rect(cornerRadius: 8))
 
       VStack(alignment: .leading) {
-        Text(id.uuidString)
+        Text(manga.mangaID.uuidString)
           .font(.title3)
           .lineLimit(4)
 
