@@ -50,7 +50,11 @@ extension HomeDataProvider: DependencyKey {
           mangaIDs.contains($0.mangaID)
         }
         request.predicate = NSPredicate(predicate)
-        return try IdentifiedArray(uniqueElements: viewContext.fetch(request))
+        let identifiedMangas = try IdentifiedArray(
+          uniqueElements: viewContext.fetch(request),
+          id: \.mangaID
+        )
+        return IdentifiedArray(uniqueElements: mangaIDs.compactMap { identifiedMangas[id: $0] })
       }
 
       return try await HomeData(
