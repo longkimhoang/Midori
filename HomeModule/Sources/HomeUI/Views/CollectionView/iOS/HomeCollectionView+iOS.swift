@@ -26,8 +26,9 @@ struct HomeCollectionView: UIViewRepresentable {
     context.coordinator.homeData = data
 
     var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, NSManagedObjectID>()
-    snapshot.appendSections([.popular])
+    snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
     snapshot.appendItems(data.popular.map(\.id), toSection: .popular)
+    snapshot.appendItems(data.recentlyAdded.map(\.id), toSection: .recentlyAdded)
     context.coordinator.dataSource.apply(snapshot)
   }
 
@@ -51,7 +52,17 @@ struct HomeCollectionView: UIViewRepresentable {
         cell.contentConfiguration = UIHostingConfiguration {
           PopularMangaView(manga: item)
         }
-        .margins(.horizontal, 16)
+        .margins(.all, 0)
+      }
+
+      let recentlyAddedCellRegistration = UICollectionView.CellRegistration<
+        UICollectionViewCell,
+        Manga
+      > { cell, _, item in
+        cell.contentConfiguration = UIHostingConfiguration {
+          RecentlyAddedMangaView(manga: item)
+        }
+        .margins(.all, 0)
       }
 
       dataSource =
@@ -59,7 +70,8 @@ struct HomeCollectionView: UIViewRepresentable {
           [weak self] collectionView, indexPath, itemIdentifier in
           guard let self else { return nil }
 
-          let section = SectionIdentifier(rawValue: indexPath.section)
+          guard let section = SectionIdentifier(rawValue: indexPath.section) else { return nil }
+
           switch section {
           case .popular:
             guard let manga = homeData.popular[id: itemIdentifier] else {
@@ -71,8 +83,26 @@ struct HomeCollectionView: UIViewRepresentable {
               for: indexPath,
               item: manga
             )
-          default:
-            return nil
+          case .latestUpdates:
+            guard let manga = homeData.recentlyAdded[id: itemIdentifier] else {
+              return nil
+            }
+
+            return collectionView.dequeueConfiguredReusableCell(
+              using: popularMangaCellRegistration,
+              for: indexPath,
+              item: manga
+            )
+          case .recentlyAdded:
+            guard let manga = homeData.recentlyAdded[id: itemIdentifier] else {
+              return nil
+            }
+
+            return collectionView.dequeueConfiguredReusableCell(
+              using: recentlyAddedCellRegistration,
+              for: indexPath,
+              item: manga
+            )
           }
         }
 
@@ -82,12 +112,16 @@ struct HomeCollectionView: UIViewRepresentable {
             .sectionTitle
         ) { sectionTitleView, _, indexPath in
           guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
-          switch section {
+          let localizedTitle: String.LocalizationValue = switch section {
           case .popular:
-            sectionTitleView.configure(title: String(localized: "Popular new titles"))
-          default:
-            break
+            "Popular new titles"
+          case .latestUpdates:
+            "Latest updates"
+          case .recentlyAdded:
+            "Recently added"
           }
+
+          sectionTitleView.configure(title: String(localized: localizedTitle))
         }
 
       dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in

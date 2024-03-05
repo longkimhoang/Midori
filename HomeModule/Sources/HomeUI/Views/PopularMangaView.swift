@@ -11,7 +11,7 @@ import SDWebImageSwiftUI
 import SwiftUI
 
 struct PopularMangaView: View {
-  let manga: Manga
+  @ObservedObject var manga: Manga
 
   var body: some View {
     ZStack {

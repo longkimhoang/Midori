@@ -20,9 +20,11 @@ extension UICollectionViewLayout {
 
       return switch sectionIdentifier {
       case .popular:
-        NSCollectionLayoutSection.popular(layoutEnvironment: layoutEnvironment)
-      default:
-        nil
+        .popular(layoutEnvironment: layoutEnvironment)
+      case .latestUpdates:
+        .latestUpdates(layoutEnvironment: layoutEnvironment)
+      case .recentlyAdded:
+        .recentlyAdded(layoutEnvironment: layoutEnvironment)
       }
     }
 
