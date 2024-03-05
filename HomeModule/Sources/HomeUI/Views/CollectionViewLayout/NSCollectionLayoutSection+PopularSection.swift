@@ -10,7 +10,7 @@ import SwiftUI
 
 extension NSCollectionLayoutSection {
   static func popular(
-    layoutEnvironment _: NSCollectionLayoutEnvironment
+    layoutEnvironment: NSCollectionLayoutEnvironment
   ) -> NSCollectionLayoutSection {
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1),
@@ -18,13 +18,14 @@ extension NSCollectionLayoutSection {
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let groupSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(1),
+      widthDimension: .fractionalWidth(1 - 32/layoutEnvironment.container.contentSize.width),
       heightDimension: .estimated(200)
     )
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-    group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
     let section = NSCollectionLayoutSection(group: group)
     section.orthogonalScrollingBehavior = .groupPaging
+    section.interGroupSpacing = 32
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
     section.boundarySupplementaryItems = [.sectionTitle]
 
     return section

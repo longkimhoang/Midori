@@ -34,7 +34,7 @@ extension NSCollectionLayoutSection {
     )
     let section = NSCollectionLayoutSection(group: group)
     section.orthogonalScrollingBehavior = .groupPaging
-    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 32)
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 16)
     section.boundarySupplementaryItems = [.sectionTitle]
 
     return section

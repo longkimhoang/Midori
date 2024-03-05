@@ -18,12 +18,8 @@ final class SectionTitleView: UICollectionReusableView {
 
     addSubview(label)
     label.snp.makeConstraints { make in
-      make.edges.equalToSuperview().inset(NSDirectionalEdgeInsets(
-        top: 8,
-        leading: 16,
-        bottom: 8,
-        trailing: 16
-      ))
+      make.horizontalEdges.equalToSuperview()
+      make.verticalEdges.equalToSuperview().inset(4)
     }
   }
 
