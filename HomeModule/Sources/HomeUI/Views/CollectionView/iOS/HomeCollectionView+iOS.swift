@@ -12,17 +12,14 @@ import HomeDomain
 import Persistence
 import SwiftUI
 
-struct HomeCollectionView: UIViewRepresentable {
+struct HomeCollectionView: UIViewControllerRepresentable {
   let data: HomeData
 
-  func makeUIView(context: Context) -> UICollectionView {
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .home())
-    context.coordinator.setupDataSource(for: collectionView)
-
-    return collectionView
+  func makeUIViewController(context: Context) -> HomeCollectionViewController {
+    HomeCollectionViewController(coordinator: context.coordinator)
   }
 
-  func updateUIView(_: UICollectionView, context: Context) {
+  func updateUIViewController(_: HomeCollectionViewController, context: Context) {
     context.coordinator.homeData = data
 
     var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, NSManagedObjectID>()
@@ -135,6 +132,29 @@ struct HomeCollectionView: UIViewRepresentable {
           nil
         }
       }
+    }
+  }
+
+  final class HomeCollectionViewController: UIViewController {
+    let coordinator: Coordinator
+
+    init(coordinator: Coordinator) {
+      self.coordinator = coordinator
+      super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+      view = UICollectionView(frame: .zero, collectionViewLayout: .home())
+    }
+
+    override func viewDidLoad() {
+      super.viewDidLoad()
+      view.layoutMargins = .zero
+      coordinator.setupDataSource(for: view as! UICollectionView)
     }
   }
 }

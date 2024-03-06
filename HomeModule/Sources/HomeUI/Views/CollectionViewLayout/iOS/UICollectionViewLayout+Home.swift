@@ -30,6 +30,7 @@ extension UICollectionViewLayout {
 
     let configuration = UICollectionViewCompositionalLayoutConfiguration()
     configuration.interSectionSpacing = 20
+    configuration.contentInsetsReference = .layoutMargins
 
     return UICollectionViewCompositionalLayout(
       sectionProvider: sectionProvider, configuration: configuration

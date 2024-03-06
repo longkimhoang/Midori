@@ -18,14 +18,14 @@ extension NSCollectionLayoutSection {
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let groupSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(1 - 32/layoutEnvironment.container.contentSize.width),
+      widthDimension: .fractionalWidth(1),
       heightDimension: .estimated(200)
     )
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
     let section = NSCollectionLayoutSection(group: group)
-    section.orthogonalScrollingBehavior = .groupPaging
     section.interGroupSpacing = 32
-    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
+    section.orthogonalScrollingBehavior = .groupPaging
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
     section.boundarySupplementaryItems = [.sectionTitle]
 
     return section
