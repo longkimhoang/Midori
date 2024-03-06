@@ -34,8 +34,8 @@ struct MangaImporter: MangaImporterProtocol {
              let managedObject = managedObject as? Persistence.Author
           {
             managedObject.authorID = artist.id
-            managedObject.name = artist.name
-            managedObject.imageURL = artist.imageURL
+            managedObject.name = artist.attributes.name
+            managedObject.imageURL = artist.attributes.imageURL
             return false
           } else {
             return true
@@ -54,7 +54,7 @@ struct MangaImporter: MangaImporterProtocol {
         managedObjectHandler: { managedObject in
           if let model = iterator.next(), let managedObject = managedObject as? Persistence.Manga {
             managedObject.mangaID = model.id
-            managedObject.title = model.title.value
+            managedObject.title = model.attributes.title.value
             managedObject.coverImageURL = model.coverImageURL
             return false
           } else {

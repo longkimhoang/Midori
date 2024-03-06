@@ -11,15 +11,17 @@ import MetaCodable
 
 @Codable
 public struct Author {
+  public typealias Attributes = AuthorAttributes
+
   public let id: UUID
+  public let attributes: Attributes
+}
 
-  @CodedIn("attributes")
+@Codable
+public struct AuthorAttributes {
   public let name: String
-
-  @CodedAt("attributes", "imageUrl")
+  @CodedAt("imageUrl")
   public let imageURL: URL?
-
-  @CodedIn("attributes")
   @CodedBy(LocalizedStringCoder())
   public let biography: LocalizedString?
 }

@@ -6,4 +6,5 @@
 //
 
 @_exported import APIModels
+@_exported import ChapterEndpoint
 @_exported import MangaEndpoint

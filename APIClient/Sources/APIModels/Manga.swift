@@ -11,18 +11,21 @@ import MetaCodable
 
 @Codable
 public struct Manga {
-  public let id: UUID
+  public typealias Attributes = MangaAttributes
 
-  @CodedIn("attributes")
+  public let id: UUID
+  public let attributes: Attributes
+  @CodedBy(RelationshipCoder())
+  public let relationships: [Reference]
+}
+
+@Codable
+public struct MangaAttributes {
   @CodedBy(LocalizedStringCoder())
   public let title: LocalizedString
 
-  @CodedIn("attributes")
   @CodedBy(LocalizedStringCoder())
   public let description: LocalizedString?
-
-  @CodedBy(RelationshipCoder())
-  public let relationships: [Reference]
 }
 
 extension Manga {

@@ -35,8 +35,19 @@ let package = Package(
       ]
     ),
     .target(
+      name: "ChapterEndpoint",
+      dependencies: [
+        .target(name: "APICommon"),
+        .target(name: "APIModels"),
+        .product(name: "Alamofire", package: "Alamofire"),
+      ]
+    ),
+    .target(
       name: "APIClient",
-      dependencies: [.target(name: "MangaEndpoint")]
+      dependencies: [
+        .target(name: "MangaEndpoint"),
+        .target(name: "ChapterEndpoint"),
+      ]
     ),
     .target(
       name: "APIModels",
