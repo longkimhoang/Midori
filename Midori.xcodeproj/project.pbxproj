@@ -19,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		4F09A0222B94B248000978B5 /* Persistence */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Persistence; sourceTree = "<group>"; };
+		4F8B6E422B981EF6000E3DFA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
 		4FB2699C2B94CDAF005BDD14 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 		4F9132AF2B93716C00CB7747 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4F8B6E422B981EF6000E3DFA /* .gitignore */,
 				4F9132AE2B93712C00CB7747 /* .swiftformat */,
 			);
 			name = "Supporting Files";
