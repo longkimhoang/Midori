@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftyLab/MetaCodable.git",
       "state" : {
-        "revision" : "a6011c3337f573b04b29b8591b507de7e6e4ed8d",
-        "version" : "1.2.1"
+        "revision" : "8dded11cad29ad5c6eeb24698e7c1c8708ceb5e0",
+        "version" : "1.3.0"
       }
     },
     {

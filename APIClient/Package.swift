@@ -10,7 +10,7 @@ let package = Package(
     .library(name: "APIClient", targets: ["APIClient"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/SwiftyLab/MetaCodable.git", from: "1.2.1"),
+    .package(url: "https://github.com/SwiftyLab/MetaCodable.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.8.1")),
   ],
   targets: [
