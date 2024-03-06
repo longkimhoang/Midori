@@ -24,25 +24,26 @@ public struct HomeView: View {
 
   public var body: some View {
     NavigationStack {
-      Group {
-        switch result {
-        case .loading:
-          ContentUnavailableView {
-            ProgressView()
-              .controlSize(.large)
-          } description: {
-            Text("Loading...")
+      HomeCollectionView(data: result.data)
+      #if os(iOS)
+        .ignoresSafeArea()
+      #endif
+        .overlay {
+          switch result {
+          case .loading:
+            ContentUnavailableView {
+              ProgressView()
+                .controlSize(.large)
+            } description: {
+              Text("Loading...")
+            }
+          case .success:
+            EmptyView()
+          case let .failure(error):
+            Text(error.localizedDescription)
           }
-        case let .success(data):
-          HomeCollectionView(data: data)
-          #if os(iOS)
-            .ignoresSafeArea()
-          #endif
-        case let .failure(error):
-          Text(error.localizedDescription)
         }
-      }
-      .navigationTitle("Home")
+        .navigationTitle("Home")
     }
     .task {
       do {
@@ -51,6 +52,15 @@ public struct HomeView: View {
       } catch {
         result = .failure(error)
       }
+    }
+  }
+}
+
+private extension FetchResult<HomeData> {
+  var data: HomeData? {
+    switch self {
+    case .success(let data): data
+    default: nil
     }
   }
 }

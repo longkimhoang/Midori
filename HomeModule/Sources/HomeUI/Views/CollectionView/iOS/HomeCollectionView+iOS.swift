@@ -14,7 +14,7 @@ import Persistence
 import SwiftUI
 
 struct HomeCollectionView: UIViewControllerRepresentable {
-  let data: HomeData
+  let data: HomeData?
 
   func makeUIViewController(context: Context) -> HomeCollectionViewController {
     HomeCollectionViewController(coordinator: context.coordinator)
@@ -23,6 +23,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
   func updateUIViewController(_: HomeCollectionViewController, context: Context) {
     context.coordinator.homeData = data
 
+    guard let data else { return }
     var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, NSManagedObjectID>()
     snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
     snapshot.appendItems(data.popular.map(\.id), toSection: .popular)
@@ -36,10 +37,10 @@ struct HomeCollectionView: UIViewControllerRepresentable {
 
   final class Coordinator: NSObject {
     private lazy var prefetcher = ImagePrefetcher()
-    var homeData: HomeData
+    var homeData: HomeData?
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, NSManagedObjectID>!
 
-    init(homeData: HomeData) {
+    init(homeData: HomeData?) {
       self.homeData = homeData
     }
 
@@ -112,10 +113,6 @@ struct HomeCollectionView: UIViewControllerRepresentable {
               item: manga
             )
           case .recentlyAdded:
-            guard let manga = homeData.recentlyAdded[id: itemIdentifier] else {
-              return nil
-            }
-
             return collectionView.dequeueConfiguredReusableCell(
               using: recentlyAddedCellRegistration,
               for: indexPath,
@@ -156,7 +153,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     }
 
     private func manga(with identifier: NSManagedObjectID, at indexPath: IndexPath) -> Manga? {
-      guard let section = SectionIdentifier(rawValue: indexPath.section) else {
+      guard let homeData, let section = SectionIdentifier(rawValue: indexPath.section) else {
         return nil
       }
 
