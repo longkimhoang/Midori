@@ -14,6 +14,7 @@ public struct Chapter {
 
   public let id: UUID
   public let attributes: Attributes
+  public let relationships: [Relationship]
 }
 
 @Codable

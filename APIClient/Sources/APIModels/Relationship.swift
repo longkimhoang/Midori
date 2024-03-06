@@ -10,7 +10,7 @@ import MetaCodable
 
 public struct Relationship: Codable {
   public let id: UUID
-  public let attributes: RelationshipAttributes?
+  public let attributes: RelationshipAttributes
 
   enum CodingKeys: CodingKey {
     case id
@@ -22,6 +22,7 @@ public struct Relationship: Codable {
     case cover = "cover_art"
     case author
     case artist
+    case manga
   }
 
   public init(from decoder: any Decoder) throws {
@@ -31,14 +32,17 @@ public struct Relationship: Codable {
     let type = try? container.decode(Type.self, forKey: .type)
     switch type {
     case .cover:
-      attributes = nil
+      attributes = try .cover(container.decodeIfPresent(
+        CoverAttributes.self,
+        forKey: .attributes
+      ))
     case .author, .artist:
-      let attributes = try container.decodeIfPresent(AuthorAttributes.self, forKey: .attributes)
-      if let attributes {
-        self.attributes = .author(attributes)
-      } else {
-        self.attributes = nil
-      }
+      attributes = try .author(container.decodeIfPresent(
+        AuthorAttributes.self,
+        forKey: .attributes
+      ))
+    case .manga:
+      attributes = try .manga(container.decodeIfPresent(MangaAttributes.self, forKey: .attributes))
     case .none:
       attributes = .unknown
     }
@@ -56,16 +60,17 @@ public struct Relationship: Codable {
 }
 
 public enum RelationshipAttributes: Decodable {
-  case author(AuthorAttributes)
-  case artist(AuthorAttributes)
-  case cover(CoverAttributes)
+  case author(AuthorAttributes?)
+  case artist(AuthorAttributes?)
+  case cover(CoverAttributes?)
+  case manga(MangaAttributes?)
   case unknown
 }
 
 extension Relationship {
   var cover: Cover? {
     switch attributes {
-    case let .cover(coverAttributes):
+    case let .cover(.some(coverAttributes)):
       Cover(id: id, attributes: coverAttributes)
     default:
       nil
@@ -74,7 +79,7 @@ extension Relationship {
 
   var author: Author? {
     switch attributes {
-    case let .author(authorAttributes):
+    case let .author(.some(authorAttributes)):
       Author(id: id, attributes: authorAttributes)
     default:
       nil
@@ -83,7 +88,7 @@ extension Relationship {
 
   var artist: Author? {
     switch attributes {
-    case let .artist(authorAttributes):
+    case let .artist(.some(authorAttributes)):
       Author(id: id, attributes: authorAttributes)
     default:
       nil

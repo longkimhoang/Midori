@@ -28,7 +28,7 @@ public struct ListChaptersParameters {
   public let limit: Int
   public let offset: Int?
   public let includes: [ListChaptersReference]?
-  public let order: Order
+  public let order: Order?
 }
 
 public enum ListChaptersReference: String, Codable {
