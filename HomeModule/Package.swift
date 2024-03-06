@@ -25,6 +25,7 @@ let package = Package(
       .upToNextMajor(from: "1.0.0")
     ),
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", exact: "3.0.0-beta.3"),
+    .package(url: "https://github.com/siteline/swiftui-introspect.git", .upToNextMajor(from: "1.1.3")),
   ],
   targets: [
     .target(
@@ -34,6 +35,7 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
+        .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
       ]
     ),
     .target(
