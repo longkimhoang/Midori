@@ -26,6 +26,7 @@ let package = Package(
     ),
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", exact: "3.0.0-beta.3"),
     .package(url: "https://github.com/siteline/swiftui-introspect.git", .upToNextMajor(from: "1.1.3")),
+    .package(url: "https://github.com/kean/Nuke.git", .upToNextMajor(from: "12.4.0")),
   ],
   targets: [
     .target(
