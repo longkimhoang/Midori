@@ -5,20 +5,15 @@
 //  Created by Long Kim on 28/02/2024.
 //
 
+import APICommon
 import Alamofire
 import Foundation
 
-enum Router: URLRequestConvertible {
+enum Router: RouterProtocol {
   case listMangas(ListMangas.Parameters?)
 
   var baseURL: URL {
     URL(string: "https://api.mangadex.org")!
-  }
-
-  var method: HTTPMethod {
-    switch self {
-    case .listMangas: .get
-    }
   }
 
   var path: String {
@@ -27,11 +22,7 @@ enum Router: URLRequestConvertible {
     }
   }
 
-  func asURLRequest() throws -> URLRequest {
-    let url = baseURL.appending(path: path)
-    var request = URLRequest(url: url)
-    request.method = method
-
+  func modifyRequest(_ request: inout URLRequest) throws {
     switch self {
     case let .listMangas(parameters):
       let defaultParameters = [
@@ -40,7 +31,5 @@ enum Router: URLRequestConvertible {
       request = try URLEncodedFormParameterEncoder.default.encode(parameters, into: request)
       request = try URLEncodedFormParameterEncoder.default.encode(defaultParameters, into: request)
     }
-
-    return request
   }
 }

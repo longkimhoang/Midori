@@ -19,6 +19,7 @@ let package = Package(
       dependencies: [
         .product(name: "MetaCodable", package: "MetaCodable"),
         .product(name: "HelperCoders", package: "MetaCodable"),
+        .product(name: "Alamofire", package: "Alamofire"),
       ]
     ),
     .testTarget(
