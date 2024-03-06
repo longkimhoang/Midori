@@ -7,17 +7,21 @@
 
 import Foundation
 import Persistence
-import SDWebImageSwiftUI
 import SwiftUI
 
 struct RecentlyAddedMangaView: View {
   @ObservedObject var manga: Manga
+  let coverThumbnailImage: Image?
 
   var body: some View {
     VStack(alignment: .leading) {
-      WebImage(url: coverThumbnailURL)
-        .resizable()
-        .aspectRatio(contentMode: .fill)
+      Rectangle()
+        .fill(.fill.tertiary)
+        .overlay {
+          coverThumbnailImage?
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+        }
         .frame(width: 128, height: 128 / 0.7)
         .clipShape(.rect(cornerRadius: 8))
 

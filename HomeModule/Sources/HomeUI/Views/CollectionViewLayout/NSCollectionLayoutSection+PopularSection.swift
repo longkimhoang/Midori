@@ -10,7 +10,7 @@ import SwiftUI
 
 extension NSCollectionLayoutSection {
   static func popular(
-    layoutEnvironment: NSCollectionLayoutEnvironment
+    layoutEnvironment _: NSCollectionLayoutEnvironment
   ) -> NSCollectionLayoutSection {
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1),

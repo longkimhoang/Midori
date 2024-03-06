@@ -7,40 +7,34 @@
 
 import Foundation
 import Persistence
-import SDWebImageSwiftUI
 import SwiftUI
 
 struct PopularMangaView: View {
   @ObservedObject var manga: Manga
+  let coverThumbnailImage: Image?
 
   var body: some View {
     ZStack {
       GeometryReader { geometry in
-        WebImage(url: coverThumbnailURL)
-          .resizable()
+        coverThumbnailImage?.resizable()
           .aspectRatio(contentMode: .fill)
           .frame(width: geometry.size.width, height: geometry.size.height)
       }
 
       GeometryReader { geometry in
         HStack(alignment: .top, spacing: 16) {
-          WebImage(url: coverThumbnailURL) { imagePhase in
-            Group {
-              switch imagePhase {
-              case let .success(image):
-                image
-                  .resizable()
-                  .aspectRatio(contentMode: .fill)
-              default:
-                Rectangle().fill(.fill.secondary)
-              }
+          Rectangle()
+            .fill(.fill.tertiary)
+            .overlay {
+              coverThumbnailImage?
+                .resizable()
+                .aspectRatio(contentMode: .fill)
             }
             .frame(
               width: geometry.size.height * 0.7,
               height: geometry.size.height
             )
-          }
-          .clipShape(.rect(cornerRadius: 8))
+            .clipShape(.rect(cornerRadius: 8))
 
           VStack(alignment: .leading) {
             Text(manga.title)
@@ -59,10 +53,5 @@ struct PopularMangaView: View {
       .background(.regularMaterial)
     }
     .clipShape(.rect(cornerRadius: 16))
-  }
-
-  private var coverThumbnailURL: URL? {
-    guard let coverImageURL = manga.coverImageURL else { return nil }
-    return URL(string: coverImageURL.absoluteString + ".256.jpg")
   }
 }

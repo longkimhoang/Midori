@@ -9,6 +9,7 @@
 import CoreData
 import Foundation
 import HomeDomain
+import Nuke
 import Persistence
 import SwiftUI
 
@@ -42,24 +43,48 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     }
 
     func setupDataSource(for collectionView: UICollectionView) {
+      func commonConfigure(indexPath: IndexPath, manga: Manga, handler: (Image?) -> Void) {
+        let imagePipeline = ImagePipeline.shared
+        let request = ImageRequest(url: manga.coverThumbnailURL)
+        let image = imagePipeline.cache.cachedImage(for: request).map { Image(uiImage: $0.image) }
+
+        handler(image)
+
+        if image == nil {
+          // Load image and reconfigure the cell
+          imagePipeline.loadImage(with: request) { [weak self] result in
+            switch result {
+            case .success:
+              self?.reconfigureCell(at: indexPath)
+            case .failure:
+              break
+            }
+          }
+        }
+      }
+
       let popularMangaCellRegistration = UICollectionView.CellRegistration<
         UICollectionViewCell,
         Manga
-      > { cell, _, item in
-        cell.contentConfiguration = UIHostingConfiguration {
-          PopularMangaView(manga: item)
+      > { cell, indexPath, manga in
+        commonConfigure(indexPath: indexPath, manga: manga) { image in
+          cell.contentConfiguration = UIHostingConfiguration {
+            PopularMangaView(manga: manga, coverThumbnailImage: image)
+          }
+          .margins(.all, 0)
         }
-        .margins(.all, 0)
       }
 
       let recentlyAddedCellRegistration = UICollectionView.CellRegistration<
         UICollectionViewCell,
         Manga
-      > { cell, _, item in
-        cell.contentConfiguration = UIHostingConfiguration {
-          RecentlyAddedMangaView(manga: item)
+      > { cell, indexPath, manga in
+        commonConfigure(indexPath: indexPath, manga: manga) { image in
+          cell.contentConfiguration = UIHostingConfiguration {
+            RecentlyAddedMangaView(manga: manga, coverThumbnailImage: image)
+          }
+          .margins(.all, 0)
         }
-        .margins(.all, 0)
       }
 
       dataSource =
@@ -133,6 +158,16 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         }
       }
     }
+
+    private func reconfigureCell(at indexPath: IndexPath) {
+      guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+        return
+      }
+
+      var snapshot = dataSource.snapshot()
+      snapshot.reconfigureItems([itemIdentifier])
+      dataSource.apply(snapshot, animatingDifferences: false)
+    }
   }
 
   final class HomeCollectionViewController: UIViewController {
@@ -142,11 +177,12 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       self.coordinator = coordinator
       super.init(nibName: nil, bundle: nil)
     }
-    
-    required init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func loadView() {
       view = UICollectionView(frame: .zero, collectionViewLayout: .home())
     }

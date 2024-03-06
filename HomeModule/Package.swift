@@ -24,8 +24,6 @@ let package = Package(
       url: "https://github.com/pointfreeco/swift-identified-collections.git",
       .upToNextMajor(from: "1.0.0")
     ),
-    .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", exact: "3.0.0-beta.3"),
-    .package(url: "https://github.com/siteline/swiftui-introspect.git", .upToNextMajor(from: "1.1.3")),
     .package(url: "https://github.com/kean/Nuke.git", .upToNextMajor(from: "12.4.0")),
   ],
   targets: [
@@ -35,8 +33,7 @@ let package = Package(
         .target(name: "HomeDomain"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SnapKit", package: "SnapKit"),
-        .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
-        .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
+        .product(name: "Nuke", package: "Nuke"),
       ]
     ),
     .target(
