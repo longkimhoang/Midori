@@ -56,10 +56,10 @@ public struct HomeView: View {
   }
 }
 
-private extension FetchResult<HomeData> {
-  var data: HomeData? {
+extension FetchResult<HomeData> {
+  fileprivate var data: HomeData? {
     switch self {
-    case .success(let data): data
+    case let .success(data): data
     default: nil
     }
   }
