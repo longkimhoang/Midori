@@ -26,12 +26,12 @@ public struct Relationship: Codable {
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    self.id = try container.decode(UUID.self, forKey: .id)
+    id = try container.decode(UUID.self, forKey: .id)
 
-    let type = try? container.decode(`Type`.self, forKey: .type)
+    let type = try? container.decode(Type.self, forKey: .type)
     switch type {
     case .cover:
-      self.attributes = nil
+      attributes = nil
     case .author, .artist:
       let attributes = try container.decodeIfPresent(AuthorAttributes.self, forKey: .attributes)
       if let attributes {
@@ -40,12 +40,18 @@ public struct Relationship: Codable {
         self.attributes = nil
       }
     case .none:
-      self.attributes = .unknown
+      attributes = .unknown
     }
   }
 
-  public func encode(to encoder: any Encoder) throws {
-    throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: [], debugDescription: "Encoding relationships is not supported"))
+  public func encode(to _: any Encoder) throws {
+    throw EncodingError.invalidValue(
+      self,
+      EncodingError.Context(
+        codingPath: [],
+        debugDescription: "Encoding relationships is not supported"
+      )
+    )
   }
 }
 
@@ -59,7 +65,7 @@ public enum RelationshipAttributes: Decodable {
 extension Relationship {
   var cover: Cover? {
     switch attributes {
-    case .cover(let coverAttributes):
+    case let .cover(coverAttributes):
       Cover(id: id, attributes: coverAttributes)
     default:
       nil
@@ -68,7 +74,7 @@ extension Relationship {
 
   var author: Author? {
     switch attributes {
-    case .author(let authorAttributes):
+    case let .author(authorAttributes):
       Author(id: id, attributes: authorAttributes)
     default:
       nil
@@ -77,7 +83,7 @@ extension Relationship {
 
   var artist: Author? {
     switch attributes {
-    case .artist(let authorAttributes):
+    case let .artist(authorAttributes):
       Author(id: id, attributes: authorAttributes)
     default:
       nil
