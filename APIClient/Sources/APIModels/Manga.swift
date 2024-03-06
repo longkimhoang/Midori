@@ -10,13 +10,13 @@ import Foundation
 import MetaCodable
 
 @Codable
+@IgnoreEncoding
 public struct Manga {
   public typealias Attributes = MangaAttributes
 
   public let id: UUID
   public let attributes: Attributes
-  @CodedBy(RelationshipCoder())
-  public let relationships: [Reference]
+  public let relationships: [Relationship]
 }
 
 @Codable
@@ -32,7 +32,7 @@ extension Manga {
   public var coverImageURL: URL? {
     guard let cover = relationships.lazy.compactMap(\.cover).first else { return nil }
     return URL(string: "https://uploads.mangadex.org/covers")?
-      .appending(components: id.uuidString.lowercased(), cover.fileName)
+      .appending(components: id.uuidString.lowercased(), cover.attributes.fileName)
   }
 
   public var author: Author? {

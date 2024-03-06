@@ -10,7 +10,15 @@ import MetaCodable
 
 @Codable
 public struct Cover {
-  @CodedIn("attributes") public let locale: String
-  @CodedIn("attributes") public let fileName: String
-  @CodedIn("attributes") public let volume: String?
+  public typealias Attributes = CoverAttributes
+
+  public let id: UUID
+  public let attributes: Attributes
+}
+
+@Codable
+public struct CoverAttributes {
+  public let locale: String
+  public let fileName: String
+  public let volume: String?
 }
