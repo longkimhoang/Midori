@@ -34,7 +34,8 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     Coordinator(homeData: data)
   }
 
-  final class Coordinator {
+  final class Coordinator: NSObject {
+    private lazy var prefetcher = ImagePrefetcher()
     var homeData: HomeData
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, NSManagedObjectID>!
 
@@ -90,26 +91,21 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       dataSource =
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
-          guard let self else { return nil }
-
-          guard let section = SectionIdentifier(rawValue: indexPath.section) else { return nil }
+          guard let self,
+                let section = SectionIdentifier(rawValue: indexPath.section),
+                let manga = manga(with: itemIdentifier, at: indexPath)
+          else {
+            return nil
+          }
 
           switch section {
           case .popular:
-            guard let manga = homeData.popular[id: itemIdentifier] else {
-              return nil
-            }
-
             return collectionView.dequeueConfiguredReusableCell(
               using: popularMangaCellRegistration,
               for: indexPath,
               item: manga
             )
           case .latestUpdates:
-            guard let manga = homeData.recentlyAdded[id: itemIdentifier] else {
-              return nil
-            }
-
             return collectionView.dequeueConfiguredReusableCell(
               using: popularMangaCellRegistration,
               for: indexPath,
@@ -159,6 +155,21 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       }
     }
 
+    private func manga(with identifier: NSManagedObjectID, at indexPath: IndexPath) -> Manga? {
+      guard let section = SectionIdentifier(rawValue: indexPath.section) else {
+        return nil
+      }
+
+      return switch section {
+      case .popular:
+        homeData.popular[id: identifier]
+      case .latestUpdates:
+        nil
+      case .recentlyAdded:
+        homeData.recentlyAdded[id: identifier]
+      }
+    }
+
     private func reconfigureCell(at indexPath: IndexPath) {
       guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
         return
@@ -187,11 +198,34 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       view = UICollectionView(frame: .zero, collectionViewLayout: .home())
     }
 
+    var collectionView: UICollectionView {
+      view as! UICollectionView
+    }
+
     override func viewDidLoad() {
       super.viewDidLoad()
       view.layoutMargins = .zero
-      coordinator.setupDataSource(for: view as! UICollectionView)
+      coordinator.setupDataSource(for: collectionView)
+      collectionView.prefetchDataSource = coordinator
     }
+  }
+}
+
+extension HomeCollectionView.Coordinator: UICollectionViewDataSourcePrefetching {
+  private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
+    let identifiers = indexPaths.map { dataSource.itemIdentifier(for: $0) }
+    return zip(identifiers, indexPaths).compactMap { identifier, indexPath -> URL? in
+      guard let identifier else { return nil }
+      return manga(with: identifier, at: indexPath)?.coverThumbnailURL
+    }
+  }
+
+  func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    prefetcher.startPrefetching(with: imageURLs(for: indexPaths))
+  }
+
+  func collectionView(_: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    prefetcher.stopPrefetching(with: imageURLs(for: indexPaths))
   }
 }
 #endif
