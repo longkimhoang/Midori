@@ -17,7 +17,15 @@ package protocol RouterProtocol: URLRequestConvertible {
 }
 
 extension RouterProtocol {
+  package var baseURL: URL {
+    URL(string: "https://api.mangadex.org")!
+  }
+
   package var method: HTTPMethod { .get }
+
+  package func modifyRequest(_: inout URLRequest) throws {
+    // Do nothing
+  }
 
   package func asURLRequest() throws -> URLRequest {
     let url = baseURL.appending(path: path)
