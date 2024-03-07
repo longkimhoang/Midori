@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HelperCoders
 import MetaCodable
 
 @Codable
@@ -14,6 +15,7 @@ public struct Chapter {
 
   public let id: UUID
   public let attributes: Attributes
+  @CodedBy(SequenceCoder(elementHelper: RelationshipCoder()))
   public let relationships: [Relationship]
 }
 

@@ -54,6 +54,9 @@ let package = Package(
       dependencies: [
         .target(name: "APICommon"),
         .product(name: "MetaCodable", package: "MetaCodable"),
+      ],
+      plugins: [
+        .plugin(name: "MetaProtocolCodable", package: "MetaCodable"),
       ]
     ),
   ]

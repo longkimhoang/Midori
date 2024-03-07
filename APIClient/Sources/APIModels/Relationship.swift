@@ -8,90 +8,82 @@
 import Foundation
 import MetaCodable
 
-public struct Relationship: Codable {
+@Codable
+@CodedAt("type")
+public protocol Relationship {
+  var id: UUID { get }
+}
+
+@Codable
+public struct CoverRelationship: Relationship, DynamicCodable {
+  public static var identifier: DynamicCodableIdentifier<String> { "cover_art" }
+
   public let id: UUID
-  public let attributes: RelationshipAttributes
+  public let attributes: CoverAttributes?
 
-  enum CodingKeys: CodingKey {
-    case id
-    case attributes
-    case type
-  }
-
-  enum `Type`: String, Decodable {
-    case cover = "cover_art"
-    case author
-    case artist
-    case manga
-  }
-
-  public init(from decoder: any Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-    id = try container.decode(UUID.self, forKey: .id)
-
-    let type = try? container.decode(Type.self, forKey: .type)
-    switch type {
-    case .cover:
-      attributes = try .cover(container.decodeIfPresent(
-        CoverAttributes.self,
-        forKey: .attributes
-      ))
-    case .author, .artist:
-      attributes = try .author(container.decodeIfPresent(
-        AuthorAttributes.self,
-        forKey: .attributes
-      ))
-    case .manga:
-      attributes = try .manga(container.decodeIfPresent(MangaAttributes.self, forKey: .attributes))
-    case .none:
-      attributes = .unknown
-    }
-  }
-
-  public func encode(to _: any Encoder) throws {
-    throw EncodingError.invalidValue(
-      self,
-      EncodingError.Context(
-        codingPath: [],
-        debugDescription: "Encoding relationships is not supported"
-      )
-    )
+  public var cover: Cover? {
+    attributes.map { Cover(id: id, attributes: $0) }
   }
 }
 
-public enum RelationshipAttributes: Decodable {
-  case author(AuthorAttributes?)
-  case artist(AuthorAttributes?)
-  case cover(CoverAttributes?)
-  case manga(MangaAttributes?)
-  case unknown
+@Codable
+public struct AuthorRelationship: Relationship, DynamicCodable {
+  public static var identifier: DynamicCodableIdentifier<String> { ["author", "artist"] }
+
+  public let id: UUID
+  public let attributes: AuthorAttributes?
+
+  public var author: Author? {
+    attributes.map { Author(id: id, attributes: $0) }
+  }
 }
 
-extension Relationship {
-  var cover: Cover? {
-    switch attributes {
-    case let .cover(.some(coverAttributes)):
-      Cover(id: id, attributes: coverAttributes)
-    default:
-      nil
-    }
-  }
+@Codable
+public struct MangaRelationship: Relationship, DynamicCodable {
+  public static var identifier: DynamicCodableIdentifier<String> { "manga" }
 
-  var author: Author? {
-    switch attributes {
-    case let .author(.some(authorAttributes)):
-      Author(id: id, attributes: authorAttributes)
-    default:
-      nil
-    }
-  }
+  public let id: UUID
+  public let attributes: MangaAttributes?
+}
 
-  var artist: Author? {
-    switch attributes {
-    case let .artist(.some(authorAttributes)):
-      Author(id: id, attributes: authorAttributes)
-    default:
-      nil
+@Codable
+public struct CreatorRelationship: Relationship, DynamicCodable {
+  public static var identifier: DynamicCodableIdentifier<String> { "creator" }
+
+  public let id: UUID
+}
+
+@Codable
+public struct ScanlationGroupRelationship: Relationship, DynamicCodable {
+  public static var identifier: DynamicCodableIdentifier<String> { "scanlation_group" }
+
+  public let id: UUID
+}
+
+@Codable
+public struct UserRelationship: Relationship, DynamicCodable {
+  public static var identifier: DynamicCodableIdentifier<String> { "user" }
+
+  public let id: UUID
+}
+
+extension Collection<Relationship> {
+  public func first<T: Relationship & DynamicCodable<String>>(
+    _: T.Type,
+    matching identifier: String? = nil
+  ) -> T? {
+    let values = lazy.compactMap { $0 as? T }
+    guard let identifier else { return values.first }
+
+    for value in values {
+      switch identifier {
+      case T.identifier:
+        return value
+      default:
+        continue
+      }
     }
+
+    return nil
   }
 }
