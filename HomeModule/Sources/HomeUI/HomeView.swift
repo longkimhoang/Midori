@@ -44,15 +44,22 @@ public struct HomeView: View {
           }
         }
         .navigationTitle("Home")
+        .refreshable {
+          await fetchHomeData()
+        }
     }
     .task {
-      do {
-        let homeData = try await homeDataProvider.retrieveHomeData()
-        result = .success(homeData)
-      } catch {
-        dump(error)
-        result = .failure(error)
-      }
+      await fetchHomeData()
+    }
+  }
+
+  private func fetchHomeData() async {
+    do {
+      let homeData = try await homeDataProvider.retrieveHomeData()
+      result = .success(homeData)
+    } catch {
+      dump(error)
+      result = .failure(error)
     }
   }
 }

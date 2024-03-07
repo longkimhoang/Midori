@@ -14,6 +14,7 @@ import Persistence
 import SwiftUI
 
 struct HomeCollectionView: UIViewControllerRepresentable {
+  @Environment(\.refresh) var refresh
   let data: HomeData?
 
   func makeUIViewController(context: Context) -> HomeCollectionViewController {
@@ -22,6 +23,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
 
   func updateUIViewController(_: HomeCollectionViewController, context: Context) {
     context.coordinator.homeData = data
+    context.coordinator.refreshAction = refresh
 
     guard let data else { return }
     var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, NSManagedObjectID>()
@@ -40,6 +42,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     private lazy var prefetcher = ImagePrefetcher()
     var homeData: HomeData?
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, NSManagedObjectID>!
+    var refreshAction: RefreshAction?
 
     init(homeData: HomeData?) {
       self.homeData = homeData
@@ -241,6 +244,17 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       view.layoutMargins = .zero
       coordinator.setupDataSource(for: collectionView)
       collectionView.prefetchDataSource = coordinator
+      collectionView.refreshControl = UIRefreshControl(
+        frame: .zero,
+        primaryAction: UIAction { [weak self] action in
+          if let refreshControl = action.sender as? UIRefreshControl {
+            Task { @MainActor in
+              await self?.coordinator.refreshAction?()
+              refreshControl.endRefreshing()
+            }
+          }
+        }
+      )
     }
   }
 }

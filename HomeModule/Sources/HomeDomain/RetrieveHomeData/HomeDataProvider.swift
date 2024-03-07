@@ -6,13 +6,13 @@
 //
 
 import Algorithms
-import OrderedCollections
 import APIClient
 import CoreData
 import Dependencies
 import DependenciesMacros
 import IdentifiedCollections
 import ModelImporters
+import OrderedCollections
 import Persistence
 
 private typealias Manga = Persistence.Manga
