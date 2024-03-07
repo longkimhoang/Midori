@@ -46,9 +46,9 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     }
 
     func setupDataSource(for collectionView: UICollectionView) {
-      func commonConfigure(indexPath: IndexPath, manga: Manga, handler: (Image?) -> Void) {
+      func commonConfigure(indexPath: IndexPath, manga: Manga?, handler: (Image?) -> Void) {
         let imagePipeline = ImagePipeline.shared
-        let request = ImageRequest(url: manga.coverThumbnailURL)
+        let request = ImageRequest(url: manga?.coverThumbnailURL)
         let image = imagePipeline.cache.cachedImage(for: request).map { Image(uiImage: $0.image) }
 
         handler(image)
@@ -98,7 +98,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           cell.contentConfiguration = UIHostingConfiguration {
             LatestChapterView(chapter: chapter, coverThumbnailImage: image)
           }
-          .margins(.horizontal, 0)
+          .margins(.all, 0)
         }
       }
 

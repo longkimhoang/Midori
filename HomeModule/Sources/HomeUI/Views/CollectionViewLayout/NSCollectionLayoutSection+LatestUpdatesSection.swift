@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension NSCollectionLayoutSection {
-  static func latestUpdates(layoutEnvironment: NSCollectionLayoutEnvironment)
+  static func latestUpdates(layoutEnvironment _: NSCollectionLayoutEnvironment)
     -> NSCollectionLayoutSection
   {
     let itemSize = NSCollectionLayoutSize(

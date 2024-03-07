@@ -6,6 +6,7 @@
 //
 
 import Algorithms
+import OrderedCollections
 import APIClient
 import CoreData
 import Dependencies
@@ -90,18 +91,18 @@ extension HomeDataProvider: DependencyKey {
       }
 
       func getMapedChapters(from listChapters: ListChapters) throws -> HomeData.Chapters {
-        let uniqueChapters = Array(
-          listChapters.chapters
-            .grouped { $0.mangaID }
-            .compactMapValues(\.first)
-            .values
-        )
-        let chapterIDs = uniqueChapters.map(\.id)
+        let uniqueChapters: OrderedDictionary<UUID, APIModels.Chapter> = listChapters.chapters
+          .reduce(into: [:]) { dict, chapter in
+            guard let mangaID = chapter.mangaID, dict[mangaID] == nil else {
+              return
+            }
+
+            dict[mangaID] = chapter
+          }
+
+        let chapterIDs = uniqueChapters.values.map(\.id)
         let request = NSFetchRequest<Chapter>(entityName: "Chapter")
-        let predicate = #Predicate<Chapter> {
-          chapterIDs.contains($0.chapterID)
-        }
-        request.predicate = NSPredicate(predicate)
+        request.predicate = NSPredicate(format: "chapterID IN %@ AND manga != nil", chapterIDs)
         let identifiedChapters = try IdentifiedArray(
           uniqueElements: viewContext.fetch(request),
           id: \.chapterID

@@ -14,7 +14,9 @@
     <entity name="Chapter" representedClassName="Chapter" syncable="YES">
         <attribute name="chapter" optional="YES" attributeType="String"/>
         <attribute name="chapterID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="title" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="readableAt" attributeType="Date" defaultDateTimeInterval="731521440" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="volume" optional="YES" attributeType="String"/>
         <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Manga" inverseName="chapters" inverseEntity="Manga"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -25,7 +27,7 @@
     <entity name="Manga" representedClassName="Manga" syncable="YES">
         <attribute name="coverImageURL" optional="YES" attributeType="URI"/>
         <attribute name="mangaID" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <attribute name="title" attributeType="String"/>
         <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="mangas" inverseEntity="Author"/>
         <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Chapter" inverseName="manga" inverseEntity="Chapter"/>
         <fetchIndex name="byMangaIDIndex">

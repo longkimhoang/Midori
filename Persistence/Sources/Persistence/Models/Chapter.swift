@@ -13,22 +13,14 @@ public final class Chapter: NSManagedObject {
   // MARK: - Attributes
 
   @NSManaged public var chapterID: UUID
-  @NSManaged public var title: String
-  @NSManaged public var chapter: String
+  @NSManaged public var volume: String?
+  @NSManaged public var title: String?
+  @NSManaged public var chapter: String?
+  @NSManaged public var readableAt: Date
 
   // MARK: - Relationships
 
-  @NSManaged public var manga: Manga
-}
-
-extension Chapter {
-  public var name: String {
-    if !title.isEmpty {
-      return title
-    }
-
-    return String(localized: "Chapter \(chapter)")
-  }
+  @NSManaged public var manga: Manga?
 }
 
 extension Chapter: Identifiable {

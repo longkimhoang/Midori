@@ -7,4 +7,5 @@
 
 enum SupplementaryItemKind {
   static let sectionTitle = "HomeCollectionView.sectionTitle"
+  static let separator = "HomeCollectionView.separator"
 }
