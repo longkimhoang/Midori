@@ -10,6 +10,7 @@ import Foundation
 import MetaCodable
 
 @Codable
+@MemberInit
 public struct Author {
   public typealias Attributes = AuthorAttributes
 

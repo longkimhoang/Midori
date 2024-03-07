@@ -25,11 +25,24 @@ public struct ListMangas {
 public struct ListMangasParameters {
   public typealias Order = ListMangasSortOrder
 
-  public let limit: Int?
+  @Default(10)
+  public let limit: Int
   public let offset: Int?
+  public let ids: [String]?
   @Default(true) public let hasAvailableChapters: Bool
   @CodedBy(DateCoder(formatter: .api)) public let createdAtSince: Date?
+  @Default<[ListMangasReference]>([.cover, .author, .artist])
+  public let includes: [ListMangasReference]
   public let order: Order?
+}
+
+public enum ListMangasReference: String, Codable {
+  case manga
+  case cover = "cover_art"
+  case author
+  case artist
+  case tag
+  case creator
 }
 
 @Codable

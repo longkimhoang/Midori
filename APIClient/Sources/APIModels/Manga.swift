@@ -11,6 +11,7 @@ import HelperCoders
 import MetaCodable
 
 @Codable
+@MemberInit
 public struct Manga {
   public typealias Attributes = MangaAttributes
 
@@ -18,6 +19,10 @@ public struct Manga {
   public let attributes: Attributes
   @CodedBy(SequenceCoder(elementHelper: RelationshipCoder()))
   public let relationships: [Relationship]
+
+  public init(id: UUID, attributes: Attributes) {
+    self.init(id: id, attributes: attributes, relationships: [])
+  }
 }
 
 @Codable
@@ -31,7 +36,7 @@ public struct MangaAttributes {
 
 extension Manga {
   public var coverImageURL: URL? {
-    guard let cover = relationships.first(CoverRelationship.self).flatMap(\.cover) else {
+    guard let cover = relationships.first(CoverRelationship.self).flatMap(\.expanded) else {
       return nil
     }
 
@@ -42,11 +47,11 @@ extension Manga {
   }
 
   public var author: Author? {
-    relationships.first(AuthorRelationship.self, matching: "author").flatMap(\.author)
+    relationships.first(AuthorRelationship.self).flatMap(\.expanded)
   }
 
   public var artist: Author? {
-    relationships.first(AuthorRelationship.self, matching: "artist").flatMap(\.author)
+    relationships.first(ArtistRelationship.self).flatMap(\.expanded)
   }
 }
 

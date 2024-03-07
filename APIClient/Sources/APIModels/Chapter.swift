@@ -10,6 +10,7 @@ import HelperCoders
 import MetaCodable
 
 @Codable
+@MemberInit
 public struct Chapter {
   public typealias Attributes = ChapterAttributes
 
@@ -17,6 +18,10 @@ public struct Chapter {
   public let attributes: Attributes
   @CodedBy(SequenceCoder(elementHelper: RelationshipCoder()))
   public let relationships: [Relationship]
+
+  public init(id: UUID, attributes: Attributes) {
+    self.init(id: id, attributes: attributes, relationships: [])
+  }
 }
 
 @Codable

@@ -16,31 +16,31 @@ public protocol Relationship {
 
 @Codable
 public struct CoverRelationship: Relationship, DynamicCodable {
-  public static var identifier: DynamicCodableIdentifier<String> { "cover_art" }
+  public static let identifier: DynamicCodableIdentifier<String> = "cover_art"
 
   public let id: UUID
   public let attributes: CoverAttributes?
-
-  public var cover: Cover? {
-    attributes.map { Cover(id: id, attributes: $0) }
-  }
 }
 
 @Codable
 public struct AuthorRelationship: Relationship, DynamicCodable {
-  public static var identifier: DynamicCodableIdentifier<String> { ["author", "artist"] }
+  public static let identifier: DynamicCodableIdentifier<String> = "author"
 
   public let id: UUID
   public let attributes: AuthorAttributes?
+}
 
-  public var author: Author? {
-    attributes.map { Author(id: id, attributes: $0) }
-  }
+@Codable
+public struct ArtistRelationship: Relationship, DynamicCodable {
+  public static let identifier: DynamicCodableIdentifier<String> = "artist"
+
+  public let id: UUID
+  public let attributes: AuthorAttributes?
 }
 
 @Codable
 public struct MangaRelationship: Relationship, DynamicCodable {
-  public static var identifier: DynamicCodableIdentifier<String> { "manga" }
+  public static let identifier: DynamicCodableIdentifier<String> = "manga"
 
   public let id: UUID
   public let attributes: MangaAttributes?
@@ -68,22 +68,11 @@ public struct UserRelationship: Relationship, DynamicCodable {
 }
 
 extension Collection<Relationship> {
-  public func first<T: Relationship & DynamicCodable<String>>(
-    _: T.Type,
-    matching identifier: String? = nil
-  ) -> T? {
-    let values = lazy.compactMap { $0 as? T }
-    guard let identifier else { return values.first }
-
-    for value in values {
-      switch identifier {
-      case T.identifier:
-        return value
-      default:
-        continue
-      }
-    }
-
-    return nil
+  /// Returns the first ``Relationship`` matching the type sepecifed.
+  ///
+  /// Use this method as a convenience helper to get the relationship you want from
+  /// the relationships returned when fetching an entity from MangaDex API.
+  public func first<T: Relationship>(_: T.Type) -> T? {
+    lazy.compactMap { $0 as? T }.first
   }
 }

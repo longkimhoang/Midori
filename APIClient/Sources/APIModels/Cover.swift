@@ -9,6 +9,7 @@ import Foundation
 import MetaCodable
 
 @Codable
+@MemberInit
 public struct Cover {
   public typealias Attributes = CoverAttributes
 
