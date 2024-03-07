@@ -27,6 +27,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, NSManagedObjectID>()
     snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
     snapshot.appendItems(data.popular.map(\.id), toSection: .popular)
+    snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
     snapshot.appendItems(data.recentlyAdded.map(\.id), toSection: .recentlyAdded)
     context.coordinator.dataSource.apply(snapshot)
   }
@@ -89,30 +90,53 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         }
       }
 
+      let latestChapterCellRegistration = UICollectionView.CellRegistration<
+        UICollectionViewCell,
+        Chapter
+      > { cell, indexPath, chapter in
+        commonConfigure(indexPath: indexPath, manga: chapter.manga) { image in
+          cell.contentConfiguration = UIHostingConfiguration {
+            LatestChapterView(chapter: chapter, coverThumbnailImage: image)
+          }
+          .margins(.horizontal, 0)
+        }
+      }
+
       dataSource =
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
           guard let self,
-                let section = SectionIdentifier(rawValue: indexPath.section),
-                let manga = manga(with: itemIdentifier, at: indexPath)
+                let section = SectionIdentifier(rawValue: indexPath.section)
           else {
             return nil
           }
 
           switch section {
           case .popular:
+            guard let manga = manga(with: itemIdentifier, at: indexPath) else {
+              return nil
+            }
+
             return collectionView.dequeueConfiguredReusableCell(
               using: popularMangaCellRegistration,
               for: indexPath,
               item: manga
             )
           case .latestUpdates:
+            guard let chapter = chapter(with: itemIdentifier, at: indexPath) else {
+              return nil
+            }
+
             return collectionView.dequeueConfiguredReusableCell(
-              using: popularMangaCellRegistration,
+              using: latestChapterCellRegistration,
               for: indexPath,
-              item: manga
+              item: chapter
             )
           case .recentlyAdded:
+            guard let manga = manga(with: itemIdentifier, at: indexPath) else {
+              return nil
+            }
+
             return collectionView.dequeueConfiguredReusableCell(
               using: recentlyAddedCellRegistration,
               for: indexPath,
@@ -164,6 +188,19 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         nil
       case .recentlyAdded:
         homeData.recentlyAdded[id: identifier]
+      }
+    }
+
+    private func chapter(with identifier: NSManagedObjectID, at indexPath: IndexPath) -> Chapter? {
+      guard let homeData, let section = SectionIdentifier(rawValue: indexPath.section) else {
+        return nil
+      }
+
+      return switch section {
+      case .popular, .recentlyAdded:
+        nil
+      case .latestUpdates:
+        homeData.latestChapters[id: identifier]
       }
     }
 

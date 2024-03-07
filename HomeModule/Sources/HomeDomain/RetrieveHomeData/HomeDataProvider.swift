@@ -34,7 +34,7 @@ extension HomeDataProvider: DependencyKey {
         let latestChapters = try await ChapterEndpoint
           .listChapters(
             parameters: ListChaptersParameters(
-              limit: 16,
+              limit: 64,
               includes: [.scanlationGroup],
               order: ListChaptersSortOrder(readableAt: .descending)
             )
@@ -90,17 +90,23 @@ extension HomeDataProvider: DependencyKey {
       }
 
       func getMapedChapters(from listChapters: ListChapters) throws -> HomeData.Chapters {
-        let chapterIDs = listChapters.chapters.map(\.id)
+        let uniqueChapters = Array(
+          listChapters.chapters
+            .grouped { $0.mangaID }
+            .compactMapValues(\.first)
+            .values
+        )
+        let chapterIDs = uniqueChapters.map(\.id)
         let request = NSFetchRequest<Chapter>(entityName: "Chapter")
         let predicate = #Predicate<Chapter> {
           chapterIDs.contains($0.chapterID)
         }
         request.predicate = NSPredicate(predicate)
-        let identifiedMangas = try IdentifiedArray(
+        let identifiedChapters = try IdentifiedArray(
           uniqueElements: viewContext.fetch(request),
           id: \.chapterID
         )
-        return IdentifiedArray(uniqueElements: chapterIDs.compactMap { identifiedMangas[id: $0] })
+        return IdentifiedArray(uniqueElements: chapterIDs.compactMap { identifiedChapters[id: $0] })
       }
 
       return try await HomeData(
@@ -113,6 +119,12 @@ extension HomeDataProvider: DependencyKey {
 }
 
 // MARK: - Private
+
+extension APIModels.Chapter {
+  fileprivate var mangaID: UUID? {
+    relationships.first(MangaRelationship.self)?.id
+  }
+}
 
 extension Date {
   fileprivate static var lastMonth: Date? {

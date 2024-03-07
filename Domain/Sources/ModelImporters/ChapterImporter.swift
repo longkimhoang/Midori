@@ -33,8 +33,12 @@ struct ChapterImporter: ChapterImporterProtocol {
              let chapter = managedObject as? Persistence.Chapter
           {
             chapter.chapterID = model.id
-            chapter.title = model.attributes.title
-            chapter.chapter = model.attributes.chapter
+            if let title = model.attributes.title {
+              chapter.title = title
+            }
+            if let chapterName = model.attributes.chapter {
+              chapter.chapter = chapterName
+            }
             return false
           } else {
             return true

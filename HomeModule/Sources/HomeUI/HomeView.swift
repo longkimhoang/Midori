@@ -50,6 +50,7 @@ public struct HomeView: View {
         let homeData = try await homeDataProvider.retrieveHomeData()
         result = .success(homeData)
       } catch {
+        dump(error)
         result = .failure(error)
       }
     }

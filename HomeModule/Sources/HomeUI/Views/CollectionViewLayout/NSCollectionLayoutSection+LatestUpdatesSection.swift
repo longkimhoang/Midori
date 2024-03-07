@@ -14,17 +14,11 @@ extension NSCollectionLayoutSection {
   {
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1),
-      heightDimension: .absolute(100)
+      heightDimension: .estimated(100)
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-    #if os(iOS)
-    let itemsPerGroup = layoutEnvironment.traitCollection.horizontalSizeClass == .compact ? 1 : 2
-    #else
-    let itemsPerGroup = 2
-    #endif
-    let baseRatio = 1 - 32 / (layoutEnvironment.container.effectiveContentSize.width)
     let groupSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(baseRatio / CGFloat(itemsPerGroup)),
+      widthDimension: .fractionalWidth(1),
       heightDimension: .estimated(300)
     )
     let group = NSCollectionLayoutGroup.vertical(
@@ -34,7 +28,7 @@ extension NSCollectionLayoutSection {
     )
     let section = NSCollectionLayoutSection(group: group)
     section.orthogonalScrollingBehavior = .groupPaging
-    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 16)
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
     section.boundarySupplementaryItems = [.sectionTitle]
 
     return section
