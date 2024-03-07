@@ -10,14 +10,15 @@ import Foundation
 
 @objc(Chapter)
 public final class Chapter: NSManagedObject {
-
   // MARK: - Attributes
 
   @NSManaged public var chapterID: UUID
-  @NSManaged public var title: String
-  @NSManaged public var chapter: String
+  @NSManaged public var title: String?
+  @NSManaged public var chapter: String?
 
   // MARK: - Relationships
 
   @NSManaged public var manga: Manga
 }
+
+extension Chapter: Identifiable {}
