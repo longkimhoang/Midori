@@ -5,7 +5,7 @@
 //  Created by Long Kim on 02/03/2024.
 //
 
-import ComposableArchitecture
+import ConcurrencyExtras
 import Dependencies
 import Foundation
 import SwiftUI
@@ -17,24 +17,22 @@ enum FetchResult<Success> {
 }
 
 public struct HomeView: View {
-  public let store: StoreOf<HomeFeature>
+  @State private var model = HomeViewModel()
 
-  public init(store: StoreOf<HomeFeature>) {
-    self.store = store
-  }
+  public init() {}
 
   public var body: some View {
     NavigationStack {
-      HomeCollectionView(data: store.data)
+      HomeCollectionView(model: model)
       #if os(iOS)
         .ignoresSafeArea()
       #endif
         .navigationTitle("Home")
         .refreshable {
-          await store.send(.fetchHomeData).finish()
+          await model.fetchHomeData().cancellableValue
         }
         .overlay {
-          switch store.state {
+          switch model.fetchStatus {
           case .loading:
             ContentUnavailableView {
               ProgressView()
@@ -42,15 +40,21 @@ public struct HomeView: View {
             } description: {
               Text("Loading...")
             }
-          case let .failure(error):
-            Text(error.localizedDescription)
+          case .failure(let error):
+            ContentUnavailableView {
+              Text(error.localizedDescription)
+            } actions: {
+              Button("Retry") {
+                model.fetchHomeData()
+              }
+            }
           default:
             EmptyView()
           }
         }
     }
     .task {
-      store.send(.fetchHomeData)
+      await model.fetchHomeData().cancellableValue
     }
   }
 }

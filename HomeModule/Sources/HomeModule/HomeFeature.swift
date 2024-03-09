@@ -15,9 +15,9 @@ public struct HomeDataFetchRequest {
 }
 
 @Reducer
-public struct HomeFeature {
+struct HomeFeature {
   @ObservableState
-  public enum State {
+  enum State {
     case loading
     case data(HomeData)
     case failure(Error)
@@ -49,6 +49,11 @@ public struct HomeFeature {
             latestChapters: latestChapters,
             recentlyAddedMangas: recentlyAddedMangas
           )
+
+          await MainActor.run {
+            print(data.latestChapters.first.map(\.id))
+          }
+
           await send(.homeDataResponse(data))
         } catch: { error, send in
           await send(.homeDataFailure(error))

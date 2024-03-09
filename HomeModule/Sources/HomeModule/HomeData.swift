@@ -7,8 +7,8 @@
 
 import Database
 
-public struct HomeData {
-  public let popularMangas: [Manga]
-  public let latestChapters: [Chapter]
-  public let recentlyAddedMangas: [Manga]
+struct HomeData {
+  let popularMangas: [Manga]
+  let latestChapters: [Chapter]
+  let recentlyAddedMangas: [Manga]
 }

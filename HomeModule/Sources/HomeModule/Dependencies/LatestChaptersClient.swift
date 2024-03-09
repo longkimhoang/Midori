@@ -35,22 +35,6 @@ extension LatestChaptersClient: DependencyKey {
             )
           )
 
-        let latestMangaIDs = latestChapters.chapters
-          .compactMap { $0.relationships.first(MangaRelationship.self) }
-          .map(\.id)
-
-        let latestMangas = try await MangaEndpoint
-          .listMangas(
-            parameters: ListMangasParameters(
-              limit: 100,
-              ids: latestMangaIDs.map { $0.uuidString.lowercased() },
-              includes: [.cover]
-            )
-          )
-
-        try await mangaStore.import(mangas: latestMangas.mangas)
-        try await chapterStore.import(chapters: latestChapters.chapters)
-
         let chapterByMangas: OrderedDictionary<UUID, APIModels.Chapter> = latestChapters.chapters
           .reduce(into: [:]) { dict, chapter in
             guard let mangaID = chapter.relationships.first(MangaRelationship.self)?.id, dict[mangaID] == nil else {
@@ -59,6 +43,18 @@ extension LatestChaptersClient: DependencyKey {
 
             dict[mangaID] = chapter
           }
+
+        let latestMangas = try await MangaEndpoint
+          .listMangas(
+            parameters: ListMangasParameters(
+              limit: 100,
+              ids: chapterByMangas.keys.map { $0.uuidString.lowercased() },
+              includes: [.cover]
+            )
+          )
+
+        try await mangaStore.import(mangas: latestMangas.mangas)
+        try await chapterStore.import(chapters: latestChapters.chapters)
 
         let chapterIDs = chapterByMangas.values.map(\.id)
         return try await chapterStore.queryByIDs(chapterIDs) {

@@ -15,40 +15,32 @@ import SwiftUI
 struct HomeCollectionView: UIViewControllerRepresentable {
   @Environment(\.modelContext) var modelContext
   @Environment(\.refresh) var refresh
-  let data: HomeData?
+  let model: HomeViewModel
 
   func makeUIViewController(context: Context) -> HomeCollectionViewController {
     HomeCollectionViewController(coordinator: context.coordinator)
   }
 
   func updateUIViewController(_: HomeCollectionViewController, context: Context) {
-    context.coordinator.homeData = data
     context.coordinator.refreshAction = refresh
     context.coordinator.modelContext = modelContext
 
-    guard let data else { return }
-    var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
-    snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
-    snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
-    snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
-    snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
-    context.coordinator.dataSource.apply(snapshot)
+    guard case let .success(data) = model.fetchStatus else { return }
+    context.coordinator.setHomeData(data, animated: context.transaction.animation != nil)
   }
 
   func makeCoordinator() -> Coordinator {
-    Coordinator(homeData: data, modelContext: modelContext)
+    Coordinator(modelContext: modelContext)
   }
 
   @MainActor
   final class Coordinator: NSObject {
     private lazy var prefetcher = ImagePrefetcher()
-    var homeData: HomeData?
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>!
     var refreshAction: RefreshAction?
     var modelContext: ModelContext
 
-    init(homeData: HomeData?, modelContext: ModelContext) {
-      self.homeData = homeData
+    init(modelContext: ModelContext) {
       self.modelContext = modelContext
     }
 
@@ -180,6 +172,21 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         default:
           nil
         }
+      }
+    }
+
+    func setHomeData(_ data: HomeData?, animated: Bool = true) {
+      if let data {
+        var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
+        snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
+        snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
+        snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
+        snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
+        dataSource.apply(snapshot, animatingDifferences: animated)
+      } else {
+        var snapshot = dataSource.snapshot()
+        snapshot.deleteAllItems()
+        dataSource.apply(snapshot, animatingDifferences: animated)
       }
     }
 
