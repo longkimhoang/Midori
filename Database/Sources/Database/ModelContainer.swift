@@ -17,7 +17,7 @@ extension ModelContainer: DependencyKey {
 }
 
 extension DependencyValues {
-  var modelContainer: ModelContainer {
+  public var modelContainer: ModelContainer {
     get { self[ModelContainer.self] }
     set { self[ModelContainer.self] = newValue }
   }

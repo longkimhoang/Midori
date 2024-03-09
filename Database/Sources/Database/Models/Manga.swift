@@ -15,9 +15,8 @@ public final class Manga {
   @Attribute(.spotlight)
   public var title: String
   public var coverImageURL: URL?
-  @Relationship
-  public var artist: Author?
-  @Relationship
+  public var createdAt: Date
+  public var artist: Artist?
   public var author: Author?
   @Relationship(inverse: \Chapter.manga)
   public var chapters: [Chapter] = []
@@ -25,10 +24,12 @@ public final class Manga {
   public init(
     mangaID: UUID,
     title: String,
-    coverImageURL: URL? = nil
+    coverImageURL: URL? = nil,
+    createdAt: Date
   ) {
     self.mangaID = mangaID
     self.title = title
     self.coverImageURL = coverImageURL
+    self.createdAt = createdAt
   }
 }

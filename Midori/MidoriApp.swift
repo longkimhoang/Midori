@@ -5,19 +5,19 @@
 //  Created by Long Kim on 26/02/2024.
 //
 
-import CoreData
+import Database
 import Dependencies
-import Persistence
+import SwiftData
 import SwiftUI
 
 @main
 struct MidoriApp: App {
-  @Dependency(\.persistenceController.container.viewContext) var viewContext
+  @Dependency(\.modelContainer) var modelContainer
 
   var body: some Scene {
     WindowGroup {
       ContentView()
     }
-    .environment(\.managedObjectContext, viewContext)
+    .modelContainer(modelContainer)
   }
 }

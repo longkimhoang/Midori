@@ -29,9 +29,10 @@ public struct Manga {
 public struct MangaAttributes {
   @CodedBy(LocalizedStringCoder())
   public let title: LocalizedString
-
   @CodedBy(LocalizedStringCoder())
   public let description: LocalizedString?
+  @CodedBy(DateCoder(formatter: .api))
+  public let createdAt: Date
 }
 
 extension Manga {

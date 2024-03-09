@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F1DA12D2B94B71200DF7BAB /* Persistence in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1DA12C2B94B71200DF7BAB /* Persistence */; };
-		4F97207F2B930AF10028B950 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F97207E2B930AF10028B950 /* HomeUI */; };
+		4F1CBB802B9B8064002F94A4 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1CBB7F2B9B8064002F94A4 /* ComposableArchitecture */; };
+		4F9D4AE22B9C26AB006380F5 /* HomeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 4F9D4AE12B9C26AB006380F5 /* HomeModule */; };
 		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
 		4FB2699D2B94CDAF005BDD14 /* Domain in Resources */ = {isa = PBXBuildFile; fileRef = 4FB2699C2B94CDAF005BDD14 /* Domain */; };
 		4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA32B8C9269009639A3 /* MidoriApp.swift */; };
@@ -18,7 +18,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4F09A0222B94B248000978B5 /* Persistence */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Persistence; sourceTree = "<group>"; };
 		4F8B6E422B981EF6000E3DFA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
@@ -31,6 +30,7 @@
 		4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4FB78DB32B8C9451009639A3 /* APIClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = APIClient; sourceTree = "<group>"; };
 		4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APIClient.xctestplan; sourceTree = "<group>"; };
+		4FE7582D2B9C300E00C7AC12 /* Database */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Database; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,8 +39,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */,
-				4F1DA12D2B94B71200DF7BAB /* Persistence in Frameworks */,
-				4F97207F2B930AF10028B950 /* HomeUI in Frameworks */,
+				4F9D4AE22B9C26AB006380F5 /* HomeModule in Frameworks */,
+				4F1CBB802B9B8064002F94A4 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,9 +60,9 @@
 			isa = PBXGroup;
 			children = (
 				4FB78DB32B8C9451009639A3 /* APIClient */,
+				4FE7582D2B9C300E00C7AC12 /* Database */,
 				4FB2699C2B94CDAF005BDD14 /* Domain */,
 				4F97207D2B9309C40028B950 /* HomeModule */,
-				4F09A0222B94B248000978B5 /* Persistence */,
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,
 				4FB78DA12B8C9269009639A3 /* Products */,
@@ -131,9 +131,9 @@
 			);
 			name = Midori;
 			packageProductDependencies = (
-				4F97207E2B930AF10028B950 /* HomeUI */,
-				4F1DA12C2B94B71200DF7BAB /* Persistence */,
 				4FB269992B94C8C6005BDD14 /* Dependencies */,
+				4F1CBB7F2B9B8064002F94A4 /* ComposableArchitecture */,
+				4F9D4AE12B9C26AB006380F5 /* HomeModule */,
 			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
@@ -166,6 +166,7 @@
 			packageReferences = (
 				4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */,
 				4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				4F1CBB7E2B9B8064002F94A4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = 4FB78DA12B8C9269009639A3 /* Products */;
 			projectDirPath = "";
@@ -424,6 +425,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4F1CBB7E2B9B8064002F94A4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.2;
+			};
+		};
 		4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nicklockwood/SwiftFormat.git";
@@ -443,13 +452,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4F1DA12C2B94B71200DF7BAB /* Persistence */ = {
+		4F1CBB7F2B9B8064002F94A4 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Persistence;
+			package = 4F1CBB7E2B9B8064002F94A4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
 		};
-		4F97207E2B930AF10028B950 /* HomeUI */ = {
+		4F9D4AE12B9C26AB006380F5 /* HomeModule */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = HomeUI;
+			productName = HomeModule;
 		};
 		4FB269992B94C8C6005BDD14 /* Dependencies */ = {
 			isa = XCSwiftPackageProductDependency;

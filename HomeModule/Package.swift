@@ -8,44 +8,26 @@ let package = Package(
   defaultLocalization: "en",
   platforms: [.macOS(.v14), .iOS(.v17)],
   products: [
-    .library(name: "HomeUI", targets: ["HomeUI"]),
+    .library(name: "HomeModule", targets: ["HomeModule"]),
   ],
   dependencies: [
-    .package(path: "APIClient"),
     .package(path: "Domain"),
-    .package(path: "Persistence"),
-    .package(
-      url: "https://github.com/pointfreeco/swift-dependencies.git",
-      .upToNextMajor(from: "1.2.1")
-    ),
-    .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.7.1")),
-    .package(url: "https://github.com/apple/swift-algorithms.git", .upToNextMajor(from: "1.2.0")),
-    .package(
-      url: "https://github.com/pointfreeco/swift-identified-collections.git",
-      .upToNextMajor(from: "1.0.0")
-    ),
-    .package(url: "https://github.com/kean/Nuke.git", .upToNextMajor(from: "12.4.0")),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
+    .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
+    .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
+    .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
   ],
   targets: [
     .target(
-      name: "HomeUI",
+      name: "HomeModule",
       dependencies: [
-        .target(name: "HomeDomain"),
+        .product(name: "Domain", package: "Domain"),
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "Nuke", package: "Nuke"),
-      ]
-    ),
-    .target(
-      name: "HomeDomain",
-      dependencies: [
-        .product(name: "APIClient", package: "APIClient"),
-        .product(name: "ModelImporters", package: "Domain"),
-        .product(name: "Persistence", package: "Persistence"),
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "DependenciesMacros", package: "swift-dependencies"),
-        .product(name: "Algorithms", package: "swift-algorithms"),
-        .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+        .product(name: "Collections", package: "swift-collections"),
       ]
     ),
   ]
