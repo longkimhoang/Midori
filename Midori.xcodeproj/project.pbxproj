@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F1CBB802B9B8064002F94A4 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1CBB7F2B9B8064002F94A4 /* ComposableArchitecture */; };
 		4F9D4AE22B9C26AB006380F5 /* HomeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 4F9D4AE12B9C26AB006380F5 /* HomeModule */; };
 		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
 		4FB2699D2B94CDAF005BDD14 /* Domain in Resources */ = {isa = PBXBuildFile; fileRef = 4FB2699C2B94CDAF005BDD14 /* Domain */; };
@@ -40,7 +39,6 @@
 			files = (
 				4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */,
 				4F9D4AE22B9C26AB006380F5 /* HomeModule in Frameworks */,
-				4F1CBB802B9B8064002F94A4 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,7 +130,6 @@
 			name = Midori;
 			packageProductDependencies = (
 				4FB269992B94C8C6005BDD14 /* Dependencies */,
-				4F1CBB7F2B9B8064002F94A4 /* ComposableArchitecture */,
 				4F9D4AE12B9C26AB006380F5 /* HomeModule */,
 			);
 			productName = Midori;
@@ -166,7 +163,6 @@
 			packageReferences = (
 				4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */,
 				4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
-				4F1CBB7E2B9B8064002F94A4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = 4FB78DA12B8C9269009639A3 /* Products */;
 			projectDirPath = "";
@@ -425,14 +421,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4F1CBB7E2B9B8064002F94A4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.9.2;
-			};
-		};
 		4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nicklockwood/SwiftFormat.git";
@@ -452,11 +440,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4F1CBB7F2B9B8064002F94A4 /* ComposableArchitecture */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F1CBB7E2B9B8064002F94A4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
-			productName = ComposableArchitecture;
-		};
 		4F9D4AE12B9C26AB006380F5 /* HomeModule */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeModule;

@@ -40,7 +40,7 @@ public struct HomeView: View {
             } description: {
               Text("Loading...")
             }
-          case .failure(let error):
+          case let .failure(error):
             ContentUnavailableView {
               Text(error.localizedDescription)
             } actions: {

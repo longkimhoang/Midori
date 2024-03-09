@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
-
   enum FetchStatus {
     case loading
     case success(HomeData)

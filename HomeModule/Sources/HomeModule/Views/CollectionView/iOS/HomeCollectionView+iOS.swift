@@ -6,7 +6,10 @@
 //
 
 #if os(iOS)
+import Combine
+import CombineSchedulers
 import Database
+import Dependencies
 import Foundation
 import Nuke
 import SwiftData
@@ -33,15 +36,18 @@ struct HomeCollectionView: UIViewControllerRepresentable {
 
   @MainActor
   final class Coordinator: NSObject {
+    private var timerCancellable: AnyCancellable?
     private lazy var prefetcher = ImagePrefetcher()
     var data: HomeData? {
       didSet {
         updateDataSource()
       }
     }
+
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>!
     var refreshAction: RefreshAction?
     var modelContext: ModelContext
+    @Dependency(\.mainQueue) var mainQueue
 
     init(modelContext: ModelContext) {
       self.modelContext = modelContext
@@ -176,6 +182,17 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           nil
         }
       }
+
+      timerCancellable = Publishers.Timer(every: .seconds(60), scheduler: mainQueue)
+        .autoconnect()
+        .sink { [weak self] _ in
+          guard let self else { return }
+          let visibleItemIdentifiers = collectionView.indexPathsForVisibleItems
+            .compactMap { self.dataSource.itemIdentifier(for: $0) }
+          var snapshot = dataSource.snapshot()
+          snapshot.reconfigureItems(visibleItemIdentifiers)
+          dataSource.apply(snapshot, animatingDifferences: false)
+        }
     }
 
     private func updateDataSource() {
