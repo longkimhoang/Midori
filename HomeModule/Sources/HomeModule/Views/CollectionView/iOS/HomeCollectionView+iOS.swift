@@ -153,22 +153,26 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           }
         }
 
-      let sectionTitleRegistration = UICollectionView
-        .SupplementaryRegistration<SectionTitleView>(
-          elementKind: SupplementaryItemKind
-            .sectionTitle
+      let sectionTitleRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
+          elementKind: SupplementaryItemKind.sectionTitle
         ) { sectionTitleView, _, indexPath in
           guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
-          let localizedTitle: String.LocalizationValue = switch section {
-          case .popular:
-            "Popular new titles"
-          case .latestUpdates:
-            "Latest updates"
-          case .recentlyAdded:
-            "Recently added"
-          }
 
-          sectionTitleView.configure(title: String(localized: localizedTitle))
+          sectionTitleView.contentConfiguration = UIHostingConfiguration {
+            Group {
+              switch section {
+              case .popular:
+                Text("Popular new titles", bundle: .module)
+              case .latestUpdates:
+                Text("Latest updates", bundle: .module)
+              case .recentlyAdded:
+                Text("Recently added", bundle: .module)
+              }
+            }
+            .font(.title)
+          }
+          .margins(.vertical, 4)
+          .margins(.horizontal, 0)
         }
 
       dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in

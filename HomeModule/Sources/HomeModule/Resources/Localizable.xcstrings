@@ -1,0 +1,33 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Ch. %@" : {
+      "comment" : "Shortform for chapter"
+    },
+    "Home" : {
+
+    },
+    "Latest updates" : {
+
+    },
+    "Loading..." : {
+
+    },
+    "Oneshot" : {
+
+    },
+    "Popular new titles" : {
+
+    },
+    "Recently added" : {
+
+    },
+    "Retry" : {
+
+    },
+    "Vol. %@" : {
+      "comment" : "Shortform for volume"
+    }
+  },
+  "version" : "1.0"
+}

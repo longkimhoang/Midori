@@ -67,16 +67,16 @@ struct LatestChapterView: View {
 
   private var chapterName: String {
     let localizedChapter = chapter.chapter.map {
-      String(localized: "Ch. \($0)", comment: "Shortform for chapter")
+      String(localized: "Ch. \($0)", bundle: .module, comment: "Shortform for chapter")
     }
 
     let localizedVolume = chapter.volume.map {
-      String(localized: "Vol. \($0)", comment: "Shortform for volume")
+      String(localized: "Vol. \($0)", bundle: .module, comment: "Shortform for volume")
     }
 
     let name = [localizedVolume, localizedChapter, chapter.title].compacted()
       .joined(separator: " - ")
-    return name.isEmpty ? String(localized: "Oneshot") : name
+    return name.isEmpty ? String(localized: "Oneshot", bundle: .module) : name
   }
 }
 

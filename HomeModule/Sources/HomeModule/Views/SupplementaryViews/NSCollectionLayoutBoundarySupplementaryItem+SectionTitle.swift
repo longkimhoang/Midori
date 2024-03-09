@@ -11,7 +11,7 @@ import SwiftUI
 extension NSCollectionLayoutBoundarySupplementaryItem {
   static var sectionTitle: NSCollectionLayoutBoundarySupplementaryItem {
     let layoutSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(1),
+      widthDimension: .estimated(200),
       heightDimension: .estimated(44)
     )
     let item = NSCollectionLayoutBoundarySupplementaryItem(
