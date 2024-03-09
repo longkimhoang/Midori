@@ -9,8 +9,7 @@ import Dependencies
 import Foundation
 import SwiftUI
 
-@Observable
-final class HomeViewModel {
+final class HomeViewModel: ObservableObject {
 
   enum FetchStatus {
     case loading
@@ -25,18 +24,15 @@ final class HomeViewModel {
     }
   }
 
-  @ObservationIgnored
   @Dependency(\.popularMangas) var popularMangas
-  @ObservationIgnored
   @Dependency(\.latestChapters) var latestChapters
-  @ObservationIgnored
   @Dependency(\.recentlyAddedMangas) var recentlyAddedMangas
 
-  var fetchStatus: FetchStatus = .loading
+  @Published var fetchStatus: FetchStatus = .loading
 
   @discardableResult
   func fetchHomeData() -> Task<Void, Never> {
-    Task {
+    Task { @MainActor in
       do {
         async let popularMangas = try await popularMangas.fetch()
         async let latestChapters = try await latestChapters.fetch()

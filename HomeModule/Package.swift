@@ -16,7 +16,6 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.1.0"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
     .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
   ],
   targets: [
@@ -24,7 +23,6 @@ let package = Package(
       name: "HomeModule",
       dependencies: [
         .product(name: "Domain", package: "Domain"),
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
         .product(name: "SnapKit", package: "SnapKit"),

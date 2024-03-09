@@ -15,7 +15,7 @@ import SwiftUI
 struct HomeCollectionView: UIViewControllerRepresentable {
   @Environment(\.modelContext) var modelContext
   @Environment(\.refresh) var refresh
-  let model: HomeViewModel
+  let data: HomeData?
 
   func makeUIViewController(context: Context) -> HomeCollectionViewController {
     HomeCollectionViewController(coordinator: context.coordinator)
@@ -24,9 +24,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
   func updateUIViewController(_: HomeCollectionViewController, context: Context) {
     context.coordinator.refreshAction = refresh
     context.coordinator.modelContext = modelContext
-
-    guard case let .success(data) = model.fetchStatus else { return }
-    context.coordinator.setHomeData(data, animated: context.transaction.animation != nil)
+    context.coordinator.data = data
   }
 
   func makeCoordinator() -> Coordinator {
@@ -36,6 +34,11 @@ struct HomeCollectionView: UIViewControllerRepresentable {
   @MainActor
   final class Coordinator: NSObject {
     private lazy var prefetcher = ImagePrefetcher()
+    var data: HomeData? {
+      didSet {
+        updateDataSource()
+      }
+    }
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>!
     var refreshAction: RefreshAction?
     var modelContext: ModelContext
@@ -175,18 +178,18 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       }
     }
 
-    func setHomeData(_ data: HomeData?, animated: Bool = true) {
+    private func updateDataSource() {
       if let data {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
         snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
         snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
         snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
         snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        dataSource.apply(snapshot)
       } else {
         var snapshot = dataSource.snapshot()
         snapshot.deleteAllItems()
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        dataSource.apply(snapshot)
       }
     }
 

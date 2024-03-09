@@ -17,13 +17,13 @@ enum FetchResult<Success> {
 }
 
 public struct HomeView: View {
-  @State private var model = HomeViewModel()
+  @StateObject private var model = HomeViewModel()
 
   public init() {}
 
   public var body: some View {
     NavigationStack {
-      HomeCollectionView(model: model)
+      HomeCollectionView(data: model.fetchStatus.data)
       #if os(iOS)
         .ignoresSafeArea()
       #endif
