@@ -8,6 +8,7 @@
 import Dependencies
 import Foundation
 import SwiftUI
+import IdentifiedCollections
 
 @Observable
 final class HomeViewModel: ObservableObject {
@@ -42,9 +43,9 @@ final class HomeViewModel: ObservableObject {
         async let recentlyAddedMangas = try await recentlyAddedMangas.fetch()
 
         let data = try await HomeData(
-          popularMangas: popularMangas,
-          latestChapters: latestChapters,
-          recentlyAddedMangas: recentlyAddedMangas
+          popularMangas: IdentifiedArray(uniqueElements: popularMangas),
+          latestChapters: IdentifiedArray(uniqueElements: latestChapters),
+          recentlyAddedMangas: IdentifiedArray(uniqueElements: recentlyAddedMangas)
         )
 
         withAnimation {

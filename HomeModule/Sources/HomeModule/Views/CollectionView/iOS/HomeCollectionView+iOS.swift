@@ -8,6 +8,7 @@
 #if os(iOS)
 import Combine
 import CombineSchedulers
+import ComposableArchitecture
 import Database
 import Dependencies
 import Foundation
@@ -16,54 +17,96 @@ import SwiftData
 import SwiftUI
 
 struct HomeCollectionView: UIViewControllerRepresentable {
-  @Environment(\.modelContext) var modelContext
-  @Environment(\.refresh) var refresh
-  @Bindable var model: HomeViewModel
+  let store: StoreOf<CounterFeature>
 
   func makeUIViewController(context: Context) -> HomeCollectionViewController {
-    HomeCollectionViewController(coordinator: context.coordinator)
+    HomeCollectionViewController(store: store)
   }
 
   func updateUIViewController(_ viewController: HomeCollectionViewController, context: Context) {
-    context.coordinator.refreshAction = refresh
-    context.coordinator.modelContext = modelContext
-
-    switch model.fetchStatus {
-    case let .success(data):
-      context.coordinator.data = data
-    case .loading:
-      viewController.showLoading()
-    case let .failure(error):
-      viewController.showError(error) {
-        model.fetchHomeData()
-      }
-    }
+    // Updates are handled through viewController's conneciton to store.
   }
 
-  func makeCoordinator() -> Coordinator {
-    Coordinator(modelContext: modelContext)
-  }
-
-  @MainActor
-  final class Coordinator: NSObject {
-    private var timerCancellable: AnyCancellable?
+  final class HomeCollectionViewController: UIViewController {
+    @ViewLoading
+    private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
     private lazy var prefetcher = ImagePrefetcher()
-    var data: HomeData? {
-      didSet {
-        updateDataSource()
+    private lazy var cancellables: Set<AnyCancellable> = []
+    let store: StoreOf<CounterFeature>
+
+    init(store: StoreOf<CounterFeature>) {
+      self.store = store
+      super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+      view = UICollectionView(frame: .zero, collectionViewLayout: .home())
+    }
+
+    var collectionView: UICollectionView {
+      view as! UICollectionView
+    }
+
+    override func viewDidLoad() {
+      super.viewDidLoad()
+      view.layoutMargins = .zero
+      setupDataSource()
+      collectionView.prefetchDataSource = self
+      collectionView.refreshControl = UIRefreshControl(
+        frame: .zero,
+        primaryAction: UIAction { action in
+          if let refreshControl = action.sender as? UIRefreshControl {
+            Task { @MainActor [weak self] in
+              guard let self else { return }
+              await store.send(.fetchPopularMangas).finish()
+              refreshControl.endRefreshing()
+            }
+          }
+        }
+      )
+
+      observe { [weak self] in
+        guard let self else { return }
+        switch store.fetchStatus {
+        case let .success(data):
+          updateDataSource(data: data)
+        default:
+          break
+        }
+
+        setNeedsUpdateContentUnavailableConfiguration()
       }
     }
 
-    var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>!
-    var refreshAction: RefreshAction?
-    var modelContext: ModelContext
-    @Dependency(\.mainQueue) var mainQueue
+    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
+      switch store.fetchStatus {
+      case .success:
+        contentUnavailableConfiguration = nil
+      case .loading:
+        contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading().updated(for: state)
+      case let .failure(error):
+        var configuration = UIContentUnavailableConfiguration.empty()
+        configuration.text = String(localized: "Error fetching content", bundle: .module)
+        configuration.secondaryText = error.localizedDescription
+        configuration.image = UIImage(systemName: "network.slash", compatibleWith: state.traitCollection)
 
-    init(modelContext: ModelContext) {
-      self.modelContext = modelContext
+        var retryButtonConfiguration = UIButton.Configuration.borderless()
+        retryButtonConfiguration.title = String(localized: "Retry", bundle: .module)
+        configuration.button = retryButtonConfiguration
+        configuration.buttonProperties.primaryAction = UIAction(identifier: .refresh) { [weak self] _ in
+          self?.store.send(.fetchPopularMangas)
+        }
+
+        contentUnavailableConfiguration = configuration.updated(for: state)
+      }
     }
 
-    func setupDataSource(for collectionView: UICollectionView) {
+    func setupDataSource() {
       func commonConfigure(indexPath: IndexPath, manga: Manga?, handler: (Image?) -> Void) {
         let imagePipeline = ImagePipeline.shared
         let request = ImageRequest(url: manga?.coverThumbnailURL)
@@ -76,7 +119,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           imagePipeline.loadImage(with: request) { [weak self] result in
             switch result {
             case .success:
-              self?.reconfigureCell(at: indexPath)
+              self?.reconfigureCells(at: CollectionOfOne(indexPath))
             case .failure:
               break
             }
@@ -121,47 +164,51 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       }
 
       dataSource =
-        UICollectionViewDiffableDataSource(collectionView: collectionView) {
-          [weak self] collectionView, indexPath, itemIdentifier -> UICollectionViewCell? in
-          guard let self,
-                let section = SectionIdentifier(rawValue: indexPath.section)
-          else {
+      UICollectionViewDiffableDataSource(collectionView: collectionView) {
+        [weak self] collectionView, indexPath, itemIdentifier -> UICollectionViewCell? in
+        guard let self,
+              let section = SectionIdentifier(rawValue: indexPath.section)
+        else {
+          return nil
+        }
+
+        guard case let .success(data) = store.fetchStatus else {
+          return nil
+        }
+
+        switch section {
+        case .popular:
+          guard let manga = data.popularMangas[id: itemIdentifier] else {
             return nil
           }
 
-          switch section {
-          case .popular:
-            guard let manga: Manga = modelContext.registeredModel(for: itemIdentifier) else {
-              return nil
-            }
-
-            return collectionView.dequeueConfiguredReusableCell(
-              using: popularMangaCellRegistration,
-              for: indexPath,
-              item: manga
-            )
-          case .latestUpdates:
-            guard let chapter: Chapter = modelContext.registeredModel(for: itemIdentifier) else {
-              return nil
-            }
-
-            return collectionView.dequeueConfiguredReusableCell(
-              using: latestChapterCellRegistration,
-              for: indexPath,
-              item: chapter
-            )
-          case .recentlyAdded:
-            guard let manga: Manga = modelContext.registeredModel(for: itemIdentifier) else {
-              return nil
-            }
-
-            return collectionView.dequeueConfiguredReusableCell(
-              using: recentlyAddedCellRegistration,
-              for: indexPath,
-              item: manga
-            )
+          return collectionView.dequeueConfiguredReusableCell(
+            using: popularMangaCellRegistration,
+            for: indexPath,
+            item: manga
+          )
+        case .latestUpdates:
+          guard let chapter = data.latestChapters[id: itemIdentifier] else {
+            return nil
           }
+
+          return collectionView.dequeueConfiguredReusableCell(
+            using: latestChapterCellRegistration,
+            for: indexPath,
+            item: chapter
+          )
+        case .recentlyAdded:
+          guard let manga = data.recentlyAddedMangas[id: itemIdentifier] else {
+            return nil
+          }
+
+          return collectionView.dequeueConfiguredReusableCell(
+            using: recentlyAddedCellRegistration,
+            for: indexPath,
+            item: manga
+          )
         }
+      }
 
       let sectionTitleRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
         elementKind: SupplementaryItemKind.sectionTitle
@@ -197,119 +244,53 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         }
       }
 
-      timerCancellable = Publishers.Timer(every: .seconds(60), scheduler: mainQueue)
+      @Dependency(\.mainQueue) var mainQueue
+      Publishers.Timer(every: .seconds(60), scheduler: mainQueue)
         .autoconnect()
         .sink { [weak self] _ in
           guard let self else { return }
-          let visibleItemIdentifiers = collectionView.indexPathsForVisibleItems
-            .compactMap { self.dataSource.itemIdentifier(for: $0) }
-          var snapshot = dataSource.snapshot()
-          snapshot.reconfigureItems(visibleItemIdentifiers)
-          dataSource.apply(snapshot, animatingDifferences: false)
+          reconfigureCells(at: collectionView.indexPathsForVisibleItems)
         }
+        .store(in: &cancellables)
     }
 
-    private func updateDataSource() {
-      if let data {
-        var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
-        snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
-        snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
-        snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
-        snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
-        dataSource.apply(snapshot)
-      } else {
-        var snapshot = dataSource.snapshot()
-        snapshot.deleteAllItems()
-        dataSource.apply(snapshot)
-      }
+    private func updateDataSource(data: HomeData) {
+      var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
+      snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
+      snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
+      snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
+      snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
+      dataSource.apply(snapshot)
     }
 
-    private func reconfigureCell(at indexPath: IndexPath) {
-      guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
-        return
-      }
-
+    private func reconfigureCells(at indexPaths: some Collection<IndexPath>) {
+      let itemIdentifiers = indexPaths.compactMap { dataSource.itemIdentifier(for: $0) }
       var snapshot = dataSource.snapshot()
-      snapshot.reconfigureItems([itemIdentifier])
+      snapshot.reconfigureItems(itemIdentifiers)
       dataSource.apply(snapshot, animatingDifferences: false)
-    }
-  }
-
-  final class HomeCollectionViewController: UIViewController {
-    let coordinator: Coordinator
-
-    init(coordinator: Coordinator) {
-      self.coordinator = coordinator
-      super.init(nibName: nil, bundle: nil)
-    }
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
-
-    override func loadView() {
-      view = UICollectionView(frame: .zero, collectionViewLayout: .home())
-    }
-
-    var collectionView: UICollectionView {
-      view as! UICollectionView
-    }
-
-    override func viewDidLoad() {
-      super.viewDidLoad()
-      view.layoutMargins = .zero
-      coordinator.setupDataSource(for: collectionView)
-      collectionView.prefetchDataSource = coordinator
-      collectionView.refreshControl = UIRefreshControl(
-        frame: .zero,
-        primaryAction: UIAction { [weak self] action in
-          if let refreshControl = action.sender as? UIRefreshControl {
-            Task { @MainActor in
-              await self?.coordinator.refreshAction?()
-              refreshControl.endRefreshing()
-            }
-          }
-        }
-      )
-    }
-
-    func showLoading() {
-      contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
-    }
-
-    func showError(_ error: Error, retryAction: @escaping () -> Void) {
-      var configuration = UIContentUnavailableConfiguration.empty()
-      configuration.text = String(localized: "Error fetching content", bundle: .module)
-      configuration.secondaryText = error.localizedDescription
-
-      var retryButtonConfiguration = UIButton.Configuration.borderless()
-      retryButtonConfiguration.title = String(localized: "Retry", bundle: .module)
-      configuration.button = retryButtonConfiguration
-      configuration.buttonProperties.primaryAction = UIAction { _ in
-        retryAction()
-      }
-
-      contentUnavailableConfiguration = configuration
     }
   }
 }
 
-extension HomeCollectionView.Coordinator: UICollectionViewDataSourcePrefetching {
+extension HomeCollectionView.HomeCollectionViewController: UICollectionViewDataSourcePrefetching {
   private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
-    let identifiers = indexPaths.map { dataSource.itemIdentifier(for: $0) }
-    return zip(identifiers, indexPaths).compactMap { identifier, _ -> URL? in
-      guard let identifier else {
+    indexPaths.compactMap { indexPath in
+      guard let section = dataSource.sectionIdentifier(for: indexPath.section),
+            let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
         return nil
       }
 
-      switch modelContext.model(for: identifier) {
-      case let manga as Manga:
-        return manga.coverThumbnailURL
-      case let chapter as Chapter:
-        return chapter.manga?.coverThumbnailURL
-      default:
+      guard case .success(let data) = store.fetchStatus else {
         return nil
+      }
+
+      return switch section {
+      case .popular:
+        data.popularMangas[id: itemIdentifier]?.coverThumbnailURL
+      case .latestUpdates:
+        data.latestChapters[id: itemIdentifier]?.manga?.coverThumbnailURL
+      case .recentlyAdded:
+        data.recentlyAddedMangas[id: itemIdentifier]?.coverThumbnailURL
       }
     }
   }
@@ -321,5 +302,9 @@ extension HomeCollectionView.Coordinator: UICollectionViewDataSourcePrefetching 
   func collectionView(_: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
     prefetcher.stopPrefetching(with: imageURLs(for: indexPaths))
   }
+}
+
+extension UIAction.Identifier {
+  fileprivate static var refresh = UIAction.Identifier("HomeCollectionView.refresh")
 }
 #endif

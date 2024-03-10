@@ -6,9 +6,10 @@
 //
 
 import Database
+import IdentifiedCollections
 
 struct HomeData {
-  let popularMangas: [Manga]
-  let latestChapters: [Chapter]
-  let recentlyAddedMangas: [Manga]
+  let popularMangas: IdentifiedArrayOf<Manga>
+  let latestChapters: IdentifiedArrayOf<Chapter>
+  let recentlyAddedMangas: IdentifiedArrayOf<Manga>
 }
