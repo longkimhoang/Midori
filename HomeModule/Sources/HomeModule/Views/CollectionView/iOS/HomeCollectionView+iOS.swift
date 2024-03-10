@@ -17,13 +17,13 @@ import SwiftData
 import SwiftUI
 
 struct HomeCollectionView: UIViewControllerRepresentable {
-  let store: StoreOf<CounterFeature>
+  let store: StoreOf<HomeFeature>
 
-  func makeUIViewController(context: Context) -> HomeCollectionViewController {
+  func makeUIViewController(context _: Context) -> HomeCollectionViewController {
     HomeCollectionViewController(store: store)
   }
 
-  func updateUIViewController(_ viewController: HomeCollectionViewController, context: Context) {
+  func updateUIViewController(_: HomeCollectionViewController, context _: Context) {
     // Updates are handled through viewController's conneciton to store.
   }
 
@@ -32,9 +32,9 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
-    let store: StoreOf<CounterFeature>
+    let store: StoreOf<HomeFeature>
 
-    init(store: StoreOf<CounterFeature>) {
+    init(store: StoreOf<HomeFeature>) {
       self.store = store
       super.init(nibName: nil, bundle: nil)
     }
@@ -164,51 +164,51 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       }
 
       dataSource =
-      UICollectionViewDiffableDataSource(collectionView: collectionView) {
-        [weak self] collectionView, indexPath, itemIdentifier -> UICollectionViewCell? in
-        guard let self,
-              let section = SectionIdentifier(rawValue: indexPath.section)
-        else {
-          return nil
-        }
-
-        guard case let .success(data) = store.fetchStatus else {
-          return nil
-        }
-
-        switch section {
-        case .popular:
-          guard let manga = data.popularMangas[id: itemIdentifier] else {
+        UICollectionViewDiffableDataSource(collectionView: collectionView) {
+          [weak self] collectionView, indexPath, itemIdentifier -> UICollectionViewCell? in
+          guard let self,
+                let section = SectionIdentifier(rawValue: indexPath.section)
+          else {
             return nil
           }
 
-          return collectionView.dequeueConfiguredReusableCell(
-            using: popularMangaCellRegistration,
-            for: indexPath,
-            item: manga
-          )
-        case .latestUpdates:
-          guard let chapter = data.latestChapters[id: itemIdentifier] else {
+          guard case let .success(data) = store.fetchStatus else {
             return nil
           }
 
-          return collectionView.dequeueConfiguredReusableCell(
-            using: latestChapterCellRegistration,
-            for: indexPath,
-            item: chapter
-          )
-        case .recentlyAdded:
-          guard let manga = data.recentlyAddedMangas[id: itemIdentifier] else {
-            return nil
-          }
+          switch section {
+          case .popular:
+            guard let manga = data.popularMangas[id: itemIdentifier] else {
+              return nil
+            }
 
-          return collectionView.dequeueConfiguredReusableCell(
-            using: recentlyAddedCellRegistration,
-            for: indexPath,
-            item: manga
-          )
+            return collectionView.dequeueConfiguredReusableCell(
+              using: popularMangaCellRegistration,
+              for: indexPath,
+              item: manga
+            )
+          case .latestUpdates:
+            guard let chapter = data.latestChapters[id: itemIdentifier] else {
+              return nil
+            }
+
+            return collectionView.dequeueConfiguredReusableCell(
+              using: latestChapterCellRegistration,
+              for: indexPath,
+              item: chapter
+            )
+          case .recentlyAdded:
+            guard let manga = data.recentlyAddedMangas[id: itemIdentifier] else {
+              return nil
+            }
+
+            return collectionView.dequeueConfiguredReusableCell(
+              using: recentlyAddedCellRegistration,
+              for: indexPath,
+              item: manga
+            )
+          }
         }
-      }
 
       let sectionTitleRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
         elementKind: SupplementaryItemKind.sectionTitle
@@ -276,11 +276,12 @@ extension HomeCollectionView.HomeCollectionViewController: UICollectionViewDataS
   private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
     indexPaths.compactMap { indexPath in
       guard let section = dataSource.sectionIdentifier(for: indexPath.section),
-            let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+            let itemIdentifier = dataSource.itemIdentifier(for: indexPath)
+      else {
         return nil
       }
 
-      guard case .success(let data) = store.fetchStatus else {
+      guard case let .success(data) = store.fetchStatus else {
         return nil
       }
 

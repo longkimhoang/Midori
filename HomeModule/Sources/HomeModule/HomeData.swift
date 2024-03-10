@@ -8,8 +8,18 @@
 import Database
 import IdentifiedCollections
 
-struct HomeData {
-  let popularMangas: IdentifiedArrayOf<Manga>
-  let latestChapters: IdentifiedArrayOf<Chapter>
-  let recentlyAddedMangas: IdentifiedArrayOf<Manga>
+public struct HomeData {
+  public let popularMangas: IdentifiedArrayOf<Manga>
+  public let latestChapters: IdentifiedArrayOf<Chapter>
+  public let recentlyAddedMangas: IdentifiedArrayOf<Manga>
+
+  public init(
+    popularMangas: IdentifiedArrayOf<Manga>,
+    latestChapters: IdentifiedArrayOf<Chapter>,
+    recentlyAddedMangas: IdentifiedArrayOf<Manga>
+  ) {
+    self.popularMangas = popularMangas
+    self.latestChapters = latestChapters
+    self.recentlyAddedMangas = recentlyAddedMangas
+  }
 }
