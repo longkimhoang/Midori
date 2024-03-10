@@ -18,16 +18,26 @@ import SwiftUI
 struct HomeCollectionView: UIViewControllerRepresentable {
   @Environment(\.modelContext) var modelContext
   @Environment(\.refresh) var refresh
-  let data: HomeData?
+  @Bindable var model: HomeViewModel
 
   func makeUIViewController(context: Context) -> HomeCollectionViewController {
     HomeCollectionViewController(coordinator: context.coordinator)
   }
 
-  func updateUIViewController(_: HomeCollectionViewController, context: Context) {
+  func updateUIViewController(_ viewController: HomeCollectionViewController, context: Context) {
     context.coordinator.refreshAction = refresh
     context.coordinator.modelContext = modelContext
-    context.coordinator.data = data
+
+    switch model.fetchStatus {
+    case let .success(data):
+      context.coordinator.data = data
+    case .loading:
+      viewController.showLoading()
+    case let .failure(error):
+      viewController.showError(error) {
+        model.fetchHomeData()
+      }
+    }
   }
 
   func makeCoordinator() -> Coordinator {
@@ -262,6 +272,25 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           }
         }
       )
+    }
+
+    func showLoading() {
+      contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
+    }
+
+    func showError(_ error: Error, retryAction: @escaping () -> Void) {
+      var configuration = UIContentUnavailableConfiguration.empty()
+      configuration.text = String(localized: "Error fetching content", bundle: .module)
+      configuration.secondaryText = error.localizedDescription
+
+      var retryButtonConfiguration = UIButton.Configuration.borderless()
+      retryButtonConfiguration.title = String(localized: "Retry", bundle: .module)
+      configuration.button = retryButtonConfiguration
+      configuration.buttonProperties.primaryAction = UIAction { _ in
+        retryAction()
+      }
+
+      contentUnavailableConfiguration = configuration
     }
   }
 }
