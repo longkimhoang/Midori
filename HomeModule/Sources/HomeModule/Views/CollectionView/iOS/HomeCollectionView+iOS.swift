@@ -58,6 +58,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
       view.layoutMargins = .zero
       setupDataSource()
       collectionView.prefetchDataSource = self
+      #if !targetEnvironment(macCatalyst)
       collectionView.refreshControl = UIRefreshControl(
         frame: .zero,
         primaryAction: UIAction { action in
@@ -70,6 +71,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           }
         }
       )
+      #endif
 
       observe { [weak self] in
         guard let self else { return }
