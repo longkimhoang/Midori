@@ -10,15 +10,17 @@ import HomeModule
 import SwiftUI
 
 struct ContentView: View {
+  let store: StoreOf<AppFeature>
+
   var body: some View {
-    HomeView(
-      store: Store(initialState: HomeFeature.State()) {
-        HomeFeature()
-      }
-    )
+    HomeView(store: store.scope(state: \.home, action: \.home))
   }
 }
 
 #Preview {
-  ContentView()
+  ContentView(
+    store: Store(initialState: AppFeature.State()) {
+      AppFeature()
+    }
+  )
 }
