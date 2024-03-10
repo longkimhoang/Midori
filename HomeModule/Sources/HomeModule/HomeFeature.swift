@@ -23,10 +23,14 @@ public struct HomeFeature {
     public init() {}
   }
 
-  public enum Action {
-    case fetchPopularMangas
+  public enum Action: ViewAction {
     case homeDataResponse(HomeData)
     case homeDataFailure(Error)
+    case view(View)
+
+    public enum View {
+      case fetchPopularMangas
+    }
   }
 
   public init() {}
@@ -38,7 +42,7 @@ public struct HomeFeature {
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
-      case .fetchPopularMangas:
+      case .view(.fetchPopularMangas):
         return .run { send in
           async let popularMangas = try await popularMangas.fetch()
           async let latestChapters = try await latestChapters.fetch()

@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import SwiftUI
 
+@ViewAction(for: HomeFeature.self)
 public struct HomeView: View {
   public let store: StoreOf<HomeFeature>
 
@@ -23,11 +24,11 @@ public struct HomeView: View {
       #endif
         .navigationTitle("Home")
         .refreshable {
-          await store.send(.fetchPopularMangas).finish()
+          await send(.fetchPopularMangas).finish()
         }
     }
     .task {
-      await store.send(.fetchPopularMangas).finish()
+      await send(.fetchPopularMangas).finish()
     }
   }
 }

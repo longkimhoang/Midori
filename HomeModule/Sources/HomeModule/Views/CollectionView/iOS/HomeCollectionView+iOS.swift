@@ -27,6 +27,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     // Updates are handled through viewController's conneciton to store.
   }
 
+  @ViewAction(for: HomeFeature.self)
   final class HomeCollectionViewController: UIViewController {
     @ViewLoading
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
@@ -63,7 +64,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           if let refreshControl = action.sender as? UIRefreshControl {
             Task { @MainActor [weak self] in
               guard let self else { return }
-              await store.send(.fetchPopularMangas).finish()
+              await send(.fetchPopularMangas).finish()
               refreshControl.endRefreshing()
             }
           }
@@ -99,7 +100,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         retryButtonConfiguration.title = String(localized: "Retry", bundle: .module)
         configuration.button = retryButtonConfiguration
         configuration.buttonProperties.primaryAction = UIAction(identifier: .refresh) { [weak self] _ in
-          self?.store.send(.fetchPopularMangas)
+          self?.send(.fetchPopularMangas)
         }
 
         contentUnavailableConfiguration = configuration.updated(for: state)
