@@ -23,9 +23,6 @@ public struct HomeView: View {
         .ignoresSafeArea()
       #endif
         .navigationTitle("Home")
-        .refreshable {
-          await send(.fetchPopularMangas).finish()
-        }
     }
     .task {
       await send(.fetchPopularMangas).finish()
