@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension NSCollectionLayoutSection {
-  static func latestUpdates(layoutEnvironment _: NSCollectionLayoutEnvironment)
+  static func latestUpdates(layoutEnvironment: NSCollectionLayoutEnvironment)
     -> NSCollectionLayoutSection
   {
     let itemSize = NSCollectionLayoutSize(
@@ -17,8 +17,13 @@ extension NSCollectionLayoutSection {
       heightDimension: .estimated(100)
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
+    #if os(iOS)
+    let groupWidth = layoutEnvironment.traitCollection.horizontalSizeClass == .compact ? 1 : 0.5
+    #else
+    let groupWidth = 1 / 2
+    #endif
     let groupSize = NSCollectionLayoutSize(
-      widthDimension: .fractionalWidth(1),
+      widthDimension: .fractionalWidth(groupWidth),
       heightDimension: .estimated(300)
     )
     let group = NSCollectionLayoutGroup.vertical(
