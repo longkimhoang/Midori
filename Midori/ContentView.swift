@@ -13,7 +13,12 @@ struct ContentView: View {
   let store: StoreOf<AppFeature>
 
   var body: some View {
-    HomeView(store: store.scope(state: \.home, action: \.home))
+    TabView {
+      HomeView(store: store.scope(state: \.home, action: \.home))
+        .tabItem {
+          Label("Home", systemImage: "house")
+        }
+    }
   }
 }
 
