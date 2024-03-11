@@ -17,6 +17,7 @@
 		4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */; };
 		4FCF649D2B9EAAB400B6D983 /* AppTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */; };
 		4FCF649F2B9EAB2600B6D983 /* AppSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */; };
+		4FCF64A52B9EB45D00B6D983 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APIClient.xctestplan; sourceTree = "<group>"; };
 		4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
 		4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSplitView.swift; sourceTree = "<group>"; };
+		4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		4FE7582D2B9C300E00C7AC12 /* Database */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Database; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,6 +72,7 @@
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,
 				4FB78DA12B8C9269009639A3 /* Products */,
+				4FCF64A32B9EB44F00B6D983 /* Resources */,
 				4F9132AF2B93716C00CB7747 /* Supporting Files */,
 				4FB78DB72B8F4032009639A3 /* Test Plans */,
 			);
@@ -127,6 +130,14 @@
 				4FB78DA52B8C9269009639A3 /* AppView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4FCF64A32B9EB44F00B6D983 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,6 +208,7 @@
 			files = (
 				4FB2699D2B94CDAF005BDD14 /* Domain in Resources */,
 				4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */,
+				4FCF64A52B9EB45D00B6D983 /* Localizable.xcstrings in Resources */,
 				4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

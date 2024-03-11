@@ -31,7 +31,11 @@ let package = Package(
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "Nuke", package: "Nuke"),
         .product(name: "Collections", package: "swift-collections"),
-        .product(name: "AdvancedCollectionTableView", package: "AdvancedCollectionTableView", condition: .when(platforms: [.macOS])),
+        .product(
+          name: "AdvancedCollectionTableView",
+          package: "AdvancedCollectionTableView",
+          condition: .when(platforms: [.macOS])
+        ),
       ]
     ),
   ]

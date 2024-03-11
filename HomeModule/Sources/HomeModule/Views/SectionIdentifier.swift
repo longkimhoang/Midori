@@ -7,8 +7,10 @@
 
 import Foundation
 
-enum SectionIdentifier: Int, CaseIterable {
+enum SectionIdentifier: Int, CaseIterable, Identifiable {
   case popular
   case latestUpdates
   case recentlyAdded
+
+  var id: Self { self }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22689"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView wantsLayer="YES" id="c22-O7-iKe" customClass="SectionTitleView" customModule="HomeModule">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ck1-dZ-2gD">
+                    <rect key="frame" x="-2" y="0.0" width="484" height="30"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Section Title" usesSingleLineMode="YES" id="Xtu-CB-XAS">
+                        <font key="font" textStyle="title1" name=".SFNS-Regular"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="ck1-dZ-2gD" secondAttribute="bottom" id="8Xi-WU-Ysi"/>
+                <constraint firstItem="ck1-dZ-2gD" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="Nre-YN-Qod"/>
+                <constraint firstAttribute="trailing" secondItem="ck1-dZ-2gD" secondAttribute="trailing" id="fWC-Au-8bC"/>
+                <constraint firstItem="ck1-dZ-2gD" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="juJ-LK-ljP"/>
+            </constraints>
+            <connections>
+                <outlet property="label" destination="ck1-dZ-2gD" id="XvD-Pa-U9I"/>
+            </connections>
+            <point key="canvasLocation" x="86" y="-17"/>
+        </customView>
+    </objects>
+</document>
