@@ -61,6 +61,15 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4F6852C12B9F694100BC67CC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FB78DA72B8C926A009639A3 /* Assets.xcassets */,
+				4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		4F9132AF2B93716C00CB7747 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -80,7 +89,6 @@
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,
 				4FB78DA12B8C9269009639A3 /* Products */,
-				4FCF64A32B9EB44F00B6D983 /* Resources */,
 				4F9132AF2B93716C00CB7747 /* Supporting Files */,
 				4FB78DB72B8F4032009639A3 /* Test Plans */,
 			);
@@ -99,8 +107,8 @@
 			children = (
 				4F3875D82B9DC6780025EDB8 /* AppFeature.swift */,
 				4FB78DA32B8C9269009639A3 /* MidoriApp.swift */,
-				4FB78DA72B8C926A009639A3 /* Assets.xcassets */,
 				4FB78DAA2B8C926A009639A3 /* Preview Content */,
+				4F6852C12B9F694100BC67CC /* Resources */,
 				4F6852C02B9F68AF00BC67CC /* Supporting Files */,
 				4FCF649B2B9EAA7E00B6D983 /* Views */,
 			);
@@ -138,14 +146,6 @@
 				4FB78DA52B8C9269009639A3 /* AppView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		4FCF64A32B9EB44F00B6D983 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
