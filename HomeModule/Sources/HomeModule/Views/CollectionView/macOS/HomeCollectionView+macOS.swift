@@ -29,6 +29,8 @@ struct HomeCollectionView: NSViewControllerRepresentable {
   @ViewAction(for: HomeFeature.self)
   final class HomeCollectionViewController: NSViewController {
     @ViewLoading
+    private var collectionView: NSCollectionView
+    @ViewLoading
     private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
@@ -47,12 +49,11 @@ struct HomeCollectionView: NSViewControllerRepresentable {
     override func loadView() {
       let collectionView = NSCollectionView()
       collectionView.collectionViewLayout = .home()
+      let scrollView = NSScrollView()
+      scrollView.documentView = collectionView
 
-      view = collectionView
-    }
-
-    var collectionView: NSCollectionView {
-      view as! NSCollectionView
+      self.view = scrollView
+      self.collectionView = collectionView
     }
 
     override func viewDidLoad() {
@@ -181,12 +182,16 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       ) { sectionTitleView, _, indexPath in
         guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
 
-        switch section {
+        let title = switch section {
         case .popular:
-          sectionTitleView.label.stringValue = String(localized: "Popular new titles", bundle: .module)
-        default:
-          break
+          String(localized: "Popular new titles", bundle: .module)
+        case .latestUpdates:
+          String(localized: "Latest updates", bundle: .module)
+        case .recentlyAdded:
+          String(localized: "Recently added", bundle: .module)
         }
+
+        sectionTitleView.label.stringValue = title
       }
 
       dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in

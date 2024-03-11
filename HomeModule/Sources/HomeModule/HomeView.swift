@@ -19,9 +19,7 @@ public struct HomeView: View {
   public var body: some View {
     NavigationStack {
       HomeCollectionView(store: store)
-      #if os(iOS)
         .ignoresSafeArea()
-      #endif
         .navigationTitle("Home")
         .toolbar {
           ToolbarItem {
