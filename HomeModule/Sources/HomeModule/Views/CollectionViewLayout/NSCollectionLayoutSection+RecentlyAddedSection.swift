@@ -28,7 +28,11 @@ extension NSCollectionLayoutSection {
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 16
     section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+    #if os(iOS)
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
+    #else
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+    #endif
     section.boundarySupplementaryItems = [.sectionTitle]
 
     return section

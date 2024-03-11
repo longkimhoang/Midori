@@ -14,6 +14,7 @@ import Database
 import Dependencies
 import FZUIKit
 import Nuke
+import SnapKit
 import SwiftData
 import SwiftUI
 
@@ -52,7 +53,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       let scrollView = NSScrollView()
       scrollView.documentView = collectionView
 
-      self.view = scrollView
+      view = scrollView
       self.collectionView = collectionView
     }
 
@@ -101,7 +102,6 @@ struct HomeCollectionView: NSViewControllerRepresentable {
           item.contentConfiguration = NSHostingConfiguration {
             PopularMangaView(manga: manga, coverThumbnailImage: image)
           }
-          .margins(.all, 0)
         }
       }
 
