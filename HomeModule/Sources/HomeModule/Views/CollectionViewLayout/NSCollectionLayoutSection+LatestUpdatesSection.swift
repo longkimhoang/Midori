@@ -19,7 +19,7 @@ extension NSCollectionLayoutSection {
     #if os(iOS)
     let groupWidth = layoutEnvironment.traitCollection.horizontalSizeClass == .compact ? 1 : 0.5
     #else
-    let groupWidth = 0.5
+    let groupWidth = layoutEnvironment.container.effectiveContentSize.width > 1000 ? 1/3 : 0.5
     #endif
     let groupSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(groupWidth),

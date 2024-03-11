@@ -29,7 +29,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
   @ViewAction(for: HomeFeature.self)
   final class HomeCollectionViewController: NSViewController {
     @ViewLoading
-    private var dataSource: CollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
+    private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
     let store: StoreOf<HomeFeature>
@@ -45,7 +45,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
     }
 
     override func loadView() {
-      let collectionView = NSCollectionView(frame: .zero)
+      let collectionView = NSCollectionView()
       collectionView.collectionViewLayout = .home()
 
       view = collectionView
@@ -129,7 +129,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       }
 
       dataSource =
-        CollectionViewDiffableDataSource(collectionView: collectionView) {
+        NSCollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier -> NSCollectionViewItem? in
           guard let self,
                 let section = SectionIdentifier(rawValue: indexPath.section)
@@ -217,7 +217,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
       snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
       snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
-      dataSource.apply(snapshot)
+      dataSource.apply(snapshot, animatingDifferences: true)
     }
 
     private func reconfigureItems(at indexPaths: some Collection<IndexPath>) {
@@ -229,8 +229,8 @@ struct HomeCollectionView: NSViewControllerRepresentable {
 extension HomeCollectionView.HomeCollectionViewController: NSCollectionViewPrefetching {
   private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
     indexPaths.compactMap { indexPath in
-      guard let itemIdentifier = dataSource.element(for: indexPath),
-            let section = dataSource.section(for: itemIdentifier)
+      guard let section = SectionIdentifier(rawValue: indexPath.section),
+            let itemIdentifier = dataSource.itemIdentifier(for: indexPath)
       else {
         return nil
       }
