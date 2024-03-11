@@ -18,7 +18,8 @@ public struct HomeFeature {
   @ObservableState
   public struct State {
     public typealias FetchStatus = HomeDataFetchStatus
-    public internal(set) var fetchStatus: FetchStatus = .loading
+    public var fetchStatus: FetchStatus = .loading
+    public var isRefreshing: Bool = false
 
     public init() {}
   }
@@ -43,6 +44,7 @@ public struct HomeFeature {
     Reduce { state, action in
       switch action {
       case .view(.fetchPopularMangas):
+        state.isRefreshing = true
         return .run { send in
           async let popularMangas = try await popularMangas.fetch()
           async let latestChapters = try await latestChapters.fetch()
@@ -58,9 +60,11 @@ public struct HomeFeature {
           await send(.homeDataFailure(error))
         }
       case let .homeDataResponse(data):
+        state.isRefreshing = false
         state.fetchStatus = .success(data)
         return .none
       case let .homeDataFailure(error):
+        state.isRefreshing = false
         state.fetchStatus = .failure(error)
         return .none
       }

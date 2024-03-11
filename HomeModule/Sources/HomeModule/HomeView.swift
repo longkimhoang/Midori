@@ -22,9 +22,11 @@ public struct HomeView: View {
         .ignoresSafeArea()
         .navigationTitle("Home")
         .toolbar {
+          #if os(macOS)
           ToolbarItem {
             refreshButton
           }
+          #endif
         }
     }
     .task {
@@ -37,10 +39,15 @@ public struct HomeView: View {
     Button {
       send(.fetchPopularMangas)
     } label: {
-      Label {
-        Text("Refresh", bundle: .module)
-      } icon: {
-        Image(systemName: "arrow.triangle.2.circlepath")
+      if store.isRefreshing {
+        ProgressView()
+          .controlSize(.small)
+      } else {
+        Label {
+          Text("Refresh", bundle: .module)
+        } icon: {
+          Image(systemName: "arrow.clockwise")
+        }
       }
     }
     .keyboardShortcut("r", modifiers: .command)
