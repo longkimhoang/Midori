@@ -43,5 +43,6 @@ public struct HomeView: View {
         Image(systemName: "arrow.triangle.2.circlepath")
       }
     }
+    .keyboardShortcut("r", modifiers: .command)
   }
 }
