@@ -14,7 +14,7 @@ struct AppSplitView: View {
     case home
   }
 
-  @State private var destination: Destination = .home
+  @State private var destination: Destination? = .home
   let store: StoreOf<AppFeature>
 
   var body: some View {
@@ -24,10 +24,13 @@ struct AppSplitView: View {
           destination.label
         }
       }
+      .toolbarTitleDisplayMode(.inline)
     } detail: {
       switch destination {
       case .home:
         HomeView(store: store.scope(state: \.home, action: \.home))
+      case .none:
+        EmptyView()
       }
     }
   }

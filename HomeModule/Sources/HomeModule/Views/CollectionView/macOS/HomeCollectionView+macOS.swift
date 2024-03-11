@@ -5,6 +5,7 @@
 //  Created by Long Kim on 11/3/24.
 //
 
+#if os(macOS)
 import ComposableArchitecture
 import SwiftUI
 
@@ -15,3 +16,4 @@ struct HomeCollectionView: View {
     EmptyView()
   }
 }
+#endif
