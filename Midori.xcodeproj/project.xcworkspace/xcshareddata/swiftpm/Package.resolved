@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "advancedcollectiontableview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flocked/AdvancedCollectionTableView.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "1351280fa22b3010f7f0bccf4660027968392854"
+      }
+    },
+    {
       "identity" : "alamofire",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
@@ -16,6 +25,33 @@
       "state" : {
         "revision" : "9dc9cbe4bc45c65164fa653a563d8d8db61b09bb",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "fzquicklook",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flocked/FZQuicklook.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ec128140038e902ea4b303fe7909af3f86cc686f"
+      }
+    },
+    {
+      "identity" : "fzswiftutils",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flocked/FZSwiftUtils.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "44175a2cd397c17e470b959a41495478560cf965"
+      }
+    },
+    {
+      "identity" : "fzuikit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flocked/FZUIKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "210e40b5c9633af43f815f28661054a204440907"
       }
     },
     {

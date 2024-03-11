@@ -18,6 +18,7 @@ let package = Package(
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
     .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
+    .package(url: "https://github.com/flocked/AdvancedCollectionTableView.git", branch: "main"),
   ],
   targets: [
     .target(
@@ -30,6 +31,7 @@ let package = Package(
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "Nuke", package: "Nuke"),
         .product(name: "Collections", package: "swift-collections"),
+        .product(name: "AdvancedCollectionTableView", package: "AdvancedCollectionTableView", condition: .when(platforms: [.macOS])),
       ]
     ),
   ]
