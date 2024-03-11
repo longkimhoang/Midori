@@ -7,8 +7,24 @@
 
 #if os(macOS)
 import AppKit
+import SnapKit
 
 final class SectionTitleView: NSView, NSCollectionViewElement {
-  @IBOutlet var label: NSTextField!
+  private(set) lazy var label = NSTextField(labelWithString: "Placeholder title")
+
+  override init(frame frameRect: NSRect) {
+    super.init(frame: frameRect)
+
+    label.font = NSFont.systemFont(.title1)
+
+    addSubview(label)
+    label.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
+    }
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 }
 #endif

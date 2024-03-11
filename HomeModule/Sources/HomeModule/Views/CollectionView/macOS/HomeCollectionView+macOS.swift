@@ -177,7 +177,6 @@ struct HomeCollectionView: NSViewControllerRepresentable {
         }
 
       let sectionTitleRegistration = NSCollectionView.SupplementaryRegistration<SectionTitleView>(
-        nib: NSNib(nibNamed: "SectionTitle", bundle: .module)!,
         elementKind: SupplementaryItemKind.sectionTitle
       ) { sectionTitleView, _, indexPath in
         guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
