@@ -53,6 +53,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F6852C02B9F68AF00BC67CC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4FB78DA92B8C926A009639A3 /* Midori.entitlements */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		4F9132AF2B93716C00CB7747 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,11 +97,11 @@
 		4FB78DA22B8C9269009639A3 /* Midori */ = {
 			isa = PBXGroup;
 			children = (
-				4FB78DA92B8C926A009639A3 /* Midori.entitlements */,
 				4F3875D82B9DC6780025EDB8 /* AppFeature.swift */,
 				4FB78DA32B8C9269009639A3 /* MidoriApp.swift */,
 				4FB78DA72B8C926A009639A3 /* Assets.xcassets */,
 				4FB78DAA2B8C926A009639A3 /* Preview Content */,
+				4F6852C02B9F68AF00BC67CC /* Supporting Files */,
 				4FCF649B2B9EAA7E00B6D983 /* Views */,
 			);
 			path = Midori;
@@ -352,7 +360,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Midori/Midori.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Midori/Supporting Files/Midori.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -394,7 +402,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Midori/Midori.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Midori/Supporting Files/Midori.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
