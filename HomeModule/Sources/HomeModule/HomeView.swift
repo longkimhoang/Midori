@@ -23,9 +23,27 @@ public struct HomeView: View {
         .ignoresSafeArea()
       #endif
         .navigationTitle("Home")
+        .toolbar {
+          ToolbarItem {
+            refreshButton
+          }
+        }
     }
     .task {
       await send(.fetchPopularMangas).finish()
+    }
+  }
+
+  @ViewBuilder
+  private var refreshButton: some View {
+    Button {
+      send(.fetchPopularMangas)
+    } label: {
+      Label {
+        Text("Refresh", bundle: .module)
+      } icon: {
+        Image(systemName: "arrow.triangle.2.circlepath")
+      }
     }
   }
 }

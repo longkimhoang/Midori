@@ -22,7 +22,7 @@ struct MidoriApp: App {
 
   var body: some Scene {
     WindowGroup {
-      ContentView(store: MidoriApp.store)
+      AppView(store: MidoriApp.store)
     }
     .modelContainer(modelContainer)
   }

@@ -5,6 +5,7 @@
 //  Created by Long Kim on 05/03/2024.
 //
 
+#if os(iOS)
 import Foundation
 import SwiftUI
 
@@ -35,3 +36,4 @@ extension NSCollectionLayoutSection {
     return section
   }
 }
+#endif
