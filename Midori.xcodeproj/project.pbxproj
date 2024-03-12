@@ -22,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		4F3875D82B9DC6780025EDB8 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
+		4F6857B02BA0A06600BC67CC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		4F8B6E422B981EF6000E3DFA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
@@ -75,6 +76,7 @@
 			children = (
 				4F8B6E422B981EF6000E3DFA /* .gitignore */,
 				4F9132AE2B93712C00CB7747 /* .swiftformat */,
+				4F6857B02BA0A06600BC67CC /* Gemfile */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
