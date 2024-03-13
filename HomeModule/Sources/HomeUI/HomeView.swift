@@ -51,6 +51,10 @@ public struct HomeView: View {
         if let store = store.scope(state: \.latestUpdatesDetail, action: \.latestUpdatesDetail) {
           LatestUpdatesDetailView(store: store)
         }
+      case .recentlyAddedDetail:
+        if let store = store.scope(state: \.recentlyAddedDetail, action: \.recentlyAddedDetail) {
+          RecentlyAddedDetailView(store: store)
+        }
       }
     }
     .task {

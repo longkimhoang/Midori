@@ -85,15 +85,21 @@ extension HomeFeature {
     @ObservableState
     public enum State {
       case latestUpdatesDetail(LatestUpdatesDetailFeature.State)
+      case recentlyAddedDetail(RecentlyAddedDetailFeature.State)
     }
 
     public enum Action {
       case latestUpdatesDetail(LatestUpdatesDetailFeature.Action)
+      case recentlyAddedDetail(RecentlyAddedDetailFeature.Action)
     }
 
     public var body: some ReducerOf<Self> {
       Scope(state: \.latestUpdatesDetail, action: \.latestUpdatesDetail) {
         LatestUpdatesDetailFeature()
+      }
+
+      Scope(state: \.recentlyAddedDetail, action: \.recentlyAddedDetail) {
+        RecentlyAddedDetailFeature()
       }
     }
   }
