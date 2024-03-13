@@ -29,6 +29,21 @@ public struct HomeView: View {
           }
           #endif
         }
+        .overlay {
+          #if os(macOS)
+          switch store.fetchStatus {
+          case .loading:
+            ContentUnavailableView {
+              ProgressView()
+                .controlSize(.large)
+            } description: {
+              Text("Loading...", bundle: .module)
+            }
+          default:
+            EmptyView()
+          }
+          #endif
+        }
     } destination: { store in
       switch store.state {
       case .latestUpdatesDetail:
