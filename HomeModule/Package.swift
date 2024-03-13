@@ -11,6 +11,7 @@ let package = Package(
     .library(name: "HomeModule", targets: ["HomeModule"]),
   ],
   dependencies: [
+    .package(path: "CommonUI"),
     .package(path: "Domain"),
     .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
@@ -25,6 +26,7 @@ let package = Package(
     .target(
       name: "HomeModule",
       dependencies: [
+        .product(name: "CommonUI", package: "CommonUI"),
         .product(name: "Domain", package: "Domain"),
         .product(name: "APIClients", package: "Networking"),
         .product(name: "APIModels", package: "Networking"),

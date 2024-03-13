@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import CommonUI
 import SwiftUI
 
 @ViewAction(for: HomeFeature.self)
@@ -43,11 +44,7 @@ public struct HomeView: View {
         ProgressView()
           .controlSize(.small)
       } else {
-        Label {
-          Text("Refresh", bundle: .module)
-        } icon: {
-          Image(systemName: "arrow.clockwise")
-        }
+        Label("Refresh", bundle: .module, systemImage: "arrow.clockwise")
       }
     }
     .keyboardShortcut("r", modifiers: .command)

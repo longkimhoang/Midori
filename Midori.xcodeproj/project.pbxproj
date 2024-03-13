@@ -23,6 +23,7 @@
 /* Begin PBXFileReference section */
 		4F3875D82B9DC6780025EDB8 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
 		4F3FE1912BA162A4005DF6E5 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
+		4F3FE1932BA18189005DF6E5 /* CommonUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonUI; sourceTree = "<group>"; };
 		4F6857B02BA0A06600BC67CC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		4F8B6E422B981EF6000E3DFA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
@@ -85,6 +86,7 @@
 		4FB78D972B8C9269009639A3 = {
 			isa = PBXGroup;
 			children = (
+				4F3FE1932BA18189005DF6E5 /* CommonUI */,
 				4FE7582D2B9C300E00C7AC12 /* Database */,
 				4FB2699C2B94CDAF005BDD14 /* Domain */,
 				4F97207D2B9309C40028B950 /* HomeModule */,
