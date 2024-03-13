@@ -16,8 +16,11 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Description of what the lane does"
-  lane :custom_lane do
-    # add actions here: https://docs.fastlane.tools/actions
+  desc "Archive iOS app for ad-hoc distribution"
+  lane :ios_adhoc do
+    gym(
+      export_method: "ad-hoc",
+      destination: "generic/platform=iOS"
+    )
   end
 end
