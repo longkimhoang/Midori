@@ -6,12 +6,16 @@
 //
 
 import ComposableArchitecture
+import Database
 import Dependencies
+import IdentifiedCollections
 
 @Reducer
 public struct RecentlyAddedDetailFeature {
   @ObservableState
   public struct State {
+    public var mangas: IdentifiedArrayOf<Manga> = []
+
     public init() {}
   }
 

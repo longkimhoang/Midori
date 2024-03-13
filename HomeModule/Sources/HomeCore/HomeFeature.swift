@@ -7,6 +7,8 @@
 
 import ComposableArchitecture
 
+@CasePathable
+@dynamicMemberLookup
 public enum HomeDataFetchStatus {
   case loading
   case success(HomeData)
@@ -68,6 +70,16 @@ public struct HomeFeature {
       case let .homeDataFailure(error):
         state.isRefreshing = false
         state.fetchStatus = .failure(error)
+        return .none
+      case let .path(.push(id: id, state: .latestUpdatesDetail)):
+        if let data = state.fetchStatus.success {
+          state.path[id: id]?.latestUpdatesDetail?.chapters = data.latestChapters
+        }
+        return .none
+      case let .path(.push(id: id, state: .recentlyAddedDetail)):
+        if let data = state.fetchStatus.success {
+          state.path[id: id]?.recentlyAddedDetail?.mangas = data.recentlyAddedMangas
+        }
         return .none
       case .path:
         return .none

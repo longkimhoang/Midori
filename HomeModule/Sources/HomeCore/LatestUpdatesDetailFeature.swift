@@ -6,12 +6,14 @@
 //
 
 import ComposableArchitecture
-import Dependencies
+import Database
 
 @Reducer
 public struct LatestUpdatesDetailFeature {
   @ObservableState
   public struct State {
+    public var chapters: IdentifiedArrayOf<Chapter> = []
+
     public init() {}
   }
 

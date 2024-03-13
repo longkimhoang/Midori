@@ -177,7 +177,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
             return nil
           }
 
-          guard case let .success(data) = store.fetchStatus else {
+          guard let data = store.fetchStatus.success else {
             return nil
           }
 
@@ -290,7 +290,7 @@ extension HomeCollectionView.HomeCollectionViewController: UICollectionViewDataS
         return nil
       }
 
-      guard case let .success(data) = store.fetchStatus else {
+      guard let data = store.fetchStatus.success else {
         return nil
       }
 
