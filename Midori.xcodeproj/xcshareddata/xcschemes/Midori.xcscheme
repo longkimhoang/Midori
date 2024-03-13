@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Test Plans/APIClient.xctestplan"
+            reference = "container:Test Plans/Networking.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

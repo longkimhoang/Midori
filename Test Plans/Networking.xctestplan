@@ -13,11 +13,10 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:APIClient",
-        "identifier" : "APICommonTests",
-        "name" : "APICommonTests"
+        "containerPath" : "container:Networking",
+        "identifier" : "CommonTests",
+        "name" : "CommonTests"
       }
     }
   ],

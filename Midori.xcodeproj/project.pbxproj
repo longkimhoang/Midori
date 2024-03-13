@@ -35,7 +35,7 @@
 		4FB78DA72B8C926A009639A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FB78DA92B8C926A009639A3 /* Midori.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Midori.entitlements; sourceTree = "<group>"; };
 		4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APIClient.xctestplan; sourceTree = "<group>"; };
+		4FB78DB92B8F40DA009639A3 /* Networking.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Networking.xctestplan; sourceTree = "<group>"; };
 		4FC20A052BA0C77D00A9948B /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
 		4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSplitView.swift; sourceTree = "<group>"; };
@@ -139,7 +139,7 @@
 		4FB78DB72B8F4032009639A3 /* Test Plans */ = {
 			isa = PBXGroup;
 			children = (
-				4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */,
+				4FB78DB92B8F40DA009639A3 /* Networking.xctestplan */,
 			);
 			path = "Test Plans";
 			sourceTree = "<group>";
