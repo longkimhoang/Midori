@@ -8,14 +8,14 @@ let package = Package(
   defaultLocalization: "en",
   platforms: [.macOS(.v14), .iOS(.v17)],
   products: [
-    .library(name: "HomeModule", targets: ["HomeModule"]),
+    .library(name: "HomeUI", targets: ["HomeUI"]),
+    .library(name: "HomeCore", targets: ["HomeCore"]),
   ],
   dependencies: [
     .package(path: "CommonUI"),
     .package(path: "Domain"),
     .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
-    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.1.0"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
@@ -24,14 +24,20 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "HomeModule",
+      name: "HomeCore",
       dependencies: [
-        .product(name: "CommonUI", package: "CommonUI"),
         .product(name: "Domain", package: "Domain"),
         .product(name: "APIClients", package: "Networking"),
         .product(name: "APIModels", package: "Networking"),
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
+    ),
+    .target(
+      name: "HomeUI",
+      dependencies: [
+        .target(name: "HomeCore"),
+        .product(name: "CommonUI", package: "CommonUI"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "Nuke", package: "Nuke"),

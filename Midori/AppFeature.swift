@@ -6,7 +6,7 @@
 //
 
 import ComposableArchitecture
-import HomeModule
+import HomeCore
 
 @Reducer
 struct AppFeature {

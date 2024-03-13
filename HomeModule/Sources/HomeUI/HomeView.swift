@@ -7,6 +7,7 @@
 
 import CommonUI
 import ComposableArchitecture
+import HomeCore
 import SwiftUI
 
 @ViewAction(for: HomeFeature.self)

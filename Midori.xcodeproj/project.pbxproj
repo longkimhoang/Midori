@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4F3875D92B9DC6780025EDB8 /* AppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3875D82B9DC6780025EDB8 /* AppFeature.swift */; };
-		4F9D4AE22B9C26AB006380F5 /* HomeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 4F9D4AE12B9C26AB006380F5 /* HomeModule */; };
+		4F3FE1962BA1B9ED005DF6E5 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3FE1952BA1B9ED005DF6E5 /* HomeUI */; };
 		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
 		4FB2699D2B94CDAF005BDD14 /* Domain in Resources */ = {isa = PBXBuildFile; fileRef = 4FB2699C2B94CDAF005BDD14 /* Domain */; };
 		4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA32B8C9269009639A3 /* MidoriApp.swift */; };
@@ -50,7 +50,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */,
-				4F9D4AE22B9C26AB006380F5 /* HomeModule in Frameworks */,
+				4F3FE1962BA1B9ED005DF6E5 /* HomeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +182,7 @@
 			name = Midori;
 			packageProductDependencies = (
 				4FB269992B94C8C6005BDD14 /* Dependencies */,
-				4F9D4AE12B9C26AB006380F5 /* HomeModule */,
+				4F3FE1952BA1B9ED005DF6E5 /* HomeUI */,
 			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
@@ -498,9 +498,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4F9D4AE12B9C26AB006380F5 /* HomeModule */ = {
+		4F3FE1952BA1B9ED005DF6E5 /* HomeUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = HomeModule;
+			productName = HomeUI;
 		};
 		4FB269992B94C8C6005BDD14 /* Dependencies */ = {
 			isa = XCSwiftPackageProductDependency;

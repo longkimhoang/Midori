@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import HomeCore
 import SwiftUI
 
 struct LatestUpdatesDetailView: View {

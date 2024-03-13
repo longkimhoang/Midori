@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import HomeModule
 import SwiftUI
 
 struct AppView: View {

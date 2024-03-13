@@ -13,6 +13,7 @@ import ComposableArchitecture
 import Database
 import Dependencies
 import Foundation
+import HomeCore
 import Nuke
 import SwiftData
 import SwiftUI

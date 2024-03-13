@@ -6,7 +6,7 @@
 //
 
 import ComposableArchitecture
-import HomeModule
+import HomeUI
 import SwiftUI
 
 struct AppSplitView: View {
