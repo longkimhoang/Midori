@@ -11,17 +11,17 @@ import SwiftUI
 
 @ViewAction(for: HomeFeature.self)
 public struct HomeView: View {
-  public let store: StoreOf<HomeFeature>
+  @Bindable public var store: StoreOf<HomeFeature>
 
   public init(store: StoreOf<HomeFeature>) {
     self.store = store
   }
 
   public var body: some View {
-    NavigationStack {
+    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
       HomeCollectionView(store: store)
         .ignoresSafeArea()
-        .navigationTitle("Home")
+        .navigationTitle(Text("Home", bundle: .module))
         .toolbar {
           #if os(macOS)
           ToolbarItem {
@@ -29,9 +29,18 @@ public struct HomeView: View {
           }
           #endif
         }
+    } destination: { store in
+      switch store.state {
+      case .latestUpdatesDetail:
+        if let store = store.scope(state: \.latestUpdatesDetail, action: \.latestUpdatesDetail) {
+          LatestUpdatesDetailView(store: store)
+        }
+      }
     }
     .task {
-      await send(.fetchPopularMangas).finish()
+      if case .loading = store.fetchStatus {
+        await send(.fetchPopularMangas).finish()
+      }
     }
   }
 

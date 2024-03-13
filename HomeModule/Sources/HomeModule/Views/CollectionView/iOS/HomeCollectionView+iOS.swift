@@ -8,6 +8,7 @@
 #if os(iOS)
 import Combine
 import CombineSchedulers
+import CommonUI
 import ComposableArchitecture
 import Database
 import Dependencies
@@ -224,12 +225,16 @@ struct HomeCollectionView: UIViewControllerRepresentable {
             case .popular:
               Text("Popular new titles", bundle: .module)
             case .latestUpdates:
-              Text("Latest updates", bundle: .module)
+              NavigationLink(state: HomeFeature.Path.State.latestUpdatesDetail(LatestUpdatesDetailFeature.State())) {
+                Label("Latest updates", bundle: .module, systemImage: "chevron.forward")
+                  .labelStyle(.sectionTitleNavigation)
+              }
             case .recentlyAdded:
               Text("Recently added", bundle: .module)
             }
           }
           .font(.title)
+          .foregroundStyle(.primary)
         }
         .margins(.vertical, 4)
         .margins(.horizontal, 0)

@@ -20,6 +20,7 @@ public struct HomeFeature {
     public typealias FetchStatus = HomeDataFetchStatus
     public var fetchStatus: FetchStatus = .loading
     public var isRefreshing: Bool = false
+    public var path = StackState<Path.State>()
 
     public init() {}
   }
@@ -27,6 +28,7 @@ public struct HomeFeature {
   public enum Action: ViewAction {
     case homeDataResponse(HomeData)
     case homeDataFailure(Error)
+    case path(StackAction<Path.State, Path.Action>)
     case view(View)
 
     public enum View {
@@ -67,6 +69,31 @@ public struct HomeFeature {
         state.isRefreshing = false
         state.fetchStatus = .failure(error)
         return .none
+      case .path:
+        return .none
+      }
+    }
+    .forEach(\.path, action: \.path) {
+      Path()
+    }
+  }
+}
+
+extension HomeFeature {
+  @Reducer
+  public struct Path {
+    @ObservableState
+    public enum State {
+      case latestUpdatesDetail(LatestUpdatesDetailFeature.State)
+    }
+
+    public enum Action {
+      case latestUpdatesDetail(LatestUpdatesDetailFeature.Action)
+    }
+
+    public var body: some ReducerOf<Self> {
+      Scope(state: \.latestUpdatesDetail, action: \.latestUpdatesDetail) {
+        LatestUpdatesDetailFeature()
       }
     }
   }
