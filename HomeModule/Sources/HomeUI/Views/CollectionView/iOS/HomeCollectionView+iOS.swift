@@ -225,14 +225,20 @@ struct HomeCollectionView: UIViewControllerRepresentable {
             case .popular:
               Text("Popular new titles", bundle: .module)
             case .latestUpdates:
-              NavigationLink(state: HomeFeature.Path.State.latestUpdatesDetail(LatestUpdatesDetailFeature.State())) {
+              NavigationLink(
+                state: HomeFeature.Path.State.latestUpdatesDetail(LatestUpdatesDetailFeature.State())
+              ) {
                 Label("Latest updates", bundle: .module, systemImage: "chevron.forward")
-                  .labelStyle(.sectionTitleNavigation)
               }
             case .recentlyAdded:
-              Text("Recently added", bundle: .module)
+              NavigationLink(
+                state: HomeFeature.Path.State.recentlyAddedDetail(RecentlyAddedDetailFeature.State())
+              ) {
+                Label("Recently added", bundle: .module, systemImage: "chevron.forward")
+              }
             }
           }
+          .labelStyle(.sectionTitleNavigation)
           .font(.title)
           .foregroundStyle(.primary)
         }

@@ -13,6 +13,9 @@ struct RecentlyAddedDetailView: View {
   let store: StoreOf<RecentlyAddedDetailFeature>
 
   var body: some View {
-    Text("Recently added")
+    List(store.mangas) { manga in
+      Text(manga.title)
+    }
+    .navigationTitle(Text("Recently added", bundle: .module))
   }
 }

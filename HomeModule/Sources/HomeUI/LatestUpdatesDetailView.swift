@@ -13,7 +13,9 @@ struct LatestUpdatesDetailView: View {
   let store: StoreOf<LatestUpdatesDetailFeature>
 
   var body: some View {
-    Text("Latest updates")
-      .navigationTitle(Text("Latest updates", bundle: .module))
+    List(store.chapters) { chapter in
+      Text(chapter.chapterID.uuidString)
+    }
+    .navigationTitle(Text("Latest updates", bundle: .module))
   }
 }
