@@ -2,11 +2,11 @@
 //  ListMangas.swift
 //
 //
-//  Created by Long Kim on 28/02/2024.
+//  Created by Long Kim on 13/3/24.
 //
 
-import APICommon
 import APIModels
+import Common
 import Foundation
 import HelperCoders
 import MetaCodable
@@ -23,17 +23,14 @@ public struct ListMangas {
 @Codable
 @MemberInit
 public struct ListMangasParameters {
-  public typealias Order = ListMangasSortOrder
-
-  @Default(10)
-  public let limit: Int
+  @Default(10) public let limit: Int
   public let offset: Int?
   public let ids: [String]?
   @Default(true) public let hasAvailableChapters: Bool
   @CodedBy(DateCoder(formatter: .api)) public let createdAtSince: Date?
   @Default<[ListMangasReference]>([.cover, .author, .artist])
   public let includes: [ListMangasReference]
-  public let order: Order?
+  public let order: ListMangasSortOrder?
 }
 
 public enum ListMangasReference: String, Codable {
@@ -48,13 +45,7 @@ public enum ListMangasReference: String, Codable {
 @Codable
 @MemberInit
 public struct ListMangasSortOrder {
-  public typealias SortOrder = APICommon.SortOrder
-
-  public let latestUploadChapter: SortOrder?
-  public let followedCount: SortOrder?
-  public let createdAt: SortOrder?
-}
-
-extension ListMangas {
-  public typealias Parameters = ListMangasParameters
+  public let latestUploadChapter: Common.SortOrder?
+  public let followedCount: Common.SortOrder?
+  public let createdAt: Common.SortOrder?
 }

@@ -8,7 +8,7 @@
 import MetaCodable
 import XCTest
 
-@testable import APICommon
+@testable import Common
 
 final class LocalizedStringCoderTests: XCTestCase {
   @Codable

@@ -2,11 +2,11 @@
 //  ListChapters.swift
 //
 //
-//  Created by Long Kim on 06/03/2024.
+//  Created by Long Kim on 13/3/24.
 //
 
-import APICommon
 import APIModels
+import Common
 import MetaCodable
 
 @Codable
@@ -22,13 +22,10 @@ public struct ListChapters {
 @Codable
 @MemberInit
 public struct ListChaptersParameters {
-  public typealias Order = ListChaptersSortOrder
-
-  @Default(10)
-  public let limit: Int
+  @Default(10) public let limit: Int
   public let offset: Int?
   public let includes: [ListChaptersReference]?
-  public let order: Order?
+  public let order: ListChaptersSortOrder?
 }
 
 public enum ListChaptersReference: String, Codable {
@@ -40,12 +37,8 @@ public enum ListChaptersReference: String, Codable {
 @Codable
 @MemberInit
 public struct ListChaptersSortOrder {
-  public let createdAt: SortOrder?
-  public let updatedAt: SortOrder?
-  public let publishAt: SortOrder?
-  public let readableAt: SortOrder?
-}
-
-extension ListChapters {
-  public typealias Parameters = ListChaptersParameters
+  public let createdAt: Common.SortOrder?
+  public let updatedAt: Common.SortOrder?
+  public let publishAt: Common.SortOrder?
+  public let readableAt: Common.SortOrder?
 }

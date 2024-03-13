@@ -5,12 +5,12 @@
 //  Created by Long Kim on 08/03/2024.
 //
 
+import APIClients
 import Database
 import Dependencies
 import DependenciesMacros
 import Domain
 import Foundation
-import MangaEndpoint
 import SwiftData
 
 @DependencyClient
@@ -21,6 +21,8 @@ struct PopularMangasClient {
 extension PopularMangasClient: DependencyKey {
   static var liveValue: Self {
     @Dependency(\.calendar) var calendar
+    @Dependency(\.date) var date
+    @Dependency(\.mangaAPI) var mangaAPI
     @Dependency(\.mangaStore) var mangaStore
 
     return PopularMangasClient(
@@ -28,22 +30,23 @@ extension PopularMangasClient: DependencyKey {
         let lastMonth = calendar.date(
           byAdding: .month,
           value: -1,
-          to: Date(),
+          to: date(),
           wrappingComponents: false
         )
 
-        let popularMangas = try await MangaEndpoint
-          .listMangas(parameters: ListMangasParameters(
+        let popularMangas = try await mangaAPI.listMangas(
+          parameters: ListMangasParameters(
             createdAtSince: lastMonth,
             order: ListMangasSortOrder(followedCount: .descending)
-          ))
+          )
+        )
 
         try await mangaStore.import(mangas: popularMangas.mangas)
 
         let mangaIDs = popularMangas.mangas.map(\.id)
-        return try await mangaStore.queryByIDs(mangaIDs) { descriptor in
-          descriptor.propertiesToFetch = [\.title, \.coverImageURL, \.mangaID]
-          descriptor.relationshipKeyPathsForPrefetching = [\.artist, \.author]
+        return try await mangaStore.queryByIDs(mangaIDs) {
+          $0.propertiesToFetch = [\.title, \.coverImageURL, \.mangaID]
+          $0.relationshipKeyPathsForPrefetching = [\.artist, \.author]
         }
         .sorted(by: \.mangaID, using: mangaIDs)
       }

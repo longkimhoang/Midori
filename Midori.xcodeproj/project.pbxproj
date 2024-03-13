@@ -22,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		4F3875D82B9DC6780025EDB8 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
+		4F3FE1912BA162A4005DF6E5 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		4F6857B02BA0A06600BC67CC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		4F8B6E422B981EF6000E3DFA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
@@ -33,7 +34,6 @@
 		4FB78DA72B8C926A009639A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FB78DA92B8C926A009639A3 /* Midori.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Midori.entitlements; sourceTree = "<group>"; };
 		4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		4FB78DB32B8C9451009639A3 /* APIClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = APIClient; sourceTree = "<group>"; };
 		4FB78DB92B8F40DA009639A3 /* APIClient.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APIClient.xctestplan; sourceTree = "<group>"; };
 		4FC20A052BA0C77D00A9948B /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
@@ -85,10 +85,10 @@
 		4FB78D972B8C9269009639A3 = {
 			isa = PBXGroup;
 			children = (
-				4FB78DB32B8C9451009639A3 /* APIClient */,
 				4FE7582D2B9C300E00C7AC12 /* Database */,
 				4FB2699C2B94CDAF005BDD14 /* Domain */,
 				4F97207D2B9309C40028B950 /* HomeModule */,
+				4F3FE1912BA162A4005DF6E5 /* Networking */,
 				4FC20A042BA0C74700A9948B /* ci_scripts */,
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
 				4FB78DA22B8C9269009639A3 /* Midori */,

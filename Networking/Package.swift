@@ -4,18 +4,20 @@
 import PackageDescription
 
 let package = Package(
-  name: "APIClient",
+  name: "Networking",
   platforms: [.macOS(.v14), .iOS(.v17)],
   products: [
-    .library(name: "APIClient", targets: ["APIClient"]),
+    .library(name: "APIClients", targets: ["APIClients"]),
+    .library(name: "APIModels", targets: ["APIModels"]),
   ],
   dependencies: [
     .package(url: "https://github.com/SwiftyLab/MetaCodable.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.8.1")),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
   ],
   targets: [
     .target(
-      name: "APICommon",
+      name: "Common",
       dependencies: [
         .product(name: "MetaCodable", package: "MetaCodable"),
         .product(name: "HelperCoders", package: "MetaCodable"),
@@ -23,36 +25,23 @@ let package = Package(
       ]
     ),
     .testTarget(
-      name: "APICommonTests",
-      dependencies: [.target(name: "APICommon")]
+      name: "CommonTests",
+      dependencies: [.target(name: "Common")]
     ),
     .target(
-      name: "MangaEndpoint",
+      name: "APIClients",
       dependencies: [
-        .target(name: "APICommon"),
         .target(name: "APIModels"),
         .product(name: "Alamofire", package: "Alamofire"),
-      ]
-    ),
-    .target(
-      name: "ChapterEndpoint",
-      dependencies: [
-        .target(name: "APICommon"),
-        .target(name: "APIModels"),
-        .product(name: "Alamofire", package: "Alamofire"),
-      ]
-    ),
-    .target(
-      name: "APIClient",
-      dependencies: [
-        .target(name: "MangaEndpoint"),
-        .target(name: "ChapterEndpoint"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        .product(name: "MetaCodable", package: "MetaCodable"),
       ]
     ),
     .target(
       name: "APIModels",
       dependencies: [
-        .target(name: "APICommon"),
+        .target(name: "Common"),
         .product(name: "MetaCodable", package: "MetaCodable"),
       ]
     ),

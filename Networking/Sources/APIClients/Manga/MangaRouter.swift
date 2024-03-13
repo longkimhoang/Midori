@@ -1,16 +1,16 @@
 //
-//  Router.swift
+//  MangaRouter.swift
 //
 //
-//  Created by Long Kim on 28/02/2024.
+//  Created by Long Kim on 13/3/24.
 //
 
 import Alamofire
-import APICommon
+import Common
 import Foundation
 
-enum Router: RouterProtocol {
-  case listMangas(ListMangas.Parameters?)
+enum MangaRouter: RouterProtocol {
+  case listMangas(ListMangasParameters?)
 
   var baseURL: URL {
     URL(string: "https://api.mangadex.org")!

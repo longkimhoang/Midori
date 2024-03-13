@@ -12,6 +12,7 @@ let package = Package(
   ],
   dependencies: [
     .package(path: "Domain"),
+    .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
     .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.1.0"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
@@ -25,6 +26,8 @@ let package = Package(
       name: "HomeModule",
       dependencies: [
         .product(name: "Domain", package: "Domain"),
+        .product(name: "APIClients", package: "Networking"),
+        .product(name: "APIModels", package: "Networking"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

@@ -5,12 +5,12 @@
 //  Created by Long Kim on 9/3/24.
 //
 
+import APIClients
 import Database
 import Dependencies
 import DependenciesMacros
 import Domain
 import Foundation
-import MangaEndpoint
 import SwiftData
 
 @DependencyClient
@@ -20,15 +20,17 @@ struct RecentlyAddedMangasClient {
 
 extension RecentlyAddedMangasClient: DependencyKey {
   static var liveValue: Self {
+    @Dependency(\.mangaAPI) var mangaAPI
     @Dependency(\.mangaStore) var mangaStore
 
     return RecentlyAddedMangasClient(
       fetch: {
-        let recentlyAddedMangas = try await MangaEndpoint
-          .listMangas(parameters: ListMangasParameters(
+        let recentlyAddedMangas = try await mangaAPI.listMangas(
+          parameters: ListMangasParameters(
             limit: 15,
             order: ListMangasSortOrder(createdAt: .descending)
-          ))
+          )
+        )
 
         try await mangaStore.import(mangas: recentlyAddedMangas.mangas)
 

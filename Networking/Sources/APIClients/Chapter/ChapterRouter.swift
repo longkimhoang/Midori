@@ -1,16 +1,16 @@
 //
-//  Router.swift
+//  ChapterRouter.swift
 //
 //
-//  Created by Long Kim on 07/03/2024.
+//  Created by Long Kim on 13/3/24.
 //
 
 import Alamofire
-import APICommon
+import Common
 import Foundation
 
-enum Router: RouterProtocol {
-  case listChapters(ListChapters.Parameters?)
+enum ChapterRouter: RouterProtocol {
+  case listChapters(ListChaptersParameters?)
 
   var path: String {
     switch self {

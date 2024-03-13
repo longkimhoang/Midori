@@ -5,7 +5,7 @@
 //  Created by Long Kim on 02/03/2024.
 //
 
-import APICommon
+import Common
 import Foundation
 import HelperCoders
 import MetaCodable
