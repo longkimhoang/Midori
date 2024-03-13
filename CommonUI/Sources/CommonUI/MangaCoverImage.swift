@@ -7,21 +7,21 @@
 
 import SwiftUI
 
-public struct MangaCoverImage: View {
-  let image: Image?
+public struct MangaCoverImage<Content: View>: View {
+  let content: () -> Content
   let width: CGFloat
   let aspectRatio: CGFloat
   let cornerRadius: CGFloat
   let bordered: Bool
 
   public init(
-    image: Image?,
+    @ViewBuilder content: @escaping () -> Content,
     width: CGFloat,
     aspectRatio: CGFloat = 0.7,
     cornerRadius: CGFloat = 8,
     bordered: Bool = true
   ) {
-    self.image = image
+    self.content = content
     self.width = width
     self.aspectRatio = aspectRatio
     self.cornerRadius = cornerRadius
@@ -32,8 +32,7 @@ public struct MangaCoverImage: View {
     Rectangle()
       .fill(.fill.tertiary)
       .overlay {
-        image?
-          .resizable()
+        content()
           .aspectRatio(contentMode: .fill)
       }
       .frame(width: width, height: width / aspectRatio)
@@ -44,5 +43,23 @@ public struct MangaCoverImage: View {
             .stroke(.fill)
         }
       }
+  }
+}
+
+extension MangaCoverImage where Content == Image? {
+  public init(
+    image: Image?,
+    width: CGFloat,
+    aspectRatio: CGFloat = 0.7,
+    cornerRadius: CGFloat = 8,
+    bordered: Bool = true
+  ) {
+    self.init(
+      content: { image?.resizable() },
+      width: width,
+      aspectRatio: aspectRatio,
+      cornerRadius: cornerRadius,
+      bordered: bordered
+    )
   }
 }
