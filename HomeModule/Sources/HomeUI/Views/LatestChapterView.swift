@@ -33,24 +33,28 @@ struct LatestChapterView: View {
               .foregroundStyle(.secondary)
           }
           .lineLimit(1)
+          #if os(iOS)
           .anchorPreference(key: ContentStackLeadingAnchorPreference.self, value: .leading) { $0 }
+          #endif
 
           Spacer()
         }
       }
       .padding([.vertical, .trailing])
-      .overlayPreferenceValue(ContentStackLeadingAnchorPreference.self) { preference in
-        GeometryReader { geometry in
-          if let preference {
-            VStack {
-              Spacer()
-              Divider()
+      #if os(iOS)
+        .overlayPreferenceValue(ContentStackLeadingAnchorPreference.self) { preference in
+          GeometryReader { geometry in
+            if let preference {
+              VStack {
+                Spacer()
+                Divider()
+              }
+              .padding(.trailing)
+              .padding(.leading, geometry[preference].x)
             }
-            .padding(.trailing)
-            .padding(.leading, geometry[preference].x)
           }
         }
-      }
+      #endif
     }
   }
 
@@ -69,6 +73,7 @@ struct LatestChapterView: View {
   }
 }
 
+#if os(iOS)
 private struct ContentStackLeadingAnchorPreference: PreferenceKey {
   typealias Value = Anchor<CGPoint>?
 
@@ -78,3 +83,4 @@ private struct ContentStackLeadingAnchorPreference: PreferenceKey {
     value = nextValue()
   }
 }
+#endif
