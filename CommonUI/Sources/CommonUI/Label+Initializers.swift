@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Label+Initializers.swift
+//
 //
 //  Created by Long Kim on 13/3/24.
 //

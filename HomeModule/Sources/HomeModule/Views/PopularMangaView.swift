@@ -5,6 +5,7 @@
 //  Created by Long Kim on 03/03/2024.
 //
 
+import CommonUI
 import Database
 import Foundation
 import SwiftUI
@@ -23,18 +24,7 @@ struct PopularMangaView: View {
 
       GeometryReader { geometry in
         HStack(alignment: .top, spacing: 16) {
-          Rectangle()
-            .fill(.fill.tertiary)
-            .overlay {
-              coverThumbnailImage?
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-            }
-            .frame(
-              width: geometry.size.height * 0.7,
-              height: geometry.size.height
-            )
-            .clipShape(.rect(cornerRadius: 8))
+          MangaCoverImage(image: coverThumbnailImage, width: geometry.size.height * 0.7, bordered: false)
 
           VStack(alignment: .leading) {
             Text(manga.title)

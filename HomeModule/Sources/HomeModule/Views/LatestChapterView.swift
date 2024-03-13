@@ -6,6 +6,7 @@
 //
 
 import Algorithms
+import CommonUI
 import Database
 import Foundation
 import SwiftUI
@@ -18,19 +19,7 @@ struct LatestChapterView: View {
     if let manga = chapter.manga {
       VStack(alignment: .leading) {
         HStack(alignment: .top) {
-          Rectangle()
-            .fill(.fill.tertiary)
-            .overlay {
-              coverThumbnailImage?
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-            }
-            .frame(width: 60, height: 60 / 0.7)
-            .clipShape(.rect(cornerRadius: 8))
-            .overlay {
-              RoundedRectangle(cornerRadius: 8)
-                .stroke(.fill)
-            }
+          MangaCoverImage(image: coverThumbnailImage, width: 60)
 
           VStack(alignment: .leading) {
             Text(manga.title)
