@@ -13,9 +13,14 @@ import Domain
 import Foundation
 import SwiftData
 
+struct FetchRecentlyAddedMangasParameters {
+  var limit: Int = 15
+  var offset: Int?
+}
+
 @DependencyClient
 struct RecentlyAddedMangasClient {
-  var fetch: () async throws -> [Manga]
+  var fetch: (_ parameters: FetchRecentlyAddedMangasParameters) async throws -> [Manga]
 }
 
 extension RecentlyAddedMangasClient: DependencyKey {
@@ -24,10 +29,11 @@ extension RecentlyAddedMangasClient: DependencyKey {
     @Dependency(\.mangaStore) var mangaStore
 
     return RecentlyAddedMangasClient(
-      fetch: {
+      fetch: { parameters in
         let recentlyAddedMangas = try await mangaAPI.listMangas(
           parameters: ListMangasParameters(
-            limit: 15,
+            limit: parameters.limit,
+            offset: parameters.offset,
             order: ListMangasSortOrder(createdAt: .descending)
           )
         )
@@ -41,6 +47,12 @@ extension RecentlyAddedMangasClient: DependencyKey {
         }
       }
     )
+  }
+}
+
+extension RecentlyAddedMangasClient {
+  func fetch() async throws -> [Manga] {
+    try await fetch(parameters: FetchRecentlyAddedMangasParameters())
   }
 }
 

@@ -34,7 +34,7 @@ struct LatestChapterView: View {
           }
           .lineLimit(1)
           #if os(iOS)
-          .anchorPreference(key: ContentStackLeadingAnchorPreference.self, value: .leading) { $0 }
+            .anchorPreference(key: ContentStackLeadingAnchorPreference.self, value: .leading) { $0 }
           #endif
 
           Spacer()

@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Dependencies
 
 @Reducer
 public struct RecentlyAddedDetailFeature {
@@ -13,6 +14,8 @@ public struct RecentlyAddedDetailFeature {
   public struct State {
     public init() {}
   }
+
+  @Dependency(\.recentlyAddedMangas) var recentlyAddedMangas
 
   public enum Action {}
 }

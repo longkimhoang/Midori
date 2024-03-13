@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Dependencies
 
 @Reducer
 public struct LatestUpdatesDetailFeature {
@@ -18,9 +19,11 @@ public struct LatestUpdatesDetailFeature {
     case view(View)
 
     public enum View {
-      case fetchLatestChapters
+      case fetchLatestChapters(offset: Int? = nil)
     }
   }
+
+  @Dependency(\.latestChapters) var latestChapters
 
   public var body: some ReducerOf<Self> {
     Reduce { _, action in

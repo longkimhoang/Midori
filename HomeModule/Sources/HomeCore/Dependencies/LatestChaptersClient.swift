@@ -15,9 +15,14 @@ import Foundation
 import OrderedCollections
 import SwiftData
 
+struct FetchLatestChaptersParameters {
+  var limit: Int = 64
+  var offset: Int?
+}
+
 @DependencyClient
 struct LatestChaptersClient {
-  var fetch: () async throws -> [Database.Chapter]
+  var fetch: (_ parameters: FetchLatestChaptersParameters) async throws -> [Database.Chapter]
 }
 
 extension LatestChaptersClient: DependencyKey {
@@ -28,10 +33,11 @@ extension LatestChaptersClient: DependencyKey {
     @Dependency(\.chapterStore) var chapterStore
 
     return LatestChaptersClient(
-      fetch: {
+      fetch: { parameters in
         let latestChapters = try await chapterAPI.listChapters(
           parameters: ListChaptersParameters(
-            limit: 64,
+            limit: parameters.limit,
+            offset: parameters.offset,
             includes: [.scanlationGroup],
             order: ListChaptersSortOrder(readableAt: .descending)
           )
@@ -64,6 +70,12 @@ extension LatestChaptersClient: DependencyKey {
         }
       }
     )
+  }
+}
+
+extension LatestChaptersClient {
+  func fetch() async throws -> [Database.Chapter] {
+    try await fetch(parameters: FetchLatestChaptersParameters())
   }
 }
 
