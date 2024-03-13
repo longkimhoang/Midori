@@ -181,16 +181,25 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       ) { sectionTitleView, _, indexPath in
         guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
 
-        let title = switch section {
-        case .popular:
-          String(localized: "Popular new titles", bundle: .module)
-        case .latestUpdates:
-          String(localized: "Latest updates", bundle: .module)
-        case .recentlyAdded:
-          String(localized: "Recently added", bundle: .module)
+        sectionTitleView.contentConfiguration = NSHostingConfiguration {
+          Group {
+            switch section {
+            case .popular:
+              Text("Popular new titles", bundle: .module)
+            case .latestUpdates:
+              NavigationLink(state: HomeFeature.Path.State.latestUpdatesDetail(LatestUpdatesDetailFeature.State())) {
+                Label("Latest updates", bundle: .module, systemImage: "chevron.forward")
+                  .labelStyle(.sectionTitleNavigation)
+              }
+            case .recentlyAdded:
+              Text("Recently added", bundle: .module)
+            }
+          }
+          .font(.title)
+          .foregroundStyle(.primary)
+          .buttonStyle(.link)
         }
-
-        sectionTitleView.label.stringValue = title
+        .margins(.all, 0)
       }
 
       dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in

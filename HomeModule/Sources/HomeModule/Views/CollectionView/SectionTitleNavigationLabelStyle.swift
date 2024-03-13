@@ -15,6 +15,15 @@ struct SectionTitleNavigationLabelStyle: LabelStyle {
         .imageScale(.small)
         .foregroundStyle(.secondary)
     }
+    #if os(macOS)
+    .onHover { inside in
+      if inside {
+        NSCursor.pointingHand.push()
+      } else {
+        NSCursor.pop()
+      }
+    }
+    #endif
   }
 }
 
