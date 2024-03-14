@@ -61,6 +61,10 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       super.viewDidLoad()
       setupDataSource()
       collectionView.prefetchDataSource = self
+    }
+
+    override func viewWillAppear() {
+      super.viewWillAppear()
 
       observe { [weak self] in
         guard let self else { return }
