@@ -21,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F0974252BA2FC41005403CA /* MangaList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MangaList; sourceTree = "<group>"; };
 		4F3875D82B9DC6780025EDB8 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
 		4F3FE1912BA162A4005DF6E5 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		4F3FE1932BA18189005DF6E5 /* CommonUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonUI; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 				4FE7582D2B9C300E00C7AC12 /* Database */,
 				4FB2699C2B94CDAF005BDD14 /* Domain */,
 				4F97207D2B9309C40028B950 /* HomeModule */,
+				4F0974252BA2FC41005403CA /* MangaList */,
 				4F3FE1912BA162A4005DF6E5 /* Networking */,
 				4FC20A042BA0C74700A9948B /* ci_scripts */,
 				4FB78DB42B8C9705009639A3 /* Frameworks */,
