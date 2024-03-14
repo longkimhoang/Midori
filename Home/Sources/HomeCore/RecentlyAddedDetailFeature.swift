@@ -8,18 +8,26 @@
 import ComposableArchitecture
 import Database
 import Dependencies
-import IdentifiedCollections
+import MangaListCore
 
 @Reducer
 public struct RecentlyAddedDetailFeature {
   @ObservableState
   public struct State {
-    public var mangas: IdentifiedArrayOf<Manga> = []
+    public var mangaList = MangaListFeature.State()
 
     public init() {}
   }
 
   @Dependency(\.recentlyAddedMangas) var recentlyAddedMangas
 
-  public enum Action {}
+  public enum Action {
+    case mangaList(MangaListFeature.Action)
+  }
+
+  public var body: some ReducerOf<Self> {
+    Scope(state: \.mangaList, action: \.mangaList) {
+      MangaListFeature()
+    }
+  }
 }

@@ -83,7 +83,7 @@ public struct HomeFeature {
         }
       case let .path(.push(id: id, state: .recentlyAddedDetail)):
         if let data = state.fetchStatus.success {
-          state.path[id: id]?.recentlyAddedDetail?.mangas = data.recentlyAddedMangas
+          state.path[id: id]?.recentlyAddedDetail?.mangaList.mangas = data.recentlyAddedMangas
         }
         return .none
       case .path:

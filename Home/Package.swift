@@ -15,6 +15,7 @@ let package = Package(
     .package(path: "CommonUI"),
     .package(path: "Domain"),
     .package(path: "Networking"),
+    .package(path: "MangaList"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
@@ -29,6 +30,7 @@ let package = Package(
         .product(name: "Domain", package: "Domain"),
         .product(name: "APIClients", package: "Networking"),
         .product(name: "APIModels", package: "Networking"),
+        .product(name: "MangaListCore", package: "MangaList"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]
