@@ -23,6 +23,7 @@ struct FetchLatestChaptersParameters {
 @DependencyClient
 struct LatestChaptersClient {
   var fetch: (_ parameters: FetchLatestChaptersParameters) async throws -> [Database.Chapter]
+  var fetchInitialDetail: @MainActor () throws -> [Database.Chapter]
 }
 
 extension LatestChaptersClient: DependencyKey {
@@ -68,6 +69,12 @@ extension LatestChaptersClient: DependencyKey {
           $0.sortBy = [SortDescriptor(\.readableAt, order: .reverse)]
           $0.relationshipKeyPathsForPrefetching = [\.manga]
         }
+      },
+      fetchInitialDetail: {
+        var fetchDescriptor = FetchDescriptor<Database.Chapter>()
+        fetchDescriptor.sortBy = [SortDescriptor(\.readableAt, order: .reverse)]
+        fetchDescriptor.fetchLimit = 100
+        return try chapterStore.query(fetchDescriptor: fetchDescriptor)
       }
     )
   }
@@ -83,5 +90,11 @@ extension DependencyValues {
   var latestChapters: LatestChaptersClient {
     get { self[LatestChaptersClient.self] }
     set { self[LatestChaptersClient.self] = newValue }
+  }
+}
+
+extension APIModels.Chapter {
+  fileprivate var mangaID: UUID? {
+    relationships.first(MangaRelationship.self).map(\.id)
   }
 }

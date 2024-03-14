@@ -18,9 +18,11 @@ public struct LatestUpdatesDetailFeature {
   }
 
   public enum Action: ViewAction {
+    case chaptersResponse(IdentifiedArrayOf<Chapter>)
     case view(View)
 
     public enum View {
+      case fetchInitialChapters
       case fetchLatestChapters(offset: Int? = nil)
     }
   }
@@ -28,8 +30,16 @@ public struct LatestUpdatesDetailFeature {
   @Dependency(\.latestChapters) var latestChapters
 
   public var body: some ReducerOf<Self> {
-    Reduce { _, action in
+    Reduce { state, action in
       switch action {
+      case let .chaptersResponse(chapters):
+        state.chapters.append(contentsOf: chapters)
+        return .none
+      case .view(.fetchInitialChapters):
+        return .run { @MainActor send in
+          let chapters = try IdentifiedArray(uniqueElements: latestChapters.fetchInitialDetail())
+          send(.chaptersResponse(chapters))
+        }
       case .view(.fetchLatestChapters):
         return .none
       }

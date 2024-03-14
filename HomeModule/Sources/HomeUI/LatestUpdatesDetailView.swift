@@ -9,6 +9,7 @@ import ComposableArchitecture
 import HomeCore
 import SwiftUI
 
+@ViewAction(for: LatestUpdatesDetailFeature.self)
 struct LatestUpdatesDetailView: View {
   let store: StoreOf<LatestUpdatesDetailFeature>
 

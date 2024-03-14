@@ -5,7 +5,10 @@
 //  Created by Long Kim on 10/3/24.
 //
 
+import Collections
 import ComposableArchitecture
+import Database
+import Foundation
 
 @CasePathable
 @dynamicMemberLookup
@@ -72,10 +75,12 @@ public struct HomeFeature {
         state.fetchStatus = .failure(error)
         return .none
       case let .path(.push(id: id, state: .latestUpdatesDetail)):
-        if let data = state.fetchStatus.success {
-          state.path[id: id]?.latestUpdatesDetail?.chapters = data.latestChapters
+        return LatestUpdatesDetailFeature().reduce(
+          into: &state.path[id: id]![keyPath: \.latestUpdatesDetail]!,
+          action: .view(.fetchInitialChapters)
+        ).map {
+          Action.path(.element(id: id, action: .latestUpdatesDetail($0)))
         }
-        return .none
       case let .path(.push(id: id, state: .recentlyAddedDetail)):
         if let data = state.fetchStatus.success {
           state.path[id: id]?.recentlyAddedDetail?.mangas = data.recentlyAddedMangas
