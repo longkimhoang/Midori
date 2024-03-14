@@ -35,6 +35,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
     private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
+    private var observation: ObservationToken?
     let store: StoreOf<HomeFeature>
 
     init(store: StoreOf<HomeFeature>) {
@@ -63,10 +64,10 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       collectionView.prefetchDataSource = self
     }
 
-    override func viewWillAppear() {
-      super.viewWillAppear()
+    override func viewDidAppear() {
+      super.viewDidAppear()
 
-      observe { [weak self] in
+      observation = observe { [weak self] in
         guard let self else { return }
         switch store.fetchStatus {
         case let .success(data):
@@ -75,6 +76,12 @@ struct HomeCollectionView: NSViewControllerRepresentable {
           break
         }
       }
+    }
+
+    override func viewDidDisappear() {
+      super.viewDidDisappear()
+
+      observation?.cancel()
     }
 
     func setupDataSource() {
