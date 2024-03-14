@@ -17,8 +17,6 @@ public struct MangaListView: View {
   }
 
   public var body: some View {
-    List(store.mangas) { manga in
-      Text(manga.title)
-    }
+    MangaListCollectionView(store: store)
   }
 }
