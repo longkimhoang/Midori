@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "HomeModule",
+  name: "Home",
   defaultLocalization: "en",
   platforms: [.macOS(.v14), .iOS(.v17)],
   products: [

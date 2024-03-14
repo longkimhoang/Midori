@@ -22,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		4F0974252BA2FC41005403CA /* MangaList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MangaList; sourceTree = "<group>"; };
+		4F0974272BA2FCD2005403CA /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
 		4F3875D82B9DC6780025EDB8 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
 		4F3FE1912BA162A4005DF6E5 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		4F3FE1932BA18189005DF6E5 /* CommonUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonUI; sourceTree = "<group>"; };
@@ -29,7 +30,6 @@
 		4F6857B02BA0A06600BC67CC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		4F8B6E422B981EF6000E3DFA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
-		4F97207D2B9309C40028B950 /* HomeModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeModule; sourceTree = "<group>"; };
 		4FB2699C2B94CDAF005BDD14 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		4FB78DA02B8C9269009639A3 /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB78DA32B8C9269009639A3 /* MidoriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidoriApp.swift; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 				4F3FE1932BA18189005DF6E5 /* CommonUI */,
 				4FE7582D2B9C300E00C7AC12 /* Database */,
 				4FB2699C2B94CDAF005BDD14 /* Domain */,
-				4F97207D2B9309C40028B950 /* HomeModule */,
+				4F0974272BA2FCD2005403CA /* Home */,
 				4F0974252BA2FC41005403CA /* MangaList */,
 				4F3FE1912BA162A4005DF6E5 /* Networking */,
 				4FC20A042BA0C74700A9948B /* ci_scripts */,
