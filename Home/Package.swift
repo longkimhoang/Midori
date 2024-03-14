@@ -40,6 +40,7 @@ let package = Package(
       dependencies: [
         .target(name: "HomeCore"),
         .product(name: "CommonUI", package: "CommonUI"),
+        .product(name: "MangaListUI", package: "MangaList"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "Nuke", package: "Nuke"),

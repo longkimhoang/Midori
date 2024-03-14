@@ -7,15 +7,14 @@
 
 import ComposableArchitecture
 import HomeCore
+import MangaListUI
 import SwiftUI
 
 struct RecentlyAddedDetailView: View {
   let store: StoreOf<RecentlyAddedDetailFeature>
 
   var body: some View {
-    List(store.mangaList.mangas) { manga in
-      Text(manga.title)
-    }
-    .navigationTitle(Text("Recently added", bundle: .module))
+    MangaListView(store: store.scope(state: \.mangaList, action: \.mangaList))
+      .navigationTitle(Text("Recently added", bundle: .module))
   }
 }

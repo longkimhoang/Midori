@@ -9,6 +9,7 @@ let package = Package(
   platforms: [.macOS(.v14), .iOS(.v17)],
   products: [
     .library(name: "MangaListCore", targets: ["MangaListCore"]),
+    .library(name: "MangaListUI", targets: ["MangaListUI"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
@@ -18,6 +19,12 @@ let package = Package(
       name: "MangaListCore",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
+    ),
+    .target(
+      name: "MangaListUI",
+      dependencies: [
+        .target(name: "MangaListCore"),
       ]
     ),
   ]
