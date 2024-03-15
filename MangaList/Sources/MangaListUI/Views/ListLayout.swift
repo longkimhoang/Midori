@@ -18,7 +18,7 @@ extension NSCollectionLayoutSection {
     #endif
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1 / CGFloat(itemsPerRow)),
-      heightDimension: .fractionalHeight(1)
+      heightDimension: .estimated(140)
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let groupSize = NSCollectionLayoutSize(
@@ -40,7 +40,11 @@ extension NSCollectionLayoutSection {
     group.interItemSpacing = .fixed(16)
     #endif
     let section = NSCollectionLayoutSection(group: group)
+    #if os(iOS)
+    section.interGroupSpacing = 8
+    #else
     section.interGroupSpacing = 16
+    #endif
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
     return section
@@ -48,6 +52,17 @@ extension NSCollectionLayoutSection {
 }
 
 #if os(iOS)
+extension UICollectionViewLayout {
+  static func mangaList() -> UICollectionViewLayout {
+    let configuration = UICollectionViewCompositionalLayoutConfiguration()
+    let layout = UICollectionViewCompositionalLayout { _, layoutEnvironment in
+      NSCollectionLayoutSection.mangaList(layoutEnvironment: layoutEnvironment)
+    }
+    layout.configuration = configuration
+
+    return layout
+  }
+}
 #else
 extension NSCollectionViewLayout {
   static func mangaList() -> NSCollectionViewLayout {
