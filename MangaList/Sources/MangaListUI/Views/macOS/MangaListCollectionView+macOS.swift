@@ -44,14 +44,18 @@ struct MangaListCollectionView: NSViewRepresentable {
     }
 
     func setupDataSource(for collectionView: NSCollectionView) {
-      let mangaListCellRegistration = NSCollectionView.ItemRegistration<NSCollectionViewItem, Manga> {
-        item, _, manga in
+      let mangaListCellRegistration =
+        NSCollectionView.ItemRegistration<NSCollectionViewItem, Manga>(url: { $0.thumbnailURL() }) {
+          item, _, manga, image in
 
-        item.contentConfiguration = NSHostingConfiguration {
-          MangaListItemView(manga: manga, coverImage: nil)
+          item.contentConfiguration = NSHostingConfiguration {
+            MangaListItemView(manga: manga, coverImage: image.map { Image(nsImage: $0) })
+          }
+          .margins(.all, 0)
+        } onLoadSuccess: { [weak collectionView] indexPath, _ in
+          collectionView?.reconfigureItems(at: [indexPath])
         }
-        .margins(.all, 0)
-      }
+
       dataSource =
         NSCollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in

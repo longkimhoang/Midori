@@ -1,11 +1,12 @@
 //
-//  File.swift
-//  
+//  MangaListCollectionView+iOS.swift
+//
 //
 //  Created by Long Kim on 15/3/24.
 //
 
 #if os(iOS)
+import CommonUI
 import ComposableArchitecture
 import Database
 import MangaListCore
@@ -39,14 +40,17 @@ struct MangaListCollectionView: UIViewRepresentable {
     }
 
     func setupDataSource(for collectionView: UICollectionView) {
-      let mangaListCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-        cell, _, manga in
+      let mangaListCellRegistration =
+        UICollectionView.CellRegistration<UICollectionViewCell, Manga>(url: { $0.thumbnailURL() }) {
+          cell, _, manga, image in
 
-        cell.contentConfiguration = UIHostingConfiguration {
-          MangaListItemView(manga: manga, coverImage: nil)
+          cell.contentConfiguration = UIHostingConfiguration {
+            MangaListItemView(manga: manga, coverImage: image.map(Image.init))
+          }
+          .margins(.all, 0)
+        } onLoadSuccess: { [weak self] indexPath, _ in
+          self?.reconfigureItems(at: CollectionOfOne(indexPath))
         }
-        .margins(.all, 0)
-      }
 
       dataSource =
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
@@ -73,13 +77,20 @@ struct MangaListCollectionView: UIViewRepresentable {
       snapshot.appendItems(mangas.map(\.id))
       dataSource.apply(snapshot, animatingDifferences: true)
     }
+
+    private func reconfigureItems(at indexPaths: some Collection<IndexPath>) {
+      let itemIdentifiers = indexPaths.compactMap(dataSource.itemIdentifier(for:))
+      var snaphot = dataSource.snapshot()
+      snaphot.reconfigureItems(itemIdentifiers)
+      dataSource.apply(snaphot, animatingDifferences: false)
+    }
   }
 }
 
 extension MangaListCollectionView.Coordinator: UICollectionViewDelegate {
   func collectionView(
-    _ collectionView: UICollectionView,
-    willDisplay cell: UICollectionViewCell,
+    _: UICollectionView,
+    willDisplay _: UICollectionViewCell,
     forItemAt indexPath: IndexPath
   ) {
     if indexPath.item == store.mangas.count - 1 {
