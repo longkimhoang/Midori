@@ -14,6 +14,7 @@ public final class Manga {
   public var mangaID: UUID
   @Attribute(.spotlight)
   public var title: String
+  public var mangaDescription: String?
   public var coverImageURL: URL?
   public var createdAt: Date
   public var artist: Artist?
@@ -24,11 +25,13 @@ public final class Manga {
   public init(
     mangaID: UUID,
     title: String,
+    description: String?,
     coverImageURL: URL? = nil,
     createdAt: Date
   ) {
     self.mangaID = mangaID
     self.title = title
+    mangaDescription = description
     self.coverImageURL = coverImageURL
     self.createdAt = createdAt
   }

@@ -21,6 +21,7 @@ actor MangaStore {
         let manga = Manga(
           mangaID: model.id,
           title: model.attributes.title.value,
+          description: model.attributes.description?.value,
           coverImageURL: model.coverImageURL,
           createdAt: model.attributes.createdAt
         )
