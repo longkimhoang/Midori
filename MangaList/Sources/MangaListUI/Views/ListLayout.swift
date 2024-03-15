@@ -40,12 +40,14 @@ extension NSCollectionLayoutSection {
     group.interItemSpacing = .fixed(16)
     #endif
     let section = NSCollectionLayoutSection(group: group)
-    #if os(iOS)
-    section.interGroupSpacing = 8
-    #else
     section.interGroupSpacing = 16
-    #endif
+
+    #if os(iOS)
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
+    section.contentInsetsReference = .layoutMargins
+    #else
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+    #endif
 
     return section
   }

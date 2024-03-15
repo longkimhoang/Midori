@@ -20,17 +20,31 @@ struct MangaListItemView: View {
       VStack(alignment: .leading) {
         Text(manga.title)
           .font(.headline)
+          .lineLimit(2)
 
         if let author = manga.author {
           Text(author.name)
             .font(.subheadline)
             .foregroundStyle(.secondary)
         }
+
+        if let description = manga.mangaDescription {
+          Text(description)
+            .lineLimit(3)
+        }
       }
 
       Spacer()
     }
     .padding()
-    .background(.fill.quaternary, in: .rect(cornerRadius: 16))
+    .background(backgroundColor, in: .rect(cornerRadius: 16))
+  }
+
+  private var backgroundColor: some ShapeStyle {
+    #if os(iOS)
+    Color(uiColor: .secondarySystemGroupedBackground)
+    #else
+    .fill.quaternary
+    #endif
   }
 }

@@ -10,21 +10,23 @@ import CommonUI
 import ComposableArchitecture
 import Database
 import MangaListCore
+import Nuke
 import SwiftData
 import SwiftUI
 
-struct MangaListCollectionView: UIViewRepresentable {
+struct MangaListCollectionView: UIViewControllerRepresentable {
   let store: StoreOf<MangaListFeature>
 
-  func makeUIView(context: Context) -> UICollectionView {
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .mangaList())
-    collectionView.delegate = context.coordinator
-    context.coordinator.setupDataSource(for: collectionView)
+  func makeUIViewController(context: Context) -> ViewController {
+    let viewController = ViewController()
+    viewController.collectionView.delegate = context.coordinator
+    viewController.collectionView.prefetchDataSource = context.coordinator
+    context.coordinator.setupDataSource(for: viewController.collectionView)
 
-    return collectionView
+    return viewController
   }
 
-  func updateUIView(_: UICollectionView, context _: Context) {}
+  func updateUIViewController(_: ViewController, context _: Context) {}
 
   func makeCoordinator() -> Coordinator {
     Coordinator(store: store)
@@ -33,6 +35,7 @@ struct MangaListCollectionView: UIViewRepresentable {
   @ViewAction(for: MangaListFeature.self)
   final class Coordinator: NSObject {
     let store: StoreOf<MangaListFeature>
+    private lazy var imagePrefetcher = ImagePrefetcher()
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>!
 
     init(store: StoreOf<MangaListFeature>) {
@@ -85,6 +88,22 @@ struct MangaListCollectionView: UIViewRepresentable {
       dataSource.apply(snaphot, animatingDifferences: false)
     }
   }
+
+  final class ViewController: UIViewController {
+    override func loadView() {
+      view = UICollectionView(frame: .zero, collectionViewLayout: .mangaList())
+    }
+
+    override func viewDidLoad() {
+      super.viewDidLoad()
+      view.backgroundColor = .systemGroupedBackground
+      view.layoutMargins = .zero
+    }
+
+    var collectionView: UICollectionView {
+      view as! UICollectionView
+    }
+  }
 }
 
 extension MangaListCollectionView.Coordinator: UICollectionViewDelegate {
@@ -96,6 +115,28 @@ extension MangaListCollectionView.Coordinator: UICollectionViewDelegate {
     if indexPath.item == store.mangas.count - 1 {
       send(.delegate(.scrollEndReached))
     }
+  }
+}
+
+extension MangaListCollectionView.Coordinator: UICollectionViewDataSourcePrefetching {
+  private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
+    indexPaths.compactMap {
+      guard let itemIdentifier = dataSource.itemIdentifier(for: $0),
+            let manga = store.mangas[id: itemIdentifier]
+      else {
+        return nil
+      }
+
+      return manga.thumbnailURL()
+    }
+  }
+
+  func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    imagePrefetcher.startPrefetching(with: imageURLs(for: indexPaths))
+  }
+
+  func collectionView(_: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    imagePrefetcher.stopPrefetching(with: imageURLs(for: indexPaths))
   }
 }
 
