@@ -48,9 +48,9 @@ struct MangaListCollectionView: NSViewRepresentable {
         item, _, manga in
 
         item.contentConfiguration = NSHostingConfiguration {
-          Text(manga.title)
+          MangaListItemView(manga: manga, coverImage: nil)
         }
-        .background(.red)
+        .margins(.all, 0)
       }
       dataSource =
         NSCollectionViewDiffableDataSource(collectionView: collectionView) {

@@ -12,6 +12,7 @@ let package = Package(
     .library(name: "MangaListUI", targets: ["MangaListUI"]),
   ],
   dependencies: [
+    .package(path: "CommonUI"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
   ],
   targets: [
@@ -25,6 +26,7 @@ let package = Package(
       name: "MangaListUI",
       dependencies: [
         .target(name: "MangaListCore"),
+        .product(name: "CommonUI", package: "CommonUI"),
       ]
     ),
   ]

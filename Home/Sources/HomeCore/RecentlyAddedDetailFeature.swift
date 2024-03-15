@@ -45,6 +45,8 @@ public struct RecentlyAddedDetailFeature {
         return .none
       case .mangaList(.view(.delegate(.scrollEndReached))):
         return .none
+      case .mangaList(.view):
+        return .none
       case .view(.fetchInitialMangas):
         return .run { @MainActor send in
           let mangas = try IdentifiedArray(uniqueElements: recentlyAddedMangas.fetchInitialDetail())

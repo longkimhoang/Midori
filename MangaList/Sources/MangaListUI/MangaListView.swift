@@ -6,11 +6,12 @@
 //
 
 import ComposableArchitecture
+import CommonUI
 import MangaListCore
 import SwiftUI
 
 public struct MangaListView: View {
-  public let store: StoreOf<MangaListFeature>
+  @Bindable public var store: StoreOf<MangaListFeature>
 
   public init(store: StoreOf<MangaListFeature>) {
     self.store = store
@@ -18,5 +19,29 @@ public struct MangaListView: View {
 
   public var body: some View {
     MangaListCollectionView(store: store)
+      .ignoresSafeArea()
+      .toolbar {
+        ToolbarItem {
+          Picker(selection: $store.layout.sending(\.view.layoutChanged)) {
+            ForEach(MangaListFeature.State.Layout.allCases, id: \.self) {
+              $0.label
+            }
+          } label: {
+            Text("Layout", bundle: .module)
+          }
+          .pickerStyle(.segmented)
+        }
+      }
+  }
+}
+
+extension MangaListFeature.State.Layout {
+  fileprivate var label: some View {
+    switch self {
+    case .list:
+      Label("Toggle list view", bundle: .module, systemImage: "list.bullet")
+    case .grid:
+      Label("Toggle grid view", bundle: .module, systemImage: "square.grid.2x2")
+    }
   }
 }
