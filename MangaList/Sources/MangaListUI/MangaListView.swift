@@ -5,8 +5,8 @@
 //  Created by Long Kim on 14/3/24.
 //
 
-import ComposableArchitecture
 import CommonUI
+import ComposableArchitecture
 import MangaListCore
 import SwiftUI
 
@@ -30,6 +30,7 @@ public struct MangaListView: View {
             Text("Layout", bundle: .module)
           }
           .pickerStyle(.segmented)
+          .help(Text("Changes the layout of the mangas list.", bundle: .module))
         }
       }
   }

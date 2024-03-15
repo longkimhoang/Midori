@@ -49,7 +49,7 @@ extension RecentlyAddedMangasClient: DependencyKey {
       },
       fetchInitialDetail: {
         var fetchDescriptor = FetchDescriptor<Manga>()
-        fetchDescriptor.fetchLimit = 15
+        fetchDescriptor.fetchLimit = 30
         fetchDescriptor.sortBy = [SortDescriptor(\.createdAt, order: .reverse)]
         return try mangaStore.query(fetchDescriptor: fetchDescriptor)
       }

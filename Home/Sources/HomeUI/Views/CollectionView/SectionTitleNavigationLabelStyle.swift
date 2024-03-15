@@ -5,6 +5,7 @@
 //  Created by Long Kim on 13/3/24.
 //
 
+import CommonUI
 import SwiftUI
 
 struct SectionTitleNavigationLabelStyle: LabelStyle {
@@ -16,13 +17,7 @@ struct SectionTitleNavigationLabelStyle: LabelStyle {
         .foregroundStyle(.secondary)
     }
     #if os(macOS)
-    .onHover { inside in
-      if inside {
-        NSCursor.pointingHand.push()
-      } else {
-        NSCursor.pop()
-      }
-    }
+    .hoverCursor(.pointingHand)
     #endif
   }
 }
