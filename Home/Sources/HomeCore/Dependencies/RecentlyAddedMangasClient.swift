@@ -21,6 +21,7 @@ struct FetchRecentlyAddedMangasParameters {
 @DependencyClient
 struct RecentlyAddedMangasClient {
   var fetch: (_ parameters: FetchRecentlyAddedMangasParameters) async throws -> [Manga]
+  var fetchInitialDetail: @MainActor () throws -> [Manga]
 }
 
 extension RecentlyAddedMangasClient: DependencyKey {
@@ -45,6 +46,12 @@ extension RecentlyAddedMangasClient: DependencyKey {
           $0.propertiesToFetch = [\.title, \.coverImageURL]
           $0.sortBy = [SortDescriptor(\.createdAt, order: .reverse)]
         }
+      },
+      fetchInitialDetail: {
+        var fetchDescriptor = FetchDescriptor<Manga>()
+        fetchDescriptor.fetchLimit = 15
+        fetchDescriptor.sortBy = [SortDescriptor(\.createdAt, order: .reverse)]
+        return try mangaStore.query(fetchDescriptor: fetchDescriptor)
       }
     )
   }

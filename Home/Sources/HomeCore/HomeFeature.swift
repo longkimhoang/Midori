@@ -82,10 +82,12 @@ public struct HomeFeature {
           Action.path(.element(id: id, action: .latestUpdatesDetail($0)))
         }
       case let .path(.push(id: id, state: .recentlyAddedDetail)):
-        if let data = state.fetchStatus.success {
-          state.path[id: id]?.recentlyAddedDetail?.mangaList.mangas = data.recentlyAddedMangas
+        return RecentlyAddedDetailFeature().reduce(
+          into: &state.path[id: id]![keyPath: \.recentlyAddedDetail]!,
+          action: .view(.fetchInitialMangas)
+        ).map {
+          Action.path(.element(id: id, action: .recentlyAddedDetail($0)))
         }
-        return .none
       case .path:
         return .none
       }

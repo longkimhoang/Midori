@@ -20,6 +20,7 @@ struct MangaListCollectionView: NSViewRepresentable {
   func makeNSView(context: Context) -> NSScrollView {
     let collectionView = NSCollectionView()
     collectionView.collectionViewLayout = .mangaList()
+    collectionView.delegate = context.coordinator
     context.coordinator.setupDataSource(for: collectionView)
 
     let scrollView = NSScrollView()
@@ -27,21 +28,19 @@ struct MangaListCollectionView: NSViewRepresentable {
     return scrollView
   }
 
-  func updateNSView(_: NSScrollView, context: Context) {
-    context.coordinator.mangas = store.mangas
-    context.coordinator.updateDataSource()
-  }
+  func updateNSView(_: NSScrollView, context _: Context) {}
 
   func makeCoordinator() -> Coordinator {
-    Coordinator(mangas: store.mangas)
+    Coordinator(store: store)
   }
 
-  final class Coordinator {
-    var mangas: IdentifiedArrayOf<Manga>
-    private var dataSource: NSCollectionViewDiffableDataSource<Int, Manga.ID>!
+  @ViewAction(for: MangaListFeature.self)
+  final class Coordinator: NSObject {
+    let store: StoreOf<MangaListFeature>
+    private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>!
 
-    init(mangas: IdentifiedArrayOf<Manga>) {
-      self.mangas = mangas
+    init(store: StoreOf<MangaListFeature>) {
+      self.store = store
     }
 
     func setupDataSource(for collectionView: NSCollectionView) {
@@ -57,21 +56,43 @@ struct MangaListCollectionView: NSViewRepresentable {
         NSCollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
 
-          guard let self, let manga = mangas[id: itemIdentifier] else { return nil }
+          guard let self, let manga = store.mangas[id: itemIdentifier] else { return nil }
           return collectionView.makeItem(
             using: mangaListCellRegistration,
             for: indexPath,
             element: manga
           )
         }
+
+      observe { [weak self] in
+        guard let self else { return }
+
+        updateDataSource(with: store.mangas)
+      }
     }
 
-    func updateDataSource() {
-      var snapshot = NSDiffableDataSourceSnapshot<Int, Manga.ID>()
-      snapshot.appendSections([0])
-      snapshot.appendItems(mangas.map(\.id), toSection: 0)
+    private func updateDataSource(with mangas: IdentifiedArrayOf<Manga>) {
+      var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, Manga.ID>()
+      snapshot.appendSections([.main])
+      snapshot.appendItems(mangas.map(\.id))
       dataSource.apply(snapshot, animatingDifferences: true)
     }
   }
+}
+
+extension MangaListCollectionView.Coordinator: NSCollectionViewDelegate {
+  func collectionView(
+    _: NSCollectionView,
+    willDisplay _: NSCollectionViewItem,
+    forRepresentedObjectAt indexPath: IndexPath
+  ) {
+    if indexPath.item == store.mangas.count - 1 {
+      send(.delegate(.scrollEndReached))
+    }
+  }
+}
+
+private enum SectionIdentifier {
+  case main
 }
 #endif
