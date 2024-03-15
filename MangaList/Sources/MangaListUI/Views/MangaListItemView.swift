@@ -44,7 +44,7 @@ struct MangaListItemView: View {
     #if os(iOS)
     Color(uiColor: .secondarySystemGroupedBackground)
     #else
-    .fill.quaternary
+    .fill.tertiary
     #endif
   }
 }

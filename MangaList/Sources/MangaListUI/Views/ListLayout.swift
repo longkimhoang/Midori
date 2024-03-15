@@ -13,12 +13,14 @@ extension NSCollectionLayoutSection {
   ) -> NSCollectionLayoutSection {
     #if os(iOS)
     let itemsPerRow = layoutEnvironment.traitCollection.horizontalSizeClass == .compact ? 1 : 2
+    let itemHeight = NSCollectionLayoutDimension.estimated(140)
     #else
     let itemsPerRow = 2
+    let itemHeight = NSCollectionLayoutDimension.absolute(140)
     #endif
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1 / CGFloat(itemsPerRow)),
-      heightDimension: .estimated(140)
+      heightDimension: itemHeight
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let groupSize = NSCollectionLayoutSize(
