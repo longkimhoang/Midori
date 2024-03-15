@@ -4,13 +4,16 @@
     "Changes the layout of the mangas list." : {
 
     },
+    "Grid" : {
+
+    },
     "Layout" : {
 
     },
-    "Toggle grid view" : {
+    "List" : {
 
     },
-    "Toggle list view" : {
+    "Options" : {
 
     }
   },
