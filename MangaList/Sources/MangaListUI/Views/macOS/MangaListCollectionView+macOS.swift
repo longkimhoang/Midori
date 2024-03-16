@@ -11,6 +11,7 @@ import ComposableArchitecture
 import Database
 import FZUIKit
 import MangaListCore
+import SnapKit
 import SwiftData
 import SwiftUI
 
@@ -45,13 +46,10 @@ struct MangaListCollectionView: NSViewRepresentable {
 
     func setupDataSource(for collectionView: NSCollectionView) {
       let mangaListCellRegistration =
-        NSCollectionView.ItemRegistration<NSCollectionViewItem, Manga>(url: { $0.thumbnailURL() }) {
+        NSCollectionView.ItemRegistration<MangaListItem, Manga>(url: { $0.thumbnailURL() }) {
           item, _, manga, image in
 
-          item.contentConfiguration = NSHostingConfiguration {
-            MangaListItemView(manga: manga, coverImage: image.map { Image(nsImage: $0) })
-          }
-          .margins(.all, 0)
+          item.configure(with: manga, coverImage: image)
         } onLoadSuccess: { [weak collectionView] indexPath, _ in
           collectionView?.reconfigureItems(at: [indexPath])
         }
@@ -98,5 +96,27 @@ extension MangaListCollectionView.Coordinator: NSCollectionViewDelegate {
 
 private enum SectionIdentifier {
   case main
+}
+
+private final class MangaListItem: NSCollectionViewItem {
+  private var hostingView: NSHostingView<MangaListItemView>!
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.wantsLayer = true
+  }
+
+  func configure(with manga: Manga, coverImage: NSImage?) {
+    let rootView = MangaListItemView(manga: manga, coverImage: coverImage.map(Image.init(nsImage:)))
+    if let hostingView {
+      hostingView.rootView = rootView
+    } else {
+      hostingView = NSHostingView(rootView: rootView)
+      view.addSubview(hostingView)
+      hostingView.snp.makeConstraints { make in
+        make.edges.equalToSuperview()
+      }
+    }
+  }
 }
 #endif

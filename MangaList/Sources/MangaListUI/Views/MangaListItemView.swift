@@ -36,6 +36,9 @@ struct MangaListItemView: View {
 
       Spacer()
     }
+    #if os(macOS)
+    .modifier(CellSizingModifier())
+    #endif
     .padding()
     .background(backgroundColor, in: .rect(cornerRadius: 16))
   }
@@ -48,3 +51,16 @@ struct MangaListItemView: View {
     #endif
   }
 }
+
+#if os(macOS)
+/// On macOS we don't have `uniformAcrossSiblings` so we have to make do with
+/// absolute sizing. Therefore we need to stretch the content to the provided height.
+private struct CellSizingModifier: ViewModifier {
+  func body(content: Content) -> some View {
+    VStack(alignment: .leading) {
+      content
+      Spacer()
+    }
+  }
+}
+#endif

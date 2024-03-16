@@ -16,7 +16,7 @@ extension NSCollectionLayoutSection {
     let itemHeight = NSCollectionLayoutDimension.estimated(140)
     #else
     let itemsPerRow = 2
-    let itemHeight = NSCollectionLayoutDimension.absolute(140)
+    let itemHeight = NSCollectionLayoutDimension.absolute(120)
     #endif
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1 / CGFloat(itemsPerRow)),
