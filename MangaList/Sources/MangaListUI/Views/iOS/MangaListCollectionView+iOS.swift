@@ -6,6 +6,7 @@
 //
 
 #if os(iOS)
+import Combine
 import CommonUI
 import ComposableArchitecture
 import Database
@@ -18,7 +19,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
   let store: StoreOf<MangaListFeature>
 
   func makeUIViewController(context: Context) -> ViewController {
-    let viewController = ViewController()
+    let viewController = ViewController(initialLayout: store.layout)
     viewController.collectionView.delegate = context.coordinator
     viewController.collectionView.prefetchDataSource = context.coordinator
     context.coordinator.setupDataSource(for: viewController.collectionView)
@@ -36,6 +37,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
   final class Coordinator: NSObject {
     let store: StoreOf<MangaListFeature>
     private lazy var imagePrefetcher = ImagePrefetcher()
+    private lazy var cancellables: Set<AnyCancellable> = []
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>!
 
     init(store: StoreOf<MangaListFeature>) {
@@ -55,16 +57,38 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
           self?.reconfigureItems(at: CollectionOfOne(indexPath))
         }
 
+      let mangaGridCellRegistration =
+        UICollectionView.CellRegistration<UICollectionViewCell, Manga>(
+          url: { $0.thumbnailURL(for: .medium) }
+        ) { cell, _, manga, image in
+
+          cell.contentConfiguration = UIHostingConfiguration {
+            MangaGridItemView(manga: manga, coverImage: image.map(Image.init))
+          }
+          .margins(.all, 0)
+        } onLoadSuccess: { [weak self] indexPath, _ in
+          self?.reconfigureItems(at: CollectionOfOne(indexPath))
+        }
+
       dataSource =
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
 
           guard let self, let manga = store.mangas[id: itemIdentifier] else { return nil }
-          return collectionView.dequeueConfiguredReusableCell(
-            using: mangaListCellRegistration,
-            for: indexPath,
-            item: manga
-          )
+          switch store.layout {
+          case .list:
+            return collectionView.dequeueConfiguredReusableCell(
+              using: mangaListCellRegistration,
+              for: indexPath,
+              item: manga
+            )
+          case .grid:
+            return collectionView.dequeueConfiguredReusableCell(
+              using: mangaGridCellRegistration,
+              for: indexPath,
+              item: manga
+            )
+          }
         }
 
       observe { [weak self] in
@@ -72,6 +96,14 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
         updateDataSource(with: store.mangas)
       }
+
+      store.publisher.layout
+        .dropFirst()
+        .sink { [weak self] layout in
+          guard let self else { return }
+          updateLayout(of: collectionView, to: layout)
+        }
+        .store(in: &cancellables)
     }
 
     private func updateDataSource(with mangas: IdentifiedArrayOf<Manga>) {
@@ -87,11 +119,39 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
       snaphot.reconfigureItems(itemIdentifiers)
       dataSource.apply(snaphot, animatingDifferences: false)
     }
+
+    private func updateLayout(
+      of collectionView: UICollectionView,
+      to layout: MangaListFeature.State.Layout
+    ) {
+      collectionView.setCollectionViewLayout(
+        ViewController.collectionViewLayout(for: layout),
+        animated: false
+      )
+      var snapshot = dataSource.snapshot()
+      snapshot.reloadSections([.main])
+      dataSource.apply(snapshot, animatingDifferences: false)
+    }
   }
 
   final class ViewController: UIViewController {
+    private let initialLayout: MangaListFeature.State.Layout
+
+    init(initialLayout: MangaListFeature.State.Layout) {
+      self.initialLayout = initialLayout
+      super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+
     override func loadView() {
-      view = UICollectionView(frame: .zero, collectionViewLayout: .mangaList())
+      view = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: Self.collectionViewLayout(for: initialLayout)
+      )
     }
 
     override func viewDidLoad() {
@@ -102,6 +162,15 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
     var collectionView: UICollectionView {
       view as! UICollectionView
+    }
+
+    fileprivate static func collectionViewLayout(
+      for layout: MangaListFeature.State.Layout
+    ) -> UICollectionViewLayout {
+      switch layout {
+      case .list: .mangaList()
+      case .grid: .mangaGrid()
+      }
     }
   }
 }
