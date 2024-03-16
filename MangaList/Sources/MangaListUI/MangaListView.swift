@@ -22,21 +22,9 @@ public struct MangaListView: View {
       .ignoresSafeArea()
       .toolbar {
         ToolbarItem {
-          #if os(iOS)
-          Menu {
-            Section {
-              layoutPicker
-            } header: {
-              Text("Layout", bundle: .module)
-            }
-          } label: {
-            Label("Options", bundle: .module, systemImage: "ellipsis.circle")
-          }
-          .pickerStyle(.inline)
-          #else
           layoutPicker
-            .pickerStyle(.segmented)
-            .help(Text("Changes the layout of the mangas list.", bundle: .module))
+          #if os(macOS)
+          .pickerStyle(.segmented)
           #endif
         }
       }
@@ -51,6 +39,7 @@ public struct MangaListView: View {
     } label: {
       Text("Layout", bundle: .module)
     }
+    .help(Text("Changes the layout of the mangas list.", bundle: .module))
   }
 }
 

@@ -20,7 +20,7 @@ struct MangaListItemView: View {
       VStack(alignment: .leading) {
         Text(manga.title)
           .font(.headline)
-          .lineLimit(2)
+          .lineLimit(1)
 
         if let author = manga.author {
           Text(author.name)
@@ -32,13 +32,12 @@ struct MangaListItemView: View {
           Text(description)
             .lineLimit(3)
         }
+
+        Spacer()
       }
 
       Spacer()
     }
-    #if os(macOS)
-    .modifier(CellSizingModifier())
-    #endif
     .padding()
     .background(backgroundColor, in: .rect(cornerRadius: 16))
   }
@@ -52,9 +51,6 @@ struct MangaListItemView: View {
   }
 }
 
-#if os(macOS)
-/// On macOS we don't have `uniformAcrossSiblings` so we have to make do with
-/// absolute sizing. Therefore we need to stretch the content to the provided height.
 private struct CellSizingModifier: ViewModifier {
   func body(content: Content) -> some View {
     VStack(alignment: .leading) {
@@ -63,4 +59,3 @@ private struct CellSizingModifier: ViewModifier {
     }
   }
 }
-#endif

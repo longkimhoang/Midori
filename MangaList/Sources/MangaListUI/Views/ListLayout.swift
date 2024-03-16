@@ -13,15 +13,18 @@ extension NSCollectionLayoutSection {
   ) -> NSCollectionLayoutSection {
     #if os(iOS)
     let itemsPerRow = layoutEnvironment.traitCollection.horizontalSizeClass == .compact ? 1 : 2
-    let itemHeight = NSCollectionLayoutDimension.estimated(140)
-    #else
-    let itemsPerRow = 2
-    let itemHeight = NSCollectionLayoutDimension.absolute(120)
-    #endif
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1 / CGFloat(itemsPerRow)),
-      heightDimension: itemHeight
+      heightDimension: .uniformAcrossSiblings(estimate: 140)
     )
+    #else
+    let itemsPerRow = 2
+    let itemSize = NSCollectionLayoutSize(
+      widthDimension: .fractionalWidth(1 / CGFloat(itemsPerRow)),
+      heightDimension: .estimated(140)
+    )
+    #endif
+
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let groupSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1),
@@ -39,8 +42,8 @@ extension NSCollectionLayoutSection {
       subitem: item,
       count: itemsPerRow
     )
-    group.interItemSpacing = .fixed(16)
     #endif
+    group.interItemSpacing = .fixed(16)
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 16
 
