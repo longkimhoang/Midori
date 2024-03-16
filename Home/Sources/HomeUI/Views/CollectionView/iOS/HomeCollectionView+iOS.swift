@@ -239,6 +239,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           .labelStyle(.sectionTitleNavigation)
           .font(.title)
           .foregroundStyle(.primary)
+          .hoverEffect(.highlight)
         }
         .margins(.vertical, 4)
         .margins(.horizontal, 0)

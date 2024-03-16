@@ -13,7 +13,7 @@ extension NSCollectionLayoutSection {
   ) -> NSCollectionLayoutSection {
     let estimatedItemWidth: CGFloat = 240
     let containerWidth = layoutEnvironment.container.effectiveContentSize.width
-    let itemsPerRow = max((containerWidth / estimatedItemWidth).rounded(.down), 2)
+    let itemsPerRow = max((containerWidth / estimatedItemWidth).rounded(), 2)
     let aspectRatio = 1 / 0.7
 
     let itemSize = NSCollectionLayoutSize(
@@ -34,13 +34,12 @@ extension NSCollectionLayoutSection {
     group.interItemSpacing = .fixed(16)
     group.edgeSpacing = NSCollectionLayoutEdgeSpacing(
       leading: nil,
-      top: nil,
+      top: .fixed(16),
       trailing: nil,
       bottom: .fixed(16)
     )
 
     let section = NSCollectionLayoutSection(group: group)
-    section.interGroupSpacing = 16
     #if os(iOS)
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
     section.contentInsetsReference = .layoutMargins

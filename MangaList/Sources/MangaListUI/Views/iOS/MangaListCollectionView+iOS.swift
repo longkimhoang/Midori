@@ -128,6 +128,8 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
         ViewController.collectionViewLayout(for: layout),
         animated: false
       )
+      collectionView.scrollToItem(at: [0, 0], at: [.top, .left], animated: false)
+
       var snapshot = dataSource.snapshot()
       snapshot.reloadSections([.main])
       dataSource.apply(snapshot, animatingDifferences: false)
@@ -156,7 +158,6 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
     override func viewDidLoad() {
       super.viewDidLoad()
-      view.backgroundColor = .systemGroupedBackground
       view.layoutMargins = .zero
     }
 
