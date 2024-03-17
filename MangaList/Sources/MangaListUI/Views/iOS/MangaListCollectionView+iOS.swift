@@ -131,7 +131,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
       of collectionView: UICollectionView,
       to layout: MangaListLayout
     ) {
-      collectionView.setCollectionViewLayout(.layout(for: layout), animated: true)
+      collectionView.setCollectionViewLayout(layout.collectionViewLayout, animated: true)
       var snapshot = dataSource.snapshot()
       snapshot.reconfigureItems(snapshot.itemIdentifiers)
       dataSource.apply(snapshot, animatingDifferences: false)
@@ -154,7 +154,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
     override func loadView() {
       view = UICollectionView(
         frame: .zero,
-        collectionViewLayout: .layout(for: initialLayout)
+        collectionViewLayout: initialLayout.collectionViewLayout
       )
     }
 
@@ -207,9 +207,9 @@ private enum SectionIdentifier {
   case main
 }
 
-private extension UICollectionViewLayout {
-  static func layout(for layout: MangaListLayout) -> UICollectionViewLayout {
-    switch layout {
+private extension MangaListLayout {
+  var collectionViewLayout: UICollectionViewLayout {
+    switch self {
     case .list: .mangaList()
     case .grid: .mangaGrid()
     }
