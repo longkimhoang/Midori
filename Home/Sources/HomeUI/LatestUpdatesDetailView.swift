@@ -9,8 +9,18 @@ import HomeCore
 import SwiftUI
 
 struct LatestUpdatesDetailView: View {
+  @Environment(\.isPresented) private var isPresented
+  @StateObject private var model = LatestUpdatesDetailModel()
+
   var body: some View {
-    Text("Latest updates", bundle: .module)
-      .navigationTitle(Text("Latest updates", bundle: .module))
+    List(model.chapters) { chapter in
+      Text(chapter.chapterID.uuidString)
+    }
+    .navigationTitle(Text("Latest updates", bundle: .module))
+    .onChange(of: isPresented, initial: true) { _, isPresented in
+      if isPresented {
+        model.fetchInitialChapters()
+      }
+    }
   }
 }

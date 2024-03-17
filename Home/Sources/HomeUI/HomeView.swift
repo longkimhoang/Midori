@@ -52,6 +52,8 @@ public struct HomeView: View {
           switch destination {
           case .recentlyAdded:
             RecentlyAddedDetailView()
+          case .latestUpdates:
+            LatestUpdatesDetailView()
           default:
             Text("Not implemented")
           }

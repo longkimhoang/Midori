@@ -8,7 +8,6 @@
 import CommonUI
 import Database
 import IdentifiedCollections
-import MangaListCore
 import SwiftUI
 
 public struct MangaListView: View {

@@ -10,6 +10,7 @@ import AdvancedCollectionTableView
 import Database
 import FZUIKit
 import IdentifiedCollections
+import Nuke
 import SnapKit
 import SwiftData
 import SwiftUI
@@ -23,6 +24,7 @@ struct MangaListCollectionView: NSViewRepresentable {
     let collectionView = NSCollectionView()
     collectionView.collectionViewLayout = .mangaList()
     collectionView.delegate = context.coordinator
+    collectionView.prefetchDataSource = context.coordinator
     context.coordinator.setupDataSource(for: collectionView)
 
     let scrollView = NSScrollView()
@@ -46,6 +48,7 @@ struct MangaListCollectionView: NSViewRepresentable {
 
   final class Coordinator: NSObject {
     private weak var collectionView: NSCollectionView!
+    private lazy var imagePrefetcher = ImagePrefetcher()
     private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>!
 
     var layout: MangaListLayout {
@@ -130,17 +133,34 @@ extension MangaListCollectionView.Coordinator: NSCollectionViewDelegate {
   }
 }
 
+extension MangaListCollectionView.Coordinator: NSCollectionViewPrefetching {
+  private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
+    indexPaths.compactMap {
+      guard let itemIdentifier = dataSource.itemIdentifier(for: $0),
+            let manga = mangas[id: itemIdentifier]
+      else {
+        return nil
+      }
+
+      return manga.thumbnailURL()
+    }
+  }
+
+  func collectionView(_: NSCollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    imagePrefetcher.startPrefetching(with: imageURLs(for: indexPaths))
+  }
+
+  func collectionView(_: NSCollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    imagePrefetcher.stopPrefetching(with: imageURLs(for: indexPaths))
+  }
+}
+
 private enum SectionIdentifier {
   case main
 }
 
 private final class MangaListItem: NSCollectionViewItem {
   private var hostingView: NSHostingView<ItemView>!
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    view.wantsLayer = true
-  }
 
   func configure(with manga: Manga, coverImage: NSImage?, layout: MangaListLayout) {
     let image = coverImage.map(Image.init(nsImage:))

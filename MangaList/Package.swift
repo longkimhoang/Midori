@@ -12,12 +12,14 @@ let package = Package(
   ],
   dependencies: [
     .package(path: "CommonUI"),
+    .package(path: "Database"),
   ],
   targets: [
     .target(
       name: "MangaListUI",
       dependencies: [
         .product(name: "CommonUI", package: "CommonUI"),
+        .product(name: "Database", package: "Database"),
       ]
     ),
   ]
