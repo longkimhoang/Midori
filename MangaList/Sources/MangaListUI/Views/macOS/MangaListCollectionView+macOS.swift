@@ -28,6 +28,7 @@ struct MangaListCollectionView: NSViewRepresentable {
     context.coordinator.setupDataSource(for: collectionView)
 
     let scrollView = NSScrollView()
+    scrollView.contentInsets = NSEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
     scrollView.documentView = collectionView
     return scrollView
   }

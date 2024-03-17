@@ -89,21 +89,6 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
           self?.reconfigureItems(at: CollectionOfOne(indexPath))
         }
 
-//      let mangaGridCellRegistration =
-//        UICollectionView
-//          .CellRegistration<UICollectionViewCell, Manga>(url: { $0.thumbnailURL(for: .medium) }) {
-//            cell, _, manga, image in
-//
-//            let image = image.map(Image.init)
-//            cell.contentConfiguration = UIHostingConfiguration {
-//              MangaGridItemView(manga: manga, coverImage: image)
-//                .hoverEffect()
-//            }
-//            .margins(.all, 0)
-//          } onLoadSuccess: { [weak self] indexPath, _ in
-//            self?.reconfigureItems(at: CollectionOfOne(indexPath))
-//          }
-
       dataSource =
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
@@ -168,6 +153,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
     override func viewDidLoad() {
       super.viewDidLoad()
+      additionalSafeAreaInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
       view.layoutMargins = .zero
     }
 

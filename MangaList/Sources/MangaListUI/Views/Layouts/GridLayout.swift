@@ -18,9 +18,17 @@ extension NSCollectionLayoutSection {
 
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1 / itemsPerRow),
-      heightDimension: .fractionalHeight(1)
+      heightDimension: .fractionalWidth(aspectRatio / itemsPerRow)
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
+    #if os(macOS)
+    item.edgeSpacing = NSCollectionLayoutEdgeSpacing(
+      leading: nil,
+      top: .flexible(16),
+      trailing: nil,
+      bottom: .flexible(0)
+    )
+    #endif
 
     let groupSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1),
@@ -29,8 +37,7 @@ extension NSCollectionLayoutSection {
     #if os(iOS)
     let group = NSCollectionLayoutGroup.horizontal(
       layoutSize: groupSize,
-      repeatingSubitem: item,
-      count: Int(itemsPerRow)
+      subitems: [item]
     )
     #else
     let group = NSCollectionLayoutGroup.horizontal(
@@ -38,22 +45,15 @@ extension NSCollectionLayoutSection {
       subitem: item,
       count: Int(itemsPerRow)
     )
-    #endif
-    group.interItemSpacing = .fixed(16)
-    group.edgeSpacing = NSCollectionLayoutEdgeSpacing(
-      leading: nil,
-      top: .fixed(16),
-      trailing: nil,
-      bottom: .fixed(16)
-    )
-    #if os(macOS)
     group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
     #endif
 
+    group.interItemSpacing = .fixed(16)
+
     let section = NSCollectionLayoutSection(group: group)
+    section.interGroupSpacing = 16
     #if os(iOS)
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
-    section.contentInsetsReference = .layoutMargins
     #else
     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
     #endif
