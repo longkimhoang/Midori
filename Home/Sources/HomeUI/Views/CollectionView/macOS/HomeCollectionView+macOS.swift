@@ -10,8 +10,8 @@ import AdvancedCollectionTableView
 import Combine
 import CombineSchedulers
 import CommonUI
-import ComposableArchitecture
 import Database
+import Dependencies
 import FZUIKit
 import HomeCore
 import Nuke
@@ -23,8 +23,8 @@ struct HomeCollectionView: NSViewControllerRepresentable {
   let fetchStatus: HomeDataFetchStatus
   @Binding var path: [HomeNavigationDestination]
 
-  func makeNSViewController(context _: Context) -> HomeCollectionViewController {
-    let viewController = HomeCollectionViewController()
+  func makeNSViewController(context _: Context) -> ViewController {
+    let viewController = ViewController()
     viewController.onRefresh = {
       await refresh?()
     }
@@ -35,13 +35,13 @@ struct HomeCollectionView: NSViewControllerRepresentable {
     return viewController
   }
 
-  func updateNSViewController(_ viewController: HomeCollectionViewController, context _: Context) {
+  func updateNSViewController(_ viewController: ViewController, context _: Context) {
     if let data = fetchStatus.success {
       viewController.data = data
     }
   }
 
-  final class HomeCollectionViewController: NSViewController {
+  final class ViewController: NSViewController {
     @ViewLoading
     private var collectionView: NSCollectionView
     @ViewLoading
@@ -51,7 +51,6 @@ struct HomeCollectionView: NSViewControllerRepresentable {
     >
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
-    private var observation: ObservationToken?
 
     fileprivate var onRefresh: () async -> Void = {}
     fileprivate var onNavigate: (HomeNavigationDestination) -> Void = { _ in }
@@ -251,7 +250,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
   }
 }
 
-extension HomeCollectionView.HomeCollectionViewController: NSCollectionViewPrefetching {
+extension HomeCollectionView.ViewController: NSCollectionViewPrefetching {
   private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
     indexPaths.compactMap { indexPath in
       guard let section = SectionIdentifier(rawValue: indexPath.section),

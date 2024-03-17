@@ -10,7 +10,8 @@ import HomeCore
 import SwiftUI
 
 public struct HomeView: View {
-  @StateObject private var dataStore = HomeDataStore()
+  @State private var isRefreshing: Bool = false
+  @StateObject private var model = HomeDataModel()
   @StateObject private var navigationStore = HomeNavigationStore()
   @SceneStorage("HomeView.navigation") private var storedNavigationData: Data?
   @SceneStorage("HomeView.data") private var storedHomeData: Data?
@@ -19,21 +20,29 @@ public struct HomeView: View {
 
   public var body: some View {
     NavigationStack(path: $navigationStore.path) {
-      HomeCollectionView(fetchStatus: dataStore.fetchStatus, path: $navigationStore.path)
+      HomeCollectionView(fetchStatus: model.fetchStatus, path: $navigationStore.path)
         .ignoresSafeArea()
         .navigationTitle(Text("Home", bundle: .module))
         .toolbar {
           #if os(macOS)
           ToolbarItem {
-            RefreshButton()
+            RefreshButton(isRefreshing: isRefreshing)
           }
           #endif
         }
         .overlay {
           #if os(macOS)
-          switch dataStore.fetchStatus {
+          switch model.fetchStatus {
           case .loading:
             ContentUnavailableView.loading
+          case let .failure(error):
+            ContentUnavailableView {
+              Label("Error fetching content", bundle: .module, systemImage: "network.slash")
+            } description: {
+              Text(error.localizedDescription)
+            } actions: {
+              RefreshButton()
+            }
           default:
             EmptyView()
           }
@@ -49,7 +58,9 @@ public struct HomeView: View {
         }
     }
     .refreshable {
-      await dataStore.fetch()
+      isRefreshing = true
+      defer { isRefreshing = false }
+      await model.fetch()
     }
     .task {
       if let storedNavigationData {
@@ -57,22 +68,23 @@ public struct HomeView: View {
       }
 
       if let storedHomeData {
-        try? dataStore.restore(from: storedHomeData)
-      } else {
-        await dataStore.fetch()
+        try? model.restore(from: storedHomeData)
       }
+
+      await model.fetch()
     }
     .onChange(of: navigationStore.path) {
       storedNavigationData = navigationStore.serialziedData
     }
-    .onReceive(dataStore.objectWillChange) {
-      storedHomeData = dataStore.serializedData
+    .onReceive(model.objectWillChange) {
+      storedHomeData = model.serializedData
     }
   }
 }
 
 #if os(macOS)
 private struct RefreshButton: View {
+  var isRefreshing: Bool = false
   @Environment(\.refresh) private var refresh
 
   var body: some View {
@@ -81,7 +93,12 @@ private struct RefreshButton: View {
         await refresh?()
       }
     } label: {
-      Label("Refresh", bundle: .module, systemImage: "arrow.clockwise")
+      if isRefreshing {
+        ProgressView()
+          .controlSize(.small)
+      } else {
+        Label("Refresh", bundle: .module, systemImage: "arrow.clockwise")
+      }
     }
     .keyboardShortcut("r", modifiers: .command)
   }

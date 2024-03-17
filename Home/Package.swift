@@ -17,14 +17,11 @@ let package = Package(
     .package(path: "Networking"),
     .package(path: "MangaList"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
-    .package(
-      url: "https://github.com/pointfreeco/swift-composable-architecture.git",
-      from: "1.9.2"
-    ),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
     .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
     .package(url: "https://github.com/flocked/AdvancedCollectionTableView.git", branch: "main"),
+    .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "1.3.0"),
   ],
   targets: [
     .target(
@@ -35,7 +32,7 @@ let package = Package(
         .product(name: "APIModels", package: "Networking"),
         .product(name: "MangaListCore", package: "MangaList"),
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "CasePaths", package: "swift-case-paths"),
       ]
     ),
     .target(
@@ -44,7 +41,6 @@ let package = Package(
         .target(name: "HomeCore"),
         .product(name: "CommonUI", package: "CommonUI"),
         .product(name: "MangaListUI", package: "MangaList"),
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "SnapKit", package: "SnapKit"),
         .product(name: "Nuke", package: "Nuke"),
         .product(name: "Collections", package: "swift-collections"),

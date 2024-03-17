@@ -1,5 +1,5 @@
 //
-//  HomeDataStore.swift
+//  HomeDataModel.swift
 //
 //
 //  Created by Long Kim on 16/3/24.
@@ -11,7 +11,7 @@ import Foundation
 import IdentifiedCollections
 
 @MainActor
-public final class HomeDataStore: ObservableObject {
+public final class HomeDataModel: ObservableObject {
   @Dependency(\.popularMangas) var popularMangas
   @Dependency(\.latestChapters) var latestChapters
   @Dependency(\.recentlyAddedMangas) var recentlyAddedMangas

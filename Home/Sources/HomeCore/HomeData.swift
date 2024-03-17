@@ -5,6 +5,7 @@
 //  Created by Long Kim on 9/3/24.
 //
 
+import CasePaths
 import Database
 import IdentifiedCollections
 
@@ -22,4 +23,12 @@ public struct HomeData {
     self.latestChapters = latestChapters
     self.recentlyAddedMangas = recentlyAddedMangas
   }
+}
+
+@CasePathable
+@dynamicMemberLookup
+public enum HomeDataFetchStatus {
+  case loading
+  case success(HomeData)
+  case failure(any Error)
 }
