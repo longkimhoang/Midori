@@ -30,7 +30,6 @@ let package = Package(
         .product(name: "Domain", package: "Domain"),
         .product(name: "APIClients", package: "Networking"),
         .product(name: "APIModels", package: "Networking"),
-        .product(name: "MangaListCore", package: "MangaList"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "CasePaths", package: "swift-case-paths"),
       ]
