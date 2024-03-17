@@ -17,6 +17,7 @@ struct RecentlyAddedDetailView: View {
     MangaListView(mangas: model.mangas)
       .environment(\.mangaListEndReached, MangaListEndReachedAction {})
       .navigationTitle(Text("Recently added", bundle: .module))
+      .toolbarTitleDisplayMode(.inline)
       .onChange(of: isPresented, initial: true) { _, isPresented in
         if isPresented {
           model.fetchInitialMangas()

@@ -8,7 +8,7 @@
 import CommonUI
 import SwiftUI
 
-public enum MangaListLayout: CaseIterable {
+public enum MangaListLayout: Int, CaseIterable {
   case list
   case grid
 }

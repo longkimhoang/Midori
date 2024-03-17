@@ -300,9 +300,9 @@ struct HomeCollectionView: UIViewControllerRepresentable {
 
       var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
       snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
-      snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
-      snapshot.appendItems(data.latestChapters.map(\.id), toSection: .latestUpdates)
-      snapshot.appendItems(data.recentlyAddedMangas.map(\.id), toSection: .recentlyAdded)
+      snapshot.appendItems(data.popularMangas.ids.elements, toSection: .popular)
+      snapshot.appendItems(data.latestChapters.ids.elements, toSection: .latestUpdates)
+      snapshot.appendItems(data.recentlyAddedMangas.ids.elements, toSection: .recentlyAdded)
       dataSource.apply(snapshot)
     }
 

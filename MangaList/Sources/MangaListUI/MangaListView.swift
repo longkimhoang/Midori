@@ -12,14 +12,14 @@ import SwiftUI
 
 public struct MangaListView: View {
   public var mangas: IdentifiedArrayOf<Manga>
-  @State private var layout: MangaListLayout
+  @SceneStorage private var layout: MangaListLayout
 
   public init(
     mangas: IdentifiedArrayOf<Manga>,
     layout: MangaListLayout = .list
   ) {
     self.mangas = mangas
-    _layout = State(initialValue: layout)
+    _layout = SceneStorage(wrappedValue: layout, "MangaListView.layout")
   }
 
   public var body: some View {

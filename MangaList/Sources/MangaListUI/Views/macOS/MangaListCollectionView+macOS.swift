@@ -78,14 +78,15 @@ struct MangaListCollectionView: NSViewRepresentable {
       self.collectionView = collectionView
 
       let mangaListCellRegistration =
-        NSCollectionView.ItemRegistration<MangaListItem, Manga>(url: { $0.thumbnailURL() }) {
-          [weak self] item, _, manga, image in
+        NSCollectionView
+          .ItemRegistration<MangaListItem, Manga>(url: { $0.thumbnailURL(for: .medium) }) {
+            [weak self] item, _, manga, image in
 
-          guard let layout = self?.layout else { return }
-          item.configure(with: manga, coverImage: image, layout: layout)
-        } onLoadSuccess: { [weak collectionView] indexPath, _ in
-          collectionView?.reconfigureItems(at: [indexPath])
-        }
+            guard let layout = self?.layout else { return }
+            item.configure(with: manga, coverImage: image, layout: layout)
+          } onLoadSuccess: { [weak collectionView] indexPath, _ in
+            collectionView?.reconfigureItems(at: [indexPath])
+          }
 
       dataSource =
         NSCollectionViewDiffableDataSource(collectionView: collectionView) {
@@ -160,11 +161,11 @@ private enum SectionIdentifier {
 }
 
 private final class MangaListItem: NSCollectionViewItem {
-  private var hostingView: NSHostingView<ItemView>!
+  private var hostingView: NSHostingView<MangaItemView>!
 
   func configure(with manga: Manga, coverImage: NSImage?, layout: MangaListLayout) {
     let image = coverImage.map(Image.init(nsImage:))
-    let rootView = ItemView(manga: manga, image: image, layout: layout)
+    let rootView = MangaItemView(manga: manga, image: image, layout: layout)
 
     if let hostingView {
       hostingView.rootView = rootView
@@ -173,21 +174,6 @@ private final class MangaListItem: NSCollectionViewItem {
       view.addSubview(hostingView)
       hostingView.snp.makeConstraints { make in
         make.edges.equalToSuperview()
-      }
-    }
-  }
-
-  private struct ItemView: View {
-    let manga: Manga
-    let image: Image?
-    let layout: MangaListLayout
-
-    var body: some View {
-      switch layout {
-      case .list:
-        MangaListItemView(manga: manga, coverImage: image)
-      case .grid:
-        MangaGridItemView(manga: manga, coverImage: image)
       }
     }
   }

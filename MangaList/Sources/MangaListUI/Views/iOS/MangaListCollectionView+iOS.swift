@@ -77,31 +77,39 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
         UICollectionView.CellRegistration<UICollectionViewCell, Manga>(url: { $0.thumbnailURL() }) {
           [weak self] cell, _, manga, image in
 
-          guard let self else { return }
-          let layout = layout
+          guard let layout = self?.layout else { return }
+          let image = image.map(Image.init)
 
           cell.contentConfiguration = UIHostingConfiguration {
-            Group {
-              let image = image.map(Image.init)
-              switch layout {
-              case .list:
-                MangaListItemView(manga: manga, coverImage: image)
-              case .grid:
-                MangaGridItemView(manga: manga, coverImage: image)
-              }
-            }
-            .hoverEffect()
+            MangaItemView(manga: manga, image: image, layout: layout)
+              .hoverEffect()
           }
           .margins(.all, 0)
         } onLoadSuccess: { [weak self] indexPath, _ in
           self?.reconfigureItems(at: CollectionOfOne(indexPath))
         }
 
+//      let mangaGridCellRegistration =
+//        UICollectionView
+//          .CellRegistration<UICollectionViewCell, Manga>(url: { $0.thumbnailURL(for: .medium) }) {
+//            cell, _, manga, image in
+//
+//            let image = image.map(Image.init)
+//            cell.contentConfiguration = UIHostingConfiguration {
+//              MangaGridItemView(manga: manga, coverImage: image)
+//                .hoverEffect()
+//            }
+//            .margins(.all, 0)
+//          } onLoadSuccess: { [weak self] indexPath, _ in
+//            self?.reconfigureItems(at: CollectionOfOne(indexPath))
+//          }
+
       dataSource =
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
 
           guard let self, let manga = mangas[id: itemIdentifier] else { return nil }
+
           return collectionView.dequeueConfiguredReusableCell(
             using: mangaListCellRegistration,
             for: indexPath,
@@ -134,7 +142,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
       collectionView.setCollectionViewLayout(layout.collectionViewLayout, animated: true)
       var snapshot = dataSource.snapshot()
       snapshot.reconfigureItems(snapshot.itemIdentifiers)
-      dataSource.apply(snapshot, animatingDifferences: false)
+      dataSource.apply(snapshot)
     }
   }
 

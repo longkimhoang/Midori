@@ -5,6 +5,7 @@
 //  Created by Long Kim on 15/3/24.
 //
 
+import Algorithms
 import CommonUI
 import Database
 import SwiftUI
@@ -22,8 +23,8 @@ struct MangaListItemView: View {
           .font(.headline)
           .lineLimit(1)
 
-        if let author = manga.author {
-          Text(author.name)
+        if !subtitle.isEmpty {
+          Text(subtitle)
             .font(.subheadline)
             .foregroundStyle(.secondary)
         }
@@ -40,6 +41,10 @@ struct MangaListItemView: View {
     }
     .padding()
     .background(backgroundColor, in: .rect(cornerRadius: 16))
+  }
+
+  private var subtitle: String {
+    [manga.author?.name, manga.artist?.name].compacted().uniqued().joined(separator: ", ")
   }
 
   private var backgroundColor: some ShapeStyle {
