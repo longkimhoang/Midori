@@ -11,10 +11,17 @@ import MangaListUI
 import SwiftUI
 
 struct RecentlyAddedDetailView: View {
-  let store: StoreOf<RecentlyAddedDetailFeature>
+  @Environment(\.isPresented) private var isPresented
+  @StateObject private var model = RecentlyAddedDetailModel()
 
   var body: some View {
-    MangaListView(store: store.scope(state: \.mangaList, action: \.mangaList))
+    MangaListView(mangas: model.mangas)
+      .environment(\.mangaListEndReached, MangaListEndReachedAction {})
       .navigationTitle(Text("Recently added", bundle: .module))
+      .onChange(of: isPresented, initial: true) { _, isPresented in
+        if isPresented {
+          model.fetchInitialMangas()
+        }
+      }
   }
 }

@@ -18,11 +18,11 @@ import AppKit
 #endif
 
 #if os(iOS)
-extension UICollectionView.CellRegistration {
-  public typealias ConfigurationHandler = (Cell, IndexPath, Item, UIImage?) -> Void
-  public typealias ImageLoadSuccessHandler = (IndexPath, ImageResponse) -> Void
+public extension UICollectionView.CellRegistration {
+  typealias ConfigurationHandler = (Cell, IndexPath, Item, UIImage?) -> Void
+  typealias ImageLoadSuccessHandler = (IndexPath, ImageResponse) -> Void
 
-  public init(
+  init(
     url: @escaping (Item) -> URL?,
     handler: @escaping ConfigurationHandler,
     onLoadSuccess: @escaping ImageLoadSuccessHandler
@@ -49,11 +49,11 @@ extension UICollectionView.CellRegistration {
   }
 }
 #else
-extension NSCollectionView.ItemRegistration {
-  public typealias ConfigurationHandler = (Item, IndexPath, Element, NSImage?) -> Void
-  public typealias ImageLoadSuccessHandler = (IndexPath, ImageResponse) -> Void
+public extension NSCollectionView.ItemRegistration {
+  typealias ConfigurationHandler = (Item, IndexPath, Element, NSImage?) -> Void
+  typealias ImageLoadSuccessHandler = (IndexPath, ImageResponse) -> Void
 
-  public init(
+  init(
     url: @escaping (Element) -> URL?,
     handler: @escaping ConfigurationHandler,
     onLoadSuccess: @escaping ImageLoadSuccessHandler

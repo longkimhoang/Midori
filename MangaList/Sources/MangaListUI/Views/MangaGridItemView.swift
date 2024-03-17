@@ -39,6 +39,5 @@ struct MangaGridItemView: View {
       RoundedRectangle(cornerRadius: 16)
         .stroke(.separator, lineWidth: pixelLength)
     }
-    .hoverEffect(.lift)
   }
 }

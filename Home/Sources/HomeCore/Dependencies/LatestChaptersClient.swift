@@ -24,6 +24,7 @@ struct FetchLatestChaptersParameters {
 struct LatestChaptersClient {
   var fetch: (_ parameters: FetchLatestChaptersParameters) async throws -> [Database.Chapter]
   var fetchInitialDetail: @MainActor () throws -> [Database.Chapter]
+  var restore: @MainActor (_ ids: [Database.Chapter.ID]) throws -> [Database.Chapter]
 }
 
 extension LatestChaptersClient: DependencyKey {
@@ -46,7 +47,9 @@ extension LatestChaptersClient: DependencyKey {
 
         let chapterByMangas: OrderedDictionary<UUID, APIModels.Chapter> = latestChapters.chapters
           .reduce(into: [:]) { dict, chapter in
-            guard let mangaID = chapter.relationships.first(MangaRelationship.self)?.id, dict[mangaID] == nil else {
+            guard let mangaID = chapter.relationships.first(MangaRelationship.self)?.id,
+                  dict[mangaID] == nil
+            else {
               return
             }
 
@@ -75,6 +78,16 @@ extension LatestChaptersClient: DependencyKey {
         fetchDescriptor.sortBy = [SortDescriptor(\.readableAt, order: .reverse)]
         fetchDescriptor.fetchLimit = 100
         return try chapterStore.query(fetchDescriptor: fetchDescriptor)
+      },
+      restore: { ids in
+        var descriptor = FetchDescriptor<Database.Chapter>()
+        descriptor.predicate = #Predicate<Database.Chapter> { chapter in
+          ids.contains(chapter.persistentModelID)
+        }
+        descriptor.sortBy = [SortDescriptor(\.readableAt, order: .reverse)]
+        descriptor.relationshipKeyPathsForPrefetching = [\.manga]
+
+        return try chapterStore.query(fetchDescriptor: descriptor)
       }
     )
   }
@@ -93,8 +106,8 @@ extension DependencyValues {
   }
 }
 
-extension APIModels.Chapter {
-  fileprivate var mangaID: UUID? {
+private extension APIModels.Chapter {
+  var mangaID: UUID? {
     relationships.first(MangaRelationship.self).map(\.id)
   }
 }

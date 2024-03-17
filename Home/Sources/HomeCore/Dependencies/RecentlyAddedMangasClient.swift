@@ -22,6 +22,7 @@ struct FetchRecentlyAddedMangasParameters {
 struct RecentlyAddedMangasClient {
   var fetch: (_ parameters: FetchRecentlyAddedMangasParameters) async throws -> [Manga]
   var fetchInitialDetail: @MainActor () throws -> [Manga]
+  var restore: @MainActor (_ ids: [Manga.ID]) throws -> [Manga]
 }
 
 extension RecentlyAddedMangasClient: DependencyKey {
@@ -50,6 +51,14 @@ extension RecentlyAddedMangasClient: DependencyKey {
       fetchInitialDetail: {
         var fetchDescriptor = FetchDescriptor<Manga>()
         fetchDescriptor.fetchLimit = 30
+        fetchDescriptor.sortBy = [SortDescriptor(\.createdAt, order: .reverse)]
+        return try mangaStore.query(fetchDescriptor: fetchDescriptor)
+      },
+      restore: { ids in
+        var fetchDescriptor = FetchDescriptor<Manga>()
+        fetchDescriptor.predicate = #Predicate<Manga> { manga in
+          ids.contains(manga.persistentModelID)
+        }
         fetchDescriptor.sortBy = [SortDescriptor(\.createdAt, order: .reverse)]
         return try mangaStore.query(fetchDescriptor: fetchDescriptor)
       }

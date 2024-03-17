@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F33C13B2BA69F76008EDEDC /* .swift-version in Resources */ = {isa = PBXBuildFile; fileRef = 4F33C13A2BA69F76008EDEDC /* .swift-version */; };
+		4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */; };
 		4F3875D92B9DC6780025EDB8 /* AppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3875D82B9DC6780025EDB8 /* AppFeature.swift */; };
 		4F3FE1962BA1B9ED005DF6E5 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3FE1952BA1B9ED005DF6E5 /* HomeUI */; };
 		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
@@ -23,6 +25,8 @@
 /* Begin PBXFileReference section */
 		4F0974252BA2FC41005403CA /* MangaList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MangaList; sourceTree = "<group>"; };
 		4F0974272BA2FCD2005403CA /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
+		4F33C13A2BA69F76008EDEDC /* .swift-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-version"; sourceTree = "<group>"; };
+		4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		4F3875D82B9DC6780025EDB8 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
 		4F3FE1912BA162A4005DF6E5 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		4F3FE1932BA18189005DF6E5 /* CommonUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonUI; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				4F8B6E422B981EF6000E3DFA /* .gitignore */,
+				4F33C13A2BA69F76008EDEDC /* .swift-version */,
 				4F9132AE2B93712C00CB7747 /* .swiftformat */,
 				4F3FE1942BA1B77A005DF6E5 /* fastlane */,
 				4F6857B02BA0A06600BC67CC /* Gemfile */,
@@ -159,6 +164,7 @@
 		4FCF649B2B9EAA7E00B6D983 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */,
 				4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */,
 				4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */,
 				4FB78DA52B8C9269009639A3 /* AppView.swift */,
@@ -215,7 +221,6 @@
 			);
 			mainGroup = 4FB78D972B8C9269009639A3;
 			packageReferences = (
-				4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */,
 				4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 			);
 			productRefGroup = 4FB78DA12B8C9269009639A3 /* Products */;
@@ -236,6 +241,7 @@
 				4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */,
 				4FCF64A52B9EB45D00B6D983 /* Localizable.xcstrings in Resources */,
 				4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */,
+				4F33C13B2BA69F76008EDEDC /* .swift-version in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +256,7 @@
 				4FB78DA62B8C9269009639A3 /* AppView.swift in Sources */,
 				4FCF649F2B9EAB2600B6D983 /* AppSplitView.swift in Sources */,
 				4FCF649D2B9EAAB400B6D983 /* AppTabView.swift in Sources */,
+				4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */,
 				4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -481,14 +488,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4F9132AD2B9370AD00CB7747 /* XCRemoteSwiftPackageReference "SwiftFormat" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nicklockwood/SwiftFormat.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.53.3;
-			};
-		};
 		4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";

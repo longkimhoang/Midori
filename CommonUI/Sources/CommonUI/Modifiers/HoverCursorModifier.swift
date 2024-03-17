@@ -23,11 +23,11 @@ struct HoverCursorModifier: ViewModifier {
   }
 }
 
-extension View {
+public extension View {
   /// Specifies the cursor to change to when hovering over this view.
   ///
   /// - Parameter cursor: The `NSCursor` to change into.
-  public func hoverCursor(_ cursor: NSCursor) -> some View {
+  func hoverCursor(_ cursor: NSCursor) -> some View {
     modifier(HoverCursorModifier(cursor: cursor))
   }
 }

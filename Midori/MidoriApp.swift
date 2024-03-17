@@ -13,16 +13,11 @@ import SwiftUI
 
 @main
 struct MidoriApp: App {
-  @MainActor
-  static let store = Store(initialState: AppFeature.State()) {
-    AppFeature()
-  }
-
   @Dependency(\.modelContainer) var modelContainer
 
   var body: some Scene {
     WindowGroup {
-      AppView(store: MidoriApp.store)
+      AppView()
     }
     .modelContainer(modelContainer)
   }

@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-extension Label where Title == Text, Icon == Image {
-  public init(_ titleKey: LocalizedStringKey, bundle: Bundle? = nil, systemImage: String) {
+public extension Label where Title == Text, Icon == Image {
+  init(_ titleKey: LocalizedStringKey, bundle: Bundle? = nil, systemImage: String) {
     self.init(
       title: {
         Text(titleKey, bundle: bundle)

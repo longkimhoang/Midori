@@ -16,6 +16,7 @@ import SwiftData
 @DependencyClient
 struct PopularMangasClient {
   var fetch: () async throws -> [Manga]
+  var restore: @MainActor (_ ids: [Manga.ID]) throws -> [Manga]
 }
 
 extension PopularMangasClient: DependencyKey {
@@ -49,6 +50,18 @@ extension PopularMangasClient: DependencyKey {
           $0.relationshipKeyPathsForPrefetching = [\.artist, \.author]
         }
         .sorted(by: \.mangaID, using: mangaIDs)
+      },
+      restore: { ids in
+        var descriptor = FetchDescriptor<Manga>()
+        descriptor.predicate = #Predicate<Manga> { manga in
+          ids.contains(manga.persistentModelID)
+        }
+        descriptor.propertiesToFetch = [\.title, \.coverImageURL, \.mangaID]
+        descriptor.relationshipKeyPathsForPrefetching = [\.artist, \.author]
+
+        return try mangaStore
+          .query(fetchDescriptor: descriptor)
+          .sorted(by: \.persistentModelID, using: ids)
       }
     )
   }

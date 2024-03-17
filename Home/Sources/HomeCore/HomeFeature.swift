@@ -98,9 +98,9 @@ public struct HomeFeature {
   }
 }
 
-extension HomeFeature {
+public extension HomeFeature {
   @Reducer
-  public struct Path {
+  struct Path {
     @ObservableState
     public enum State {
       case latestUpdatesDetail(LatestUpdatesDetailFeature.State)

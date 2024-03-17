@@ -10,14 +10,15 @@ import HomeUI
 import SwiftUI
 
 struct AppTabView: View {
-  let store: StoreOf<AppFeature>
+  @SceneStorage("selectedTab") private var destination: AppDestination = .home
 
   var body: some View {
-    TabView {
-      HomeView(store: store.scope(state: \.home, action: \.home))
+    TabView(selection: $destination) {
+      HomeView()
         .tabItem {
           Label("Home", systemImage: "house")
         }
+        .tag(AppDestination.home)
     }
   }
 }

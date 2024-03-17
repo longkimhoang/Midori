@@ -14,9 +14,9 @@ public protocol ExpandableRelationship<Expanded>: Relationship {
   var attributes: Expanded.Attributes? { get }
 }
 
-extension ExpandableRelationship {
+public extension ExpandableRelationship {
   /// Expands the relationship into a complete entity.
-  public var expanded: Expanded? {
+  var expanded: Expanded? {
     attributes.map { Expanded(id: id, attributes: $0) }
   }
 }

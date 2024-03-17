@@ -26,11 +26,19 @@ extension NSCollectionLayoutSection {
       widthDimension: .fractionalWidth(1),
       heightDimension: .fractionalWidth(aspectRatio / itemsPerRow)
     )
+    #if os(iOS)
     let group = NSCollectionLayoutGroup.horizontal(
       layoutSize: groupSize,
       repeatingSubitem: item,
       count: Int(itemsPerRow)
     )
+    #else
+    let group = NSCollectionLayoutGroup.horizontal(
+      layoutSize: groupSize,
+      subitem: item,
+      count: Int(itemsPerRow)
+    )
+    #endif
     group.interItemSpacing = .fixed(16)
     group.edgeSpacing = NSCollectionLayoutEdgeSpacing(
       leading: nil,
@@ -38,6 +46,9 @@ extension NSCollectionLayoutSection {
       trailing: nil,
       bottom: .fixed(16)
     )
+    #if os(macOS)
+    group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+    #endif
 
     let section = NSCollectionLayoutSection(group: group)
     #if os(iOS)
@@ -58,6 +69,19 @@ extension UICollectionViewLayout {
     configuration.contentInsetsReference = .layoutMargins
 
     let layout = UICollectionViewCompositionalLayout { _, layoutEnvironment in
+      NSCollectionLayoutSection.mangaGrid(layoutEnvironment: layoutEnvironment)
+    }
+    layout.configuration = configuration
+
+    return layout
+  }
+}
+#else
+extension NSCollectionViewLayout {
+  static func mangaGrid() -> NSCollectionViewLayout {
+    let configuration = NSCollectionViewCompositionalLayoutConfiguration()
+
+    let layout = NSCollectionViewCompositionalLayout { _, layoutEnvironment in
       NSCollectionLayoutSection.mangaGrid(layoutEnvironment: layoutEnvironment)
     }
     layout.configuration = configuration

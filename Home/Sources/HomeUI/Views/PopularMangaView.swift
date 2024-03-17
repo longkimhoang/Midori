@@ -24,7 +24,11 @@ struct PopularMangaView: View {
 
       GeometryReader { geometry in
         HStack(alignment: .top, spacing: 16) {
-          MangaCoverImage(image: coverThumbnailImage, width: geometry.size.height * 0.7, bordered: false)
+          MangaCoverImage(
+            image: coverThumbnailImage,
+            width: geometry.size.height * 0.7,
+            bordered: false
+          )
 
           VStack(alignment: .leading) {
             Text(manga.title)

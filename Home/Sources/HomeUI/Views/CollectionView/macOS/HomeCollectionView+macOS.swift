@@ -19,33 +19,46 @@ import SwiftData
 import SwiftUI
 
 struct HomeCollectionView: NSViewControllerRepresentable {
-  let store: StoreOf<HomeFeature>
+  @Environment(\.refresh) private var refresh
+  let fetchStatus: HomeDataFetchStatus
+  @Binding var path: [HomeNavigationDestination]
 
   func makeNSViewController(context _: Context) -> HomeCollectionViewController {
-    HomeCollectionViewController(store: store)
+    let viewController = HomeCollectionViewController()
+    viewController.onRefresh = {
+      await refresh?()
+    }
+    viewController.onNavigate = { destination in
+      path.append(destination)
+    }
+
+    return viewController
   }
 
-  func updateNSViewController(_: HomeCollectionViewController, context _: Context) {}
+  func updateNSViewController(_ viewController: HomeCollectionViewController, context _: Context) {
+    if let data = fetchStatus.success {
+      viewController.data = data
+    }
+  }
 
-  @ViewAction(for: HomeFeature.self)
   final class HomeCollectionViewController: NSViewController {
     @ViewLoading
     private var collectionView: NSCollectionView
     @ViewLoading
-    private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
+    private var dataSource: NSCollectionViewDiffableDataSource<
+      SectionIdentifier,
+      PersistentIdentifier
+    >
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
     private var observation: ObservationToken?
-    let store: StoreOf<HomeFeature>
 
-    init(store: StoreOf<HomeFeature>) {
-      self.store = store
-      super.init(nibName: nil, bundle: nil)
-    }
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+    fileprivate var onRefresh: () async -> Void = {}
+    fileprivate var onNavigate: (HomeNavigationDestination) -> Void = { _ in }
+    fileprivate var data: HomeData? {
+      didSet {
+        updateDataSource()
+      }
     }
 
     override func loadView() {
@@ -62,26 +75,6 @@ struct HomeCollectionView: NSViewControllerRepresentable {
       super.viewDidLoad()
       setupDataSource()
       collectionView.prefetchDataSource = self
-    }
-
-    override func viewDidAppear() {
-      super.viewDidAppear()
-
-      observation = observe { [weak self] in
-        guard let self else { return }
-        switch store.fetchStatus {
-        case let .success(data):
-          updateDataSource(data: data)
-        default:
-          break
-        }
-      }
-    }
-
-    override func viewDidDisappear() {
-      super.viewDidDisappear()
-
-      observation?.cancel()
     }
 
     func setupDataSource() {
@@ -149,7 +142,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
             return nil
           }
 
-          guard let data = store.fetchStatus.success else {
+          guard let data else {
             return nil
           }
 
@@ -189,7 +182,7 @@ struct HomeCollectionView: NSViewControllerRepresentable {
 
       let sectionTitleRegistration = NSCollectionView.SupplementaryRegistration<SectionTitleView>(
         elementKind: SupplementaryItemKind.sectionTitle
-      ) { sectionTitleView, _, indexPath in
+      ) { [weak self] sectionTitleView, _, indexPath in
         guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
 
         sectionTitleView.contentConfiguration = NSHostingConfiguration {
@@ -198,15 +191,15 @@ struct HomeCollectionView: NSViewControllerRepresentable {
             case .popular:
               Text("Popular new titles", bundle: .module)
             case .latestUpdates:
-              NavigationLink(
-                state: HomeFeature.Path.State.latestUpdatesDetail(LatestUpdatesDetailFeature.State())
-              ) {
+              Button {
+                self?.onNavigate(.latestUpdates)
+              } label: {
                 Label("Latest updates", bundle: .module, systemImage: "chevron.forward")
               }
             case .recentlyAdded:
-              NavigationLink(
-                state: HomeFeature.Path.State.recentlyAddedDetail(RecentlyAddedDetailFeature.State())
-              ) {
+              Button {
+                self?.onNavigate(.recentlyAdded)
+              } label: {
                 Label("Recently added", bundle: .module, systemImage: "chevron.forward")
               }
             }
@@ -241,7 +234,9 @@ struct HomeCollectionView: NSViewControllerRepresentable {
         .store(in: &cancellables)
     }
 
-    private func updateDataSource(data: HomeData) {
+    private func updateDataSource() {
+      guard let data else { return }
+
       var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
       snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
       snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
@@ -265,7 +260,7 @@ extension HomeCollectionView.HomeCollectionViewController: NSCollectionViewPrefe
         return nil
       }
 
-      guard let data = store.fetchStatus.success else {
+      guard let data else {
         return nil
       }
 

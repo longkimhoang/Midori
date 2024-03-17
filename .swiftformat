@@ -1,6 +1,6 @@
---maxWidth 120
+--maxWidth 100
 --indent 2
 --wraparguments before-first
 --wrapparameters before-first
 --ifdef no-indent
---extensionacl on-declarations
+--extensionacl on-extension

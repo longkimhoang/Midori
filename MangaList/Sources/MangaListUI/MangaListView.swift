@@ -6,50 +6,38 @@
 //
 
 import CommonUI
-import ComposableArchitecture
+import Database
+import IdentifiedCollections
 import MangaListCore
 import SwiftUI
 
 public struct MangaListView: View {
-  @Bindable public var store: StoreOf<MangaListFeature>
+  public var mangas: IdentifiedArrayOf<Manga>
+  @State private var layout: MangaListLayout
 
-  public init(store: StoreOf<MangaListFeature>) {
-    self.store = store
+  public init(
+    mangas: IdentifiedArrayOf<Manga>,
+    layout: MangaListLayout = .list
+  ) {
+    self.mangas = mangas
+    _layout = State(initialValue: layout)
   }
 
   public var body: some View {
-    MangaListCollectionView(store: store)
+    MangaListCollectionView(mangas: mangas, layout: layout)
       .ignoresSafeArea()
       .toolbar {
         ToolbarItem {
-          layoutPicker
-          #if os(macOS)
+          Picker(selection: $layout) {
+            ForEach(MangaListLayout.allCases, id: \.self) { layout in
+              Label(layout)
+            }
+          } label: {
+            Text("Layout", bundle: .module)
+          }
+          .help(Text("Changes the layout of the mangas list.", bundle: .module))
           .pickerStyle(.segmented)
-          #endif
         }
       }
-  }
-
-  @ViewBuilder
-  private var layoutPicker: some View {
-    Picker(selection: $store.layout.sending(\.view.layoutChanged)) {
-      ForEach(MangaListFeature.State.Layout.allCases, id: \.self) {
-        $0.label
-      }
-    } label: {
-      Text("Layout", bundle: .module)
-    }
-    .help(Text("Changes the layout of the mangas list.", bundle: .module))
-  }
-}
-
-extension MangaListFeature.State.Layout {
-  fileprivate var label: some View {
-    switch self {
-    case .list:
-      Label("List", bundle: .module, systemImage: "list.bullet")
-    case .grid:
-      Label("Grid", bundle: .module, systemImage: "square.grid.2x2")
-    }
   }
 }

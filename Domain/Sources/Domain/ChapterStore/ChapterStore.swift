@@ -50,8 +50,8 @@ actor ChapterStore {
   }
 }
 
-extension APIModels.Chapter {
-  fileprivate var mangaID: UUID? {
+private extension APIModels.Chapter {
+  var mangaID: UUID? {
     relationships.first(MangaRelationship.self).map(\.id)
   }
 }

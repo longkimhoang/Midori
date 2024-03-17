@@ -35,9 +35,9 @@ extension ChapterStoreClient: DependencyKey {
   }
 }
 
-extension ChapterStoreClient {
+public extension ChapterStoreClient {
   @MainActor
-  public func queryByIDs(
+  func queryByIDs(
     _ ids: [UUID],
     modifyingDescriptorWith handler: (inout FetchDescriptor<Database.Chapter>) -> Void = { _ in }
   ) throws -> [Database.Chapter] {
@@ -52,8 +52,8 @@ extension ChapterStoreClient {
   }
 }
 
-extension DependencyValues {
-  public var chapterStore: ChapterStoreClient {
+public extension DependencyValues {
+  var chapterStore: ChapterStoreClient {
     get { self[ChapterStoreClient.self] }
     set { self[ChapterStoreClient.self] = newValue }
   }

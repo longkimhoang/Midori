@@ -35,10 +35,10 @@ extension MangaStoreClient: DependencyKey {
   }
 }
 
-extension MangaStoreClient {
+public extension MangaStoreClient {
   @discardableResult
   @MainActor
-  public func queryByIDs(
+  func queryByIDs(
     _ ids: [UUID],
     modifyingDescriptorWith handler: (inout FetchDescriptor<Database.Manga>) -> Void = { _ in }
   ) throws -> [Database.Manga] {
@@ -53,8 +53,8 @@ extension MangaStoreClient {
   }
 }
 
-extension DependencyValues {
-  public var mangaStore: MangaStoreClient {
+public extension DependencyValues {
+  var mangaStore: MangaStoreClient {
     get { self[MangaStoreClient.self] }
     set { self[MangaStoreClient.self] = newValue }
   }

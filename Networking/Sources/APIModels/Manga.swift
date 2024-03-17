@@ -35,8 +35,8 @@ public struct MangaAttributes {
   public let createdAt: Date
 }
 
-extension Manga {
-  public var coverImageURL: URL? {
+public extension Manga {
+  var coverImageURL: URL? {
     guard let cover = relationships.first(CoverRelationship.self).flatMap(\.expanded) else {
       return nil
     }
@@ -47,11 +47,11 @@ extension Manga {
     )
   }
 
-  public var author: Author? {
+  var author: Author? {
     relationships.first(AuthorRelationship.self).flatMap(\.expanded)
   }
 
-  public var artist: Author? {
+  var artist: Author? {
     relationships.first(ArtistRelationship.self).flatMap(\.expanded)
   }
 }

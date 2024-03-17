@@ -37,13 +37,13 @@ public final class Manga {
   }
 }
 
-extension Manga {
-  public enum ThumbnailSize: Int {
+public extension Manga {
+  enum ThumbnailSize: Int {
     case small = 256
     case medium = 512
   }
 
-  public func thumbnailURL(for size: ThumbnailSize = .small) -> URL? {
+  func thumbnailURL(for size: ThumbnailSize = .small) -> URL? {
     coverImageURL.flatMap { URL(string: $0.absoluteString + ".\(size.rawValue).jpg") }
   }
 }

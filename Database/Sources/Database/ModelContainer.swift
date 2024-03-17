@@ -10,14 +10,14 @@ import SwiftData
 
 extension ModelContainer: DependencyKey {
   public static var liveValue: ModelContainer {
-    return try! ModelContainer(
+    try! ModelContainer(
       for: Manga.self, Chapter.self, Artist.self, Author.self
     )
   }
 }
 
-extension DependencyValues {
-  public var modelContainer: ModelContainer {
+public extension DependencyValues {
+  var modelContainer: ModelContainer {
     get { self[ModelContainer.self] }
     set { self[ModelContainer.self] = newValue }
   }

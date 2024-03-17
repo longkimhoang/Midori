@@ -7,16 +7,17 @@
 
 #if os(macOS)
 import AdvancedCollectionTableView
-import ComposableArchitecture
 import Database
 import FZUIKit
-import MangaListCore
+import IdentifiedCollections
 import SnapKit
 import SwiftData
 import SwiftUI
 
 struct MangaListCollectionView: NSViewRepresentable {
-  let store: StoreOf<MangaListFeature>
+  @Environment(\.mangaListEndReached) var mangaListEndReached
+  let mangas: IdentifiedArrayOf<Manga>
+  let layout: MangaListLayout
 
   func makeNSView(context: Context) -> NSScrollView {
     let collectionView = NSCollectionView()
@@ -29,27 +30,56 @@ struct MangaListCollectionView: NSViewRepresentable {
     return scrollView
   }
 
-  func updateNSView(_: NSScrollView, context _: Context) {}
-
-  func makeCoordinator() -> Coordinator {
-    Coordinator(store: store)
+  func updateNSView(_: NSScrollView, context: Context) {
+    context.coordinator.mangas = mangas
+    context.coordinator.layout = layout
+    context.coordinator.onScrollEndReached = {
+      Task {
+        await mangaListEndReached()
+      }
+    }
   }
 
-  @ViewAction(for: MangaListFeature.self)
+  func makeCoordinator() -> Coordinator {
+    Coordinator(layout: layout, mangas: mangas)
+  }
+
   final class Coordinator: NSObject {
-    let store: StoreOf<MangaListFeature>
+    private weak var collectionView: NSCollectionView!
     private var dataSource: NSCollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>!
 
-    init(store: StoreOf<MangaListFeature>) {
-      self.store = store
+    var layout: MangaListLayout {
+      didSet {
+        guard layout != oldValue else { return }
+        updateLayout(of: collectionView, to: layout)
+      }
+    }
+
+    var mangas: IdentifiedArrayOf<Manga> {
+      didSet {
+        updateDataSource()
+      }
+    }
+
+    var onScrollEndReached: () -> Void = {}
+
+    init(
+      layout: MangaListLayout,
+      mangas: IdentifiedArrayOf<Manga>
+    ) {
+      self.layout = layout
+      self.mangas = mangas
     }
 
     func setupDataSource(for collectionView: NSCollectionView) {
+      self.collectionView = collectionView
+
       let mangaListCellRegistration =
         NSCollectionView.ItemRegistration<MangaListItem, Manga>(url: { $0.thumbnailURL() }) {
-          item, _, manga, image in
+          [weak self] item, _, manga, image in
 
-          item.configure(with: manga, coverImage: image)
+          guard let layout = self?.layout else { return }
+          item.configure(with: manga, coverImage: image, layout: layout)
         } onLoadSuccess: { [weak collectionView] indexPath, _ in
           collectionView?.reconfigureItems(at: [indexPath])
         }
@@ -58,26 +88,32 @@ struct MangaListCollectionView: NSViewRepresentable {
         NSCollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
 
-          guard let self, let manga = store.mangas[id: itemIdentifier] else { return nil }
+          guard let self, let manga = mangas[id: itemIdentifier] else { return nil }
           return collectionView.makeItem(
             using: mangaListCellRegistration,
             for: indexPath,
             element: manga
           )
         }
-
-      observe { [weak self] in
-        guard let self else { return }
-
-        updateDataSource(with: store.mangas)
-      }
     }
 
-    private func updateDataSource(with mangas: IdentifiedArrayOf<Manga>) {
+    private func updateDataSource() {
+      let itemIdentifiers = mangas.ids.elements
+      guard dataSource.snapshot().itemIdentifiers != itemIdentifiers else { return }
+
       var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, Manga.ID>()
       snapshot.appendSections([.main])
       snapshot.appendItems(mangas.map(\.id))
       dataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    private func updateLayout(
+      of collectionView: NSCollectionView,
+      to layout: MangaListLayout
+    ) {
+      collectionView.animator().collectionViewLayout = layout.collectionViewLayout
+      let indexPaths = collectionView.indexPaths(for: 0)
+      collectionView.reconfigureItems(at: indexPaths)
     }
   }
 }
@@ -88,8 +124,8 @@ extension MangaListCollectionView.Coordinator: NSCollectionViewDelegate {
     willDisplay _: NSCollectionViewItem,
     forRepresentedObjectAt indexPath: IndexPath
   ) {
-    if indexPath.item == store.mangas.count - 1 {
-      send(.delegate(.scrollEndReached))
+    if indexPath.item == mangas.count - 1 {
+      onScrollEndReached()
     }
   }
 }
@@ -99,15 +135,17 @@ private enum SectionIdentifier {
 }
 
 private final class MangaListItem: NSCollectionViewItem {
-  private var hostingView: NSHostingView<MangaListItemView>!
+  private var hostingView: NSHostingView<ItemView>!
 
   override func viewDidLoad() {
     super.viewDidLoad()
     view.wantsLayer = true
   }
 
-  func configure(with manga: Manga, coverImage: NSImage?) {
-    let rootView = MangaListItemView(manga: manga, coverImage: coverImage.map(Image.init(nsImage:)))
+  func configure(with manga: Manga, coverImage: NSImage?, layout: MangaListLayout) {
+    let image = coverImage.map(Image.init(nsImage:))
+    let rootView = ItemView(manga: manga, image: image, layout: layout)
+
     if let hostingView {
       hostingView.rootView = rootView
     } else {
@@ -116,6 +154,30 @@ private final class MangaListItem: NSCollectionViewItem {
       hostingView.snp.makeConstraints { make in
         make.edges.equalToSuperview()
       }
+    }
+  }
+
+  private struct ItemView: View {
+    let manga: Manga
+    let image: Image?
+    let layout: MangaListLayout
+
+    var body: some View {
+      switch layout {
+      case .list:
+        MangaListItemView(manga: manga, coverImage: image)
+      case .grid:
+        MangaGridItemView(manga: manga, coverImage: image)
+      }
+    }
+  }
+}
+
+private extension MangaListLayout {
+  var collectionViewLayout: NSCollectionViewLayout {
+    switch self {
+    case .list: .mangaList()
+    case .grid: .mangaGrid()
     }
   }
 }

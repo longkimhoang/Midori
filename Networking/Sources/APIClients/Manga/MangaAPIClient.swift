@@ -27,8 +27,8 @@ extension MangaAPIClient: DependencyKey {
   }
 }
 
-extension DependencyValues {
-  public var mangaAPI: MangaAPIClient {
+public extension DependencyValues {
+  var mangaAPI: MangaAPIClient {
     get { self[MangaAPIClient.self] }
     set { self[MangaAPIClient.self] = newValue }
   }

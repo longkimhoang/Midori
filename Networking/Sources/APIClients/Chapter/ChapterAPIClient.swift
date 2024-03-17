@@ -27,8 +27,8 @@ extension ChapterAPIClient: DependencyKey {
   }
 }
 
-extension DependencyValues {
-  public var chapterAPI: ChapterAPIClient {
+public extension DependencyValues {
+  var chapterAPI: ChapterAPIClient {
     get { self[ChapterAPIClient.self] }
     set { self[ChapterAPIClient.self] = newValue }
   }

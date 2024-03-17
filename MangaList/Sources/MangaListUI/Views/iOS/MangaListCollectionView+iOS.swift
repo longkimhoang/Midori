@@ -8,18 +8,19 @@
 #if os(iOS)
 import Combine
 import CommonUI
-import ComposableArchitecture
 import Database
-import MangaListCore
+import IdentifiedCollections
 import Nuke
 import SwiftData
 import SwiftUI
 
 struct MangaListCollectionView: UIViewControllerRepresentable {
-  let store: StoreOf<MangaListFeature>
+  @Environment(\.mangaListEndReached) var mangaListEndReached
+  let mangas: IdentifiedArrayOf<Manga>
+  let layout: MangaListLayout
 
   func makeUIViewController(context: Context) -> ViewController {
-    let viewController = ViewController(initialLayout: store.layout)
+    let viewController = ViewController(initialLayout: layout)
     viewController.collectionView.delegate = context.coordinator
     viewController.collectionView.prefetchDataSource = context.coordinator
     context.coordinator.setupDataSource(for: viewController.collectionView)
@@ -27,43 +28,69 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
     return viewController
   }
 
-  func updateUIViewController(_: ViewController, context _: Context) {}
-
-  func makeCoordinator() -> Coordinator {
-    Coordinator(store: store)
+  func updateUIViewController(_: ViewController, context: Context) {
+    context.coordinator.mangas = mangas
+    context.coordinator.layout = layout
+    context.coordinator.onScrollEndReached = {
+      Task {
+        await mangaListEndReached()
+      }
+    }
   }
 
-  @ViewAction(for: MangaListFeature.self)
+  func makeCoordinator() -> Coordinator {
+    Coordinator(layout: layout, mangas: mangas)
+  }
+
   final class Coordinator: NSObject {
-    let store: StoreOf<MangaListFeature>
+    fileprivate weak var collectionView: UICollectionView!
     private lazy var imagePrefetcher = ImagePrefetcher()
-    private lazy var cancellables: Set<AnyCancellable> = []
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>!
 
-    init(store: StoreOf<MangaListFeature>) {
-      self.store = store
+    var layout: MangaListLayout {
+      didSet {
+        guard layout != oldValue else { return }
+        updateLayout(of: collectionView, to: layout)
+      }
+    }
+
+    var mangas: IdentifiedArrayOf<Manga> {
+      didSet {
+        updateDataSource()
+      }
+    }
+
+    var onScrollEndReached: () -> Void = {}
+
+    init(
+      layout: MangaListLayout,
+      mangas: IdentifiedArrayOf<Manga>
+    ) {
+      self.layout = layout
+      self.mangas = mangas
     }
 
     func setupDataSource(for collectionView: UICollectionView) {
+      self.collectionView = collectionView
+
       let mangaListCellRegistration =
         UICollectionView.CellRegistration<UICollectionViewCell, Manga>(url: { $0.thumbnailURL() }) {
-          cell, _, manga, image in
+          [weak self] cell, _, manga, image in
+
+          guard let self else { return }
+          let layout = layout
 
           cell.contentConfiguration = UIHostingConfiguration {
-            MangaListItemView(manga: manga, coverImage: image.map(Image.init))
-          }
-          .margins(.all, 0)
-        } onLoadSuccess: { [weak self] indexPath, _ in
-          self?.reconfigureItems(at: CollectionOfOne(indexPath))
-        }
-
-      let mangaGridCellRegistration =
-        UICollectionView.CellRegistration<UICollectionViewCell, Manga>(
-          url: { $0.thumbnailURL(for: .medium) }
-        ) { cell, _, manga, image in
-
-          cell.contentConfiguration = UIHostingConfiguration {
-            MangaGridItemView(manga: manga, coverImage: image.map(Image.init))
+            Group {
+              let image = image.map(Image.init)
+              switch layout {
+              case .list:
+                MangaListItemView(manga: manga, coverImage: image)
+              case .grid:
+                MangaGridItemView(manga: manga, coverImage: image)
+              }
+            }
+            .hoverEffect()
           }
           .margins(.all, 0)
         } onLoadSuccess: { [weak self] indexPath, _ in
@@ -74,42 +101,22 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
         UICollectionViewDiffableDataSource(collectionView: collectionView) {
           [weak self] collectionView, indexPath, itemIdentifier in
 
-          guard let self, let manga = store.mangas[id: itemIdentifier] else { return nil }
-          switch store.layout {
-          case .list:
-            return collectionView.dequeueConfiguredReusableCell(
-              using: mangaListCellRegistration,
-              for: indexPath,
-              item: manga
-            )
-          case .grid:
-            return collectionView.dequeueConfiguredReusableCell(
-              using: mangaGridCellRegistration,
-              for: indexPath,
-              item: manga
-            )
-          }
+          guard let self, let manga = mangas[id: itemIdentifier] else { return nil }
+          return collectionView.dequeueConfiguredReusableCell(
+            using: mangaListCellRegistration,
+            for: indexPath,
+            item: manga
+          )
         }
-
-      observe { [weak self] in
-        guard let self else { return }
-
-        updateDataSource(with: store.mangas)
-      }
-
-      store.publisher.layout
-        .dropFirst()
-        .sink { [weak self] layout in
-          guard let self else { return }
-          updateLayout(of: collectionView, to: layout)
-        }
-        .store(in: &cancellables)
     }
 
-    private func updateDataSource(with mangas: IdentifiedArrayOf<Manga>) {
+    private func updateDataSource() {
+      let itemIdentifiers = mangas.ids.elements
+      guard dataSource.snapshot().itemIdentifiers != itemIdentifiers else { return }
+
       var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, Manga.ID>()
       snapshot.appendSections([.main])
-      snapshot.appendItems(mangas.map(\.id))
+      snapshot.appendItems(mangas.ids.elements)
       dataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -122,24 +129,19 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
     private func updateLayout(
       of collectionView: UICollectionView,
-      to layout: MangaListFeature.State.Layout
+      to layout: MangaListLayout
     ) {
-      collectionView.setCollectionViewLayout(
-        ViewController.collectionViewLayout(for: layout),
-        animated: false
-      )
-      collectionView.scrollToItem(at: [0, 0], at: [.top, .left], animated: false)
-
+      collectionView.setCollectionViewLayout(.layout(for: layout), animated: true)
       var snapshot = dataSource.snapshot()
-      snapshot.reloadSections([.main])
+      snapshot.reconfigureItems(snapshot.itemIdentifiers)
       dataSource.apply(snapshot, animatingDifferences: false)
     }
   }
 
   final class ViewController: UIViewController {
-    private let initialLayout: MangaListFeature.State.Layout
+    private let initialLayout: MangaListLayout
 
-    init(initialLayout: MangaListFeature.State.Layout) {
+    init(initialLayout: MangaListLayout) {
       self.initialLayout = initialLayout
       super.init(nibName: nil, bundle: nil)
     }
@@ -152,7 +154,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
     override func loadView() {
       view = UICollectionView(
         frame: .zero,
-        collectionViewLayout: Self.collectionViewLayout(for: initialLayout)
+        collectionViewLayout: .layout(for: initialLayout)
       )
     }
 
@@ -164,15 +166,6 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
     var collectionView: UICollectionView {
       view as! UICollectionView
     }
-
-    fileprivate static func collectionViewLayout(
-      for layout: MangaListFeature.State.Layout
-    ) -> UICollectionViewLayout {
-      switch layout {
-      case .list: .mangaList()
-      case .grid: .mangaGrid()
-      }
-    }
   }
 }
 
@@ -182,8 +175,8 @@ extension MangaListCollectionView.Coordinator: UICollectionViewDelegate {
     willDisplay _: UICollectionViewCell,
     forItemAt indexPath: IndexPath
   ) {
-    if indexPath.item == store.mangas.count - 1 {
-      send(.delegate(.scrollEndReached))
+    if indexPath.item == mangas.count - 1 {
+      onScrollEndReached()
     }
   }
 }
@@ -192,7 +185,7 @@ extension MangaListCollectionView.Coordinator: UICollectionViewDataSourcePrefetc
   private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
     indexPaths.compactMap {
       guard let itemIdentifier = dataSource.itemIdentifier(for: $0),
-            let manga = store.mangas[id: itemIdentifier]
+            let manga = mangas[id: itemIdentifier]
       else {
         return nil
       }
@@ -212,5 +205,14 @@ extension MangaListCollectionView.Coordinator: UICollectionViewDataSourcePrefetc
 
 private enum SectionIdentifier {
   case main
+}
+
+private extension UICollectionViewLayout {
+  static func layout(for layout: MangaListLayout) -> UICollectionViewLayout {
+    switch layout {
+    case .list: .mangaList()
+    case .grid: .mangaGrid()
+    }
+  }
 }
 #endif

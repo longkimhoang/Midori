@@ -18,33 +18,53 @@ import SwiftData
 import SwiftUI
 
 struct HomeCollectionView: UIViewControllerRepresentable {
-  let store: StoreOf<HomeFeature>
+  @Environment(\.refresh) private var refresh
+  let fetchStatus: HomeDataFetchStatus
+  @Binding var path: [HomeNavigationDestination]
 
-  func makeUIViewController(context _: Context) -> HomeCollectionViewController {
-    HomeCollectionViewController(store: store)
+  func makeUIViewController(context _: Context) -> ViewController {
+    let viewController = ViewController()
+    viewController.onRefresh = {
+      await refresh?()
+    }
+    viewController.onNavigate = { destination in
+      path.append(destination)
+    }
+
+    return viewController
   }
 
-  func updateUIViewController(_: HomeCollectionViewController, context _: Context) {
-    // Updates are handled through viewController's conneciton to store.
+  func updateUIViewController(_ viewController: ViewController, context _: Context) {
+    switch fetchStatus {
+    case .loading:
+      viewController.unavailableReason = .loading
+    case let .success(homeData):
+      viewController.unavailableReason = nil
+      viewController.data = homeData
+    case let .failure(error):
+      viewController.unavailableReason = .error(error.localizedDescription)
+    }
+
+    viewController.setNeedsUpdateContentUnavailableConfiguration()
   }
 
-  @ViewAction(for: HomeFeature.self)
-  final class HomeCollectionViewController: UIViewController {
-    @ViewLoading
-    private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, PersistentIdentifier>
+  final class ViewController: UIViewController {
+    private var dataSource: UICollectionViewDiffableDataSource<
+      SectionIdentifier,
+      PersistentIdentifier
+    >!
     private lazy var prefetcher = ImagePrefetcher()
     private lazy var cancellables: Set<AnyCancellable> = []
-    let store: StoreOf<HomeFeature>
 
-    init(store: StoreOf<HomeFeature>) {
-      self.store = store
-      super.init(nibName: nil, bundle: nil)
+    fileprivate var unavailableReason: HomeDataUnavailableReason?
+    fileprivate var data: HomeData? {
+      didSet {
+        updateDataSource()
+      }
     }
 
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
+    fileprivate var onRefresh: () async -> Void = {}
+    fileprivate var onNavigate: (HomeNavigationDestination) -> Void = { _ in }
 
     override func loadView() {
       view = UICollectionView(frame: .zero, collectionViewLayout: .home())
@@ -65,46 +85,52 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           if let refreshControl = action.sender as? UIRefreshControl {
             Task { @MainActor [weak self] in
               guard let self else { return }
-              await send(.fetchPopularMangas).finish()
+              await onRefresh()
               refreshControl.endRefreshing()
             }
           }
         }
       )
 
-      observe { [weak self] in
-        guard let self else { return }
-        switch store.fetchStatus {
-        case let .success(data):
-          updateDataSource(data: data)
-        default:
-          break
-        }
-
-        setNeedsUpdateContentUnavailableConfiguration()
-      }
+      setNeedsUpdateContentUnavailableConfiguration()
     }
 
-    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
-      switch store.fetchStatus {
-      case .success:
-        contentUnavailableConfiguration = nil
+    override var contentUnavailableConfigurationState: UIContentUnavailableConfigurationState {
+      var state = super.contentUnavailableConfigurationState
+      state[.homeDataUnavailableReason] = unavailableReason
+
+      return state
+    }
+
+    override func updateContentUnavailableConfiguration(
+      using state: UIContentUnavailableConfigurationState
+    ) {
+      switch state[.homeDataUnavailableReason] as? HomeDataUnavailableReason {
       case .loading:
-        contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading().updated(for: state)
-      case let .failure(error):
+        contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
+          .updated(for: state)
+      case let .error(errorMessage):
         var configuration = UIContentUnavailableConfiguration.empty()
         configuration.text = String(localized: "Error fetching content", bundle: .module)
-        configuration.secondaryText = error.localizedDescription
-        configuration.image = UIImage(systemName: "network.slash", compatibleWith: state.traitCollection)
+        configuration.secondaryText = errorMessage
+        configuration.image = UIImage(
+          systemName: "network.slash",
+          compatibleWith: state.traitCollection
+        )
 
         var retryButtonConfiguration = UIButton.Configuration.borderless()
         retryButtonConfiguration.title = String(localized: "Retry", bundle: .module)
         configuration.button = retryButtonConfiguration
-        configuration.buttonProperties.primaryAction = UIAction(identifier: .refresh) { [weak self] _ in
-          self?.send(.fetchPopularMangas)
-        }
+        configuration.buttonProperties
+          .primaryAction = UIAction(identifier: .refresh) { [weak self] _ in
+            Task {
+              await self?.onRefresh()
+            }
+          }
 
-        contentUnavailableConfiguration = configuration.updated(for: state)
+        contentUnavailableConfiguration = configuration
+      case .none:
+        contentUnavailableConfiguration = nil
       }
     }
 
@@ -174,7 +200,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
             return nil
           }
 
-          guard let data = store.fetchStatus.success else {
+          guard let data else {
             return nil
           }
 
@@ -212,38 +238,40 @@ struct HomeCollectionView: UIViewControllerRepresentable {
           }
         }
 
-      let sectionTitleRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
-        elementKind: SupplementaryItemKind.sectionTitle
-      ) { sectionTitleView, _, indexPath in
-        guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
+      let sectionTitleRegistration = UICollectionView
+        .SupplementaryRegistration<UICollectionViewCell>(
+          elementKind: SupplementaryItemKind.sectionTitle
+        ) { [weak self] sectionTitleView, _, indexPath in
+          guard let section = SectionIdentifier(rawValue: indexPath.section) else { return }
 
-        sectionTitleView.contentConfiguration = UIHostingConfiguration {
-          Group {
-            switch section {
-            case .popular:
-              Text("Popular new titles", bundle: .module)
-            case .latestUpdates:
-              NavigationLink(
-                state: HomeFeature.Path.State.latestUpdatesDetail(LatestUpdatesDetailFeature.State())
-              ) {
-                Label("Latest updates", bundle: .module, systemImage: "chevron.forward")
-              }
-            case .recentlyAdded:
-              NavigationLink(
-                state: HomeFeature.Path.State.recentlyAddedDetail(RecentlyAddedDetailFeature.State())
-              ) {
-                Label("Recently added", bundle: .module, systemImage: "chevron.forward")
+          sectionTitleView.contentConfiguration = UIHostingConfiguration {
+            Group {
+              switch section {
+              case .popular:
+                Text("Popular new titles", bundle: .module)
+              case .latestUpdates:
+                Button {
+                  self?.onNavigate(.latestUpdates)
+                } label: {
+                  Label("Latest updates", bundle: .module, systemImage: "chevron.forward")
+                }
+                .hoverEffect()
+              case .recentlyAdded:
+                Button {
+                  self?.onNavigate(.recentlyAdded)
+                } label: {
+                  Label("Recently added", bundle: .module, systemImage: "chevron.forward")
+                }
+                .hoverEffect()
               }
             }
+            .labelStyle(.sectionTitleNavigation)
+            .font(.title)
+            .foregroundStyle(.primary)
           }
-          .labelStyle(.sectionTitleNavigation)
-          .font(.title)
-          .foregroundStyle(.primary)
-          .hoverEffect(.highlight)
+          .margins(.vertical, 4)
+          .margins(.horizontal, 0)
         }
-        .margins(.vertical, 4)
-        .margins(.horizontal, 0)
-      }
 
       dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
         switch elementKind {
@@ -267,7 +295,9 @@ struct HomeCollectionView: UIViewControllerRepresentable {
         .store(in: &cancellables)
     }
 
-    private func updateDataSource(data: HomeData) {
+    func updateDataSource() {
+      guard let data else { return }
+
       var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, PersistentIdentifier>()
       snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
       snapshot.appendItems(data.popularMangas.map(\.id), toSection: .popular)
@@ -285,7 +315,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
   }
 }
 
-extension HomeCollectionView.HomeCollectionViewController: UICollectionViewDataSourcePrefetching {
+extension HomeCollectionView.ViewController: UICollectionViewDataSourcePrefetching {
   private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
     indexPaths.compactMap { indexPath in
       guard let section = dataSource.sectionIdentifier(for: indexPath.section),
@@ -294,7 +324,7 @@ extension HomeCollectionView.HomeCollectionViewController: UICollectionViewDataS
         return nil
       }
 
-      guard let data = store.fetchStatus.success else {
+      guard let data else {
         return nil
       }
 
@@ -318,7 +348,17 @@ extension HomeCollectionView.HomeCollectionViewController: UICollectionViewDataS
   }
 }
 
-extension UIAction.Identifier {
-  fileprivate static var refresh = UIAction.Identifier("HomeCollectionView.refresh")
+fileprivate extension UIAction.Identifier {
+  static var refresh = UIAction.Identifier("HomeCollectionView.refresh")
+}
+
+private enum HomeDataUnavailableReason: Hashable {
+  case loading
+  case error(String)
+}
+
+fileprivate extension UIConfigurationStateCustomKey {
+  static let homeDataUnavailableReason =
+    UIConfigurationStateCustomKey("HomeCollectionView.homeDataUnavailableReason")
 }
 #endif

@@ -6,76 +6,84 @@
 //
 
 import CommonUI
-import ComposableArchitecture
 import HomeCore
 import SwiftUI
 
-@ViewAction(for: HomeFeature.self)
 public struct HomeView: View {
-  @Bindable public var store: StoreOf<HomeFeature>
+  @StateObject private var dataStore = HomeDataStore()
+  @StateObject private var navigationStore = HomeNavigationStore()
+  @SceneStorage("HomeView.navigation") private var storedNavigationData: Data?
+  @SceneStorage("HomeView.data") private var storedHomeData: Data?
 
-  public init(store: StoreOf<HomeFeature>) {
-    self.store = store
-  }
+  public init() {}
 
   public var body: some View {
-    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-      HomeCollectionView(store: store)
+    NavigationStack(path: $navigationStore.path) {
+      HomeCollectionView(fetchStatus: dataStore.fetchStatus, path: $navigationStore.path)
         .ignoresSafeArea()
         .navigationTitle(Text("Home", bundle: .module))
         .toolbar {
           #if os(macOS)
           ToolbarItem {
-            refreshButton
+            RefreshButton()
           }
           #endif
         }
         .overlay {
           #if os(macOS)
-          switch store.fetchStatus {
+          switch dataStore.fetchStatus {
           case .loading:
-            ContentUnavailableView {
-              ProgressView()
-                .controlSize(.large)
-            } description: {
-              Text("Loading...", bundle: .module)
-            }
+            ContentUnavailableView.loading
           default:
             EmptyView()
           }
           #endif
         }
-    } destination: { store in
-      switch store.state {
-      case .latestUpdatesDetail:
-        if let store = store.scope(state: \.latestUpdatesDetail, action: \.latestUpdatesDetail) {
-          LatestUpdatesDetailView(store: store)
+        .navigationDestination(for: HomeNavigationDestination.self) { destination in
+          switch destination {
+          case .recentlyAdded:
+            RecentlyAddedDetailView()
+          default:
+            Text("Not implemented")
+          }
         }
-      case .recentlyAddedDetail:
-        if let store = store.scope(state: \.recentlyAddedDetail, action: \.recentlyAddedDetail) {
-          RecentlyAddedDetailView(store: store)
-        }
-      }
+    }
+    .refreshable {
+      await dataStore.fetch()
     }
     .task {
-      if case .loading = store.fetchStatus {
-        await send(.fetchPopularMangas).finish()
+      if let storedNavigationData {
+        navigationStore.restore(from: storedNavigationData)
+      }
+
+      if let storedHomeData {
+        try? dataStore.restore(from: storedHomeData)
+      } else {
+        await dataStore.fetch()
       }
     }
+    .onChange(of: navigationStore.path) {
+      storedNavigationData = navigationStore.serialziedData
+    }
+    .onReceive(dataStore.objectWillChange) {
+      storedHomeData = dataStore.serializedData
+    }
   }
+}
 
-  @ViewBuilder
-  private var refreshButton: some View {
+#if os(macOS)
+private struct RefreshButton: View {
+  @Environment(\.refresh) private var refresh
+
+  var body: some View {
     Button {
-      send(.fetchPopularMangas)
-    } label: {
-      if store.isRefreshing {
-        ProgressView()
-          .controlSize(.small)
-      } else {
-        Label("Refresh", bundle: .module, systemImage: "arrow.clockwise")
+      Task {
+        await refresh?()
       }
+    } label: {
+      Label("Refresh", bundle: .module, systemImage: "arrow.clockwise")
     }
     .keyboardShortcut("r", modifiers: .command)
   }
 }
+#endif

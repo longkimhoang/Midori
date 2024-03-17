@@ -67,12 +67,12 @@ public struct UserRelationship: Relationship, DynamicCodable {
   public let id: UUID
 }
 
-extension Collection<Relationship> {
+public extension Collection<Relationship> {
   /// Returns the first ``Relationship`` matching the type sepecifed.
   ///
   /// Use this method as a convenience helper to get the relationship you want from
   /// the relationships returned when fetching an entity from MangaDex API.
-  public func first<T: Relationship>(_: T.Type) -> T? {
+  func first<T: Relationship>(_: T.Type) -> T? {
     lazy.compactMap { $0 as? T }.first
   }
 }

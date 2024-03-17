@@ -199,15 +199,6 @@
       }
     },
     {
-      "identity" : "swiftformat",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nicklockwood/SwiftFormat.git",
-      "state" : {
-        "revision" : "a03119407c4773322d9e3c6cb5279bb597b68317",
-        "version" : "0.53.4"
-      }
-    },
-    {
       "identity" : "swiftui-navigation",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swiftui-navigation",

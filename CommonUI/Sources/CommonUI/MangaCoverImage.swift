@@ -46,8 +46,8 @@ public struct MangaCoverImage<Content: View>: View {
   }
 }
 
-extension MangaCoverImage where Content == Image? {
-  public init(
+public extension MangaCoverImage where Content == Image? {
+  init(
     image: Image?,
     width: CGFloat,
     aspectRatio: CGFloat = 0.7,

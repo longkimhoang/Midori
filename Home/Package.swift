@@ -17,7 +17,10 @@ let package = Package(
     .package(path: "Networking"),
     .package(path: "MangaList"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.1"),
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.9.2"),
+    .package(
+      url: "https://github.com/pointfreeco/swift-composable-architecture.git",
+      from: "1.9.2"
+    ),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
     .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),

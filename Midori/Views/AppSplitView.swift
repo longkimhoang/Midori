@@ -5,21 +5,16 @@
 //  Created by Long Kim on 11/3/24.
 //
 
-import ComposableArchitecture
+#if os(macOS)
 import HomeUI
 import SwiftUI
 
 struct AppSplitView: View {
-  enum Destination: Hashable, CaseIterable {
-    case home
-  }
-
-  @State private var destination: Destination? = .home
-  let store: StoreOf<AppFeature>
+  @SceneStorage("sidebarItem") private var destination: AppDestination = .home
 
   var body: some View {
     NavigationSplitView {
-      List(Destination.allCases, id: \.self, selection: $destination) { destination in
+      List(AppDestination.allCases, id: \.self, selection: $destination) { destination in
         NavigationLink(value: destination) {
           destination.label
         }
@@ -28,20 +23,18 @@ struct AppSplitView: View {
     } detail: {
       switch destination {
       case .home:
-        HomeView(store: store.scope(state: \.home, action: \.home))
-      case .none:
-        EmptyView()
+        HomeView()
       }
     }
   }
 }
 
-extension AppSplitView.Destination {
-  @ViewBuilder
-  fileprivate var label: some View {
+private extension AppDestination {
+  var label: some View {
     switch self {
     case .home:
       Label("Home", systemImage: "house")
     }
   }
 }
+#endif
