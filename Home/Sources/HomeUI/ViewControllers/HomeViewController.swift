@@ -40,6 +40,18 @@ public final class HomeViewController: UIViewController {
     )
 
     navigationItem.title = String(localized: "Home")
+
+    #if targetEnvironment(macCatalyst)
+    let refreshItem = UIBarButtonItem(
+      systemItem: .refresh,
+      primaryAction: UIAction { [weak self] _ in
+        Task { @MainActor [weak self] in
+          await self?.model.fetch()
+        }
+      }
+    )
+    navigationItem.rightBarButtonItem = refreshItem
+    #endif
   }
 
   @available(*, unavailable)
@@ -49,6 +61,21 @@ public final class HomeViewController: UIViewController {
 
   override public func loadView() {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .home())
+    #if !targetEnvironment(macCatalyst)
+    collectionView.refreshControl = UIRefreshControl(
+      frame: .zero,
+      primaryAction: UIAction { [weak self] action in
+        if let refreshControl = action.sender as? UIRefreshControl {
+          Task { @MainActor [weak self] in
+            guard let self else { return }
+            await model.fetch()
+            refreshControl.endRefreshing()
+          }
+        }
+      }
+    )
+    #endif
+
     view = collectionView
     self.collectionView = collectionView
   }
@@ -209,6 +236,9 @@ private extension HomeViewController {
           .labelStyle(.sectionTitleNavigation)
           .font(.title)
           .foregroundStyle(.primary)
+          #if targetEnvironment(macCatalyst)
+            .buttonStyle(.borderless)
+          #endif
         }
         .margins(.vertical, 4)
         .margins(.horizontal, 0)
@@ -290,7 +320,11 @@ public extension HomeViewController {
       var retryButtonConfiguration = UIButton.Configuration.borderless()
       retryButtonConfiguration.title = String(localized: "Retry", bundle: .module)
       configuration.button = retryButtonConfiguration
-      configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in }
+      configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in
+        Task {
+          await self?.model.fetch()
+        }
+      }
 
       contentUnavailableConfiguration = configuration
     case .none:

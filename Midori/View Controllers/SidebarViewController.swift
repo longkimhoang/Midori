@@ -66,21 +66,6 @@ private extension SidebarViewController {
         }
 
         cell.contentConfiguration = configuration
-        cell.configurationUpdateHandler = { cell, state in
-          guard var configuration = cell.contentConfiguration as? UIListContentConfiguration else {
-            return
-          }
-
-          configuration = configuration.updated(for: state)
-          if state.isSelected {
-            switch itemIdentifier {
-            case .home:
-              configuration.image = UIImage(systemName: "house.fill")
-            }
-          }
-
-          cell.contentConfiguration = configuration
-        }
       }
 
     dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
