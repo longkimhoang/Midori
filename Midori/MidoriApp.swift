@@ -10,7 +10,6 @@ import Dependencies
 import SwiftData
 import SwiftUI
 
-@main
 struct MidoriApp: App {
   @Dependency(\.modelContainer) var modelContainer
 

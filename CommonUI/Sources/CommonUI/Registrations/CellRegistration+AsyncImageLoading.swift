@@ -12,7 +12,7 @@ import Nuke
 import UIKit
 #endif
 
-#if canImport(AppKit)
+#if os(macOS)
 import AdvancedCollectionTableView
 import AppKit
 #endif

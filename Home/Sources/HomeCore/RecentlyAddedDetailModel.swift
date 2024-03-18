@@ -18,6 +18,7 @@ public final class RecentlyAddedDetailModel: ObservableObject {
 
   public init() {}
 
+  @MainActor
   public func fetchInitialMangas() {
     guard let mangas = try? IdentifiedArray(
       uniqueElements: recentlyAddedMangas.fetchInitialDetail()

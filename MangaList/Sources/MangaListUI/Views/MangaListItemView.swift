@@ -48,10 +48,10 @@ struct MangaListItemView: View {
   }
 
   private var backgroundColor: some ShapeStyle {
-    #if os(iOS)
-    .background.secondary
+    #if targetEnvironment(macCatalyst)
+    .background.tertiary
     #else
-    .fill.tertiary
+    .background.secondary
     #endif
   }
 }
