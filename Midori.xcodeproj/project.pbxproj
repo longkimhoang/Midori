@@ -135,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				4FD31EFC2BA75AC000BF3EF8 /* AppDelegate.swift */,
+				4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */,
 				4FB78DA32B8C9269009639A3 /* MidoriApp.swift */,
 				4FD31EFF2BA75BDE00BF3EF8 /* SceneDelegate.swift */,
 				4FB78DAA2B8C926A009639A3 /* Preview Content */,
@@ -180,7 +181,6 @@
 		4FCF649B2B9EAA7E00B6D983 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */,
 				4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */,
 				4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */,
 				4FB78DA52B8C9269009639A3 /* AppView.swift */,

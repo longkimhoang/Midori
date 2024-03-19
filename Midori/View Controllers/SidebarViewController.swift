@@ -11,7 +11,7 @@ final class SidebarViewController: UIViewController {
   @ViewLoading private var collectionView: UICollectionView
   @ViewLoading private var dataSource: UICollectionViewDiffableDataSource<
     SectionIdentifier,
-    NavigationDestination
+    AppDestination
   >
 
   init() {
@@ -29,6 +29,7 @@ final class SidebarViewController: UIViewController {
     let configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
     let layout = UICollectionViewCompositionalLayout.list(using: configuration)
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.delegate = self
 
     view = collectionView
     self.collectionView = collectionView
@@ -48,14 +49,10 @@ private enum SectionIdentifier {
   case main
 }
 
-private enum NavigationDestination: CaseIterable {
-  case home
-}
-
 private extension SidebarViewController {
   func setupDataSource() {
     let itemRegistration =
-      UICollectionView.CellRegistration<UICollectionViewListCell, NavigationDestination> {
+      UICollectionView.CellRegistration<UICollectionViewListCell, AppDestination> {
         cell, _, itemIdentifier in
 
         var configuration = cell.defaultContentConfiguration()
@@ -82,9 +79,21 @@ private extension SidebarViewController {
   func applyInitialSnapshot() {
     var snapshot = dataSource.snapshot()
     snapshot.appendSections([.main])
-    snapshot.appendItems(NavigationDestination.allCases, toSection: .main)
+    snapshot.appendItems(AppDestination.allCases, toSection: .main)
     dataSource.apply(snapshot, animatingDifferences: false)
 
     collectionView.selectItem(at: [0, 0], animated: false, scrollPosition: [])
+  }
+}
+
+// MARK: - Delegate
+
+extension SidebarViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard let destination = dataSource.itemIdentifier(for: indexPath) else {
+      return
+    }
+
+    debugPrint(destination)
   }
 }

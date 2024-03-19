@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum AppDestination: Int, Hashable, CaseIterable {
+enum AppDestination: Int, CaseIterable {
   case home
 }
 
