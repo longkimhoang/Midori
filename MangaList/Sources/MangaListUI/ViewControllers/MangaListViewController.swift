@@ -18,10 +18,12 @@ public final class MangaListViewController: UIViewController {
     SectionIdentifier,
     Manga.ID
   >!
+  private lazy var listEndReachedSubject = PassthroughSubject<Void, Never>()
   private lazy var cancellables: Set<AnyCancellable> = []
 
   @Published public var mangas: IdentifiedArrayOf<Manga>
   @Published public var layout: MangaListLayout
+  public lazy var listEndReachedPublisher = listEndReachedSubject.eraseToAnyPublisher()
 
   public init(
     mangas: IdentifiedArrayOf<Manga> = [],
@@ -43,6 +45,7 @@ public final class MangaListViewController: UIViewController {
       frame: .zero,
       collectionViewLayout: layout.collectionViewLayout
     )
+    collectionView.delegate = self
 
     view = collectionView
     self.collectionView = collectionView
@@ -173,6 +176,19 @@ private extension MangaListLayout {
         handler: handler
       )
     }
+  }
+}
+
+// MARK: - Delegate
+
+extension MangaListViewController: UICollectionViewDelegate {
+  public func collectionView(
+    _: UICollectionView,
+    willDisplay _: UICollectionViewCell,
+    forItemAt indexPath: IndexPath
+  ) {
+    guard indexPath.item == mangas.endIndex - 1 else { return }
+    listEndReachedSubject.send()
   }
 }
 

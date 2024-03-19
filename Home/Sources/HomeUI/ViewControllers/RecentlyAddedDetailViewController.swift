@@ -46,6 +46,7 @@ final class RecentlyAddedDetailViewController: UIViewController {
 
     Task {
       model.fetchInitialMangas()
+      await model.fetch()
     }
   }
 }
@@ -56,5 +57,14 @@ private extension RecentlyAddedDetailViewController {
   func configureSubscribers() {
     model.$mangas
       .assign(to: &mangaListViewController.$mangas)
+
+    mangaListViewController.listEndReachedPublisher
+      .throttle(for: .milliseconds(300), scheduler: DispatchQueue.main, latest: false)
+      .sink { [weak self] in
+        Task {
+          await self?.model.fetch()
+        }
+      }
+      .store(in: &cancellables)
   }
 }

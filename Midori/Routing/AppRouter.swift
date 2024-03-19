@@ -25,7 +25,7 @@ final class AppRouter: ObservableObject {
   }
 
   func start(
-    traitCollection: UITraitCollection
+    traitCollection _: UITraitCollection
   ) {
     guard let window else { return }
 
@@ -60,7 +60,7 @@ final class AppRouter: ObservableObject {
     let tabBarController = UITabBarController()
     let homeNavigationController = UINavigationController(rootViewController: HomeViewController())
     tabBarController.viewControllers = [
-      homeNavigationController
+      homeNavigationController,
     ]
     // Publishes destination changes to the tab bar
     $destination
