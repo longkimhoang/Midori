@@ -9,6 +9,7 @@ import Combine
 import CommonUI
 import Database
 import HomeCore
+import Nuke
 import SwiftData
 import SwiftUI
 import UIKit
@@ -20,6 +21,7 @@ public final class HomeViewController: UIViewController {
     PersistentIdentifier
   >
   private lazy var model = HomeDataModel()
+  private lazy var prefetcher = ImagePrefetcher()
   private lazy var cancellables: Set<AnyCancellable> = []
 
   private var dataUnavailableReason: HomeDataUnavailableReason? {
@@ -61,6 +63,7 @@ public final class HomeViewController: UIViewController {
 
   override public func loadView() {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: .home())
+    collectionView.prefetchDataSource = self
     #if !targetEnvironment(macCatalyst)
     collectionView.refreshControl = UIRefreshControl(
       frame: .zero,
@@ -339,5 +342,43 @@ extension HomeViewController {
   private func showRecentlyAddedDetail() {
     let viewController = RecentlyAddedDetailViewController()
     navigationController?.pushViewController(viewController, animated: true)
+  }
+}
+
+// MARK: - Prefetching
+
+extension HomeViewController: UICollectionViewDataSourcePrefetching {
+  private func imageURLs(for indexPaths: [IndexPath]) -> [URL] {
+    indexPaths.compactMap { indexPath in
+      guard let section = dataSource.sectionIdentifier(for: indexPath.section),
+            let itemIdentifier = dataSource.itemIdentifier(for: indexPath)
+      else {
+        return nil
+      }
+
+      guard let data = model.fetchStatus.success else {
+        return nil
+      }
+
+      return switch section {
+      case .popular:
+        data.popularMangas[id: itemIdentifier]?.coverThumbnailURL
+      case .latestUpdates:
+        data.latestChapters[id: itemIdentifier]?.manga?.coverThumbnailURL
+      case .recentlyAdded:
+        data.recentlyAddedMangas[id: itemIdentifier]?.coverThumbnailURL
+      }
+    }
+  }
+
+  public func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    prefetcher.startPrefetching(with: imageURLs(for: indexPaths))
+  }
+
+  public func collectionView(
+    _: UICollectionView,
+    cancelPrefetchingForItemsAt indexPaths: [IndexPath]
+  ) {
+    prefetcher.stopPrefetching(with: imageURLs(for: indexPaths))
   }
 }
