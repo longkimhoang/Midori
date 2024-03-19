@@ -11,6 +11,7 @@ import Database
 import SwiftUI
 
 struct MangaListItemView: View {
+  @Environment(\.colorScheme) private var colorScheme
   let manga: Manga
   let coverImage: Image?
 
@@ -47,20 +48,14 @@ struct MangaListItemView: View {
     [manga.author?.name, manga.artist?.name].compacted().uniqued().joined(separator: ", ")
   }
 
-  private var backgroundColor: some ShapeStyle {
+  private var backgroundColor: AnyShapeStyle {
     #if targetEnvironment(macCatalyst)
-    .background.tertiary
-    #else
-    .background.secondary
-    #endif
-  }
-}
-
-private struct CellSizingModifier: ViewModifier {
-  func body(content: Content) -> some View {
-    VStack(alignment: .leading) {
-      content
-      Spacer()
+    switch colorScheme {
+    case .dark: AnyShapeStyle(.background.tertiary)
+    default: AnyShapeStyle(.background.secondary)
     }
+    #else
+    AnyShapeStyle(.background.secondary)
+    #endif
   }
 }
