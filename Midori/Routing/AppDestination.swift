@@ -10,12 +10,14 @@ import SwiftUI
 
 enum AppDestination: Int, CaseIterable {
   case home
+  case search
 }
 
 extension AppDestination {
   var localizedTitle: LocalizedStringKey {
     switch self {
     case .home: "Home"
+    case .search: "Search"
     }
   }
 }

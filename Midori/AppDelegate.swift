@@ -13,7 +13,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     _: UIApplication,
     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
-    true
+    setupAppearance()
+
+    return true
   }
 
   func application(
@@ -25,4 +27,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func application(_: UIApplication, didDiscardSceneSessions _: Set<UISceneSession>) {}
+}
+
+// MARK: - Appearance setup
+
+private extension AppDelegate {
+  func setupAppearance() {
+    UINavigationBar.appearance().prefersLargeTitles = true
+  }
 }

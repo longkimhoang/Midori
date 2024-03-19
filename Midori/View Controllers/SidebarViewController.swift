@@ -5,6 +5,7 @@
 //  Created by Long Kim on 18/3/24.
 //
 
+import Combine
 import UIKit
 
 final class SidebarViewController: UIViewController {
@@ -14,9 +15,12 @@ final class SidebarViewController: UIViewController {
     AppDestination
   >
 
-  init() {
-    super.init(nibName: nil, bundle: nil)
+  @Published var destination: AppDestination
 
+  init(destination: AppDestination = .home) {
+    self.destination = destination
+
+    super.init(nibName: nil, bundle: nil)
     navigationItem.title = String(localized: "Midori")
   }
 
@@ -60,6 +64,9 @@ private extension SidebarViewController {
         case .home:
           configuration.text = String(localized: "Home")
           configuration.image = UIImage(systemName: "house")
+        case .search:
+          configuration.text = String(localized: "Search")
+          configuration.image = UIImage(systemName: "magnifyingglass")
         }
 
         cell.contentConfiguration = configuration
@@ -89,11 +96,11 @@ private extension SidebarViewController {
 // MARK: - Delegate
 
 extension SidebarViewController: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+  func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let destination = dataSource.itemIdentifier(for: indexPath) else {
       return
     }
 
-    debugPrint(destination)
+    self.destination = destination
   }
 }
