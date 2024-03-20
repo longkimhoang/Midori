@@ -25,6 +25,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     self.window = window
 
     router = AppRouter(window: window)
-    router?.start(traitCollection: window.traitCollection)
+    router?.start()
   }
 }

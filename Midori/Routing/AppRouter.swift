@@ -24,13 +24,11 @@ final class AppRouter: ObservableObject {
     self.window = window
   }
 
-  func start(
-    traitCollection _: UITraitCollection
-  ) {
+  func start() {
     guard let window else { return }
 
     #if targetEnvironment(macCatalyst)
-    splitViewController?.primaryBackgroundStyle = .sidebar
+    splitViewController.primaryBackgroundStyle = .sidebar
     #endif
 
     // MARK: Sidebar
