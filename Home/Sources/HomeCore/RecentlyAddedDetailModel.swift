@@ -31,6 +31,7 @@ public final class RecentlyAddedDetailModel: ObservableObject {
     }
 
     self.mangas = mangas
+    try? await Task.sleep(for: .seconds(0.5))
     await refresh()
   }
 
