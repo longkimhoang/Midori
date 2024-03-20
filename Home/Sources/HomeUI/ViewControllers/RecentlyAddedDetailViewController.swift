@@ -21,7 +21,6 @@ final class RecentlyAddedDetailViewController: UIViewController {
 
     navigationItem.title = String(localized: "Recently added")
     navigationItem.largeTitleDisplayMode = .never
-    navigationItem.rightBarButtonItems = []
   }
 
   @available(*, unavailable)
@@ -43,13 +42,28 @@ final class RecentlyAddedDetailViewController: UIViewController {
       make.edges.equalToSuperview()
     }
 
-    navigationItem.rightBarButtonItems?.append(mangaListViewController.layoutChangeBarButtonItem)
+    navigationItem.rightBarButtonItems = [mangaListViewController.layoutChangeBarButtonItem]
+    #if targetEnvironment(macCatalyst)
+    navigationItem.rightBarButtonItems?.append(
+      UIBarButtonItem(systemItem: .refresh, primaryAction: UIAction { [weak self] _ in
+        Task {
+          await self?.model.refresh()
+        }
+      })
+    )
+    #endif
 
     configureSubscribers()
 
     Task {
       await model.fetchInitialMangas()
     }
+  }
+
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+
+    view.window?.windowScene?.title = String(localized: "Recently added")
   }
 }
 
