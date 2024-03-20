@@ -31,6 +31,9 @@ final class RecentlyAddedDetailViewController: UIViewController {
 
   override func viewDidLoad() {
     mangaListViewController = MangaListViewController()
+    mangaListViewController.refresh = { [weak self] in
+      await self?.model.refresh()
+    }
 
     addChild(mangaListViewController)
     mangaListViewController.didMove(toParent: self)
@@ -45,8 +48,7 @@ final class RecentlyAddedDetailViewController: UIViewController {
     configureSubscribers()
 
     Task {
-      model.fetchInitialMangas()
-      await model.fetch()
+      await model.fetchInitialMangas()
     }
   }
 }

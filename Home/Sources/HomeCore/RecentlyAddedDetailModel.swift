@@ -9,18 +9,21 @@ import Database
 import Dependencies
 import Foundation
 import IdentifiedCollections
+import os.log
+
+private let logger = Logger(subsystem: "com.longkimhoang.Midori", category: "DataFetching")
 
 @MainActor
 public final class RecentlyAddedDetailModel: ObservableObject {
   @Dependency(\.recentlyAddedMangas) private var recentlyAddedMangas
-  private var isFetching: Bool = false
   private var offset: Int = 0
 
   @Published public var mangas: IdentifiedArrayOf<Manga> = []
+  @Published public var isFetching: Bool = false
 
   public init() {}
 
-  public func fetchInitialMangas() {
+  public func fetchInitialMangas() async {
     guard let mangas = try? IdentifiedArray(
       uniqueElements: recentlyAddedMangas.fetchInitialDetail()
     ) else {
@@ -28,6 +31,7 @@ public final class RecentlyAddedDetailModel: ObservableObject {
     }
 
     self.mangas = mangas
+    await refresh()
   }
 
   public func fetch() async {
@@ -51,7 +55,33 @@ public final class RecentlyAddedDetailModel: ObservableObject {
         offset += mangas.count
       }
     } catch {
-      debugPrint(error)
+      logger.warning("Fetching new mangas failed with error: \(error)")
     }
+  }
+
+  public func refresh() async {
+    isFetching = true
+    defer { isFetching = false }
+
+    var newMangas: IdentifiedArrayOf<Manga> = []
+    do {
+      while true {
+        let result = try await recentlyAddedMangas.fetch(
+          parameters: FetchRecentlyAddedMangasParameters(limit: 30, offset: offset)
+        )
+
+        let mangaIDs = Set(result.map(\.id))
+        guard mangaIDs.union(mangas.ids).isEmpty else {
+          break
+        }
+
+        newMangas.append(contentsOf: result)
+      }
+    } catch {
+      logger.warning("Refreshing initial mangas failed with error: \(error)")
+    }
+
+    self.mangas = mangas + newMangas
+    offset = mangas.count
   }
 }

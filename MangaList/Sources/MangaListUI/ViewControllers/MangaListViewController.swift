@@ -23,6 +23,7 @@ public final class MangaListViewController: UIViewController {
 
   @Published public var mangas: IdentifiedArrayOf<Manga>
   @Published public var layout: MangaListLayout
+  public var refresh: () async -> Void = {}
   public lazy var listEndReachedPublisher = listEndReachedSubject.eraseToAnyPublisher()
 
   public init(
@@ -46,6 +47,21 @@ public final class MangaListViewController: UIViewController {
       collectionViewLayout: layout.collectionViewLayout
     )
     collectionView.delegate = self
+    #if !targetEnvironment(macCatalyst)
+    collectionView.refreshControl = UIRefreshControl(
+      frame: .zero,
+      primaryAction: UIAction { action in
+        guard let refreshControl = action.sender as? UIRefreshControl else {
+          return
+        }
+
+        Task { [weak self] in
+          await self?.refresh()
+          refreshControl.endRefreshing()
+        }
+      }
+    )
+    #endif
 
     view = collectionView
     self.collectionView = collectionView

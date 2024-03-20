@@ -20,7 +20,7 @@ struct RecentlyAddedDetailView: View {
       .toolbarTitleDisplayMode(.inline)
       .onChange(of: isPresented, initial: true) { _, isPresented in
         if isPresented {
-          model.fetchInitialMangas()
+//          model.fetchInitialMangas()
         }
       }
   }
