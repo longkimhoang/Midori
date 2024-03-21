@@ -5,16 +5,20 @@
 //  Created by Long Kim on 18/3/24.
 //
 
-import HomeUI
+import CommonUI
 import UIKit
 
-final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate,
+  StateRestorationActivityTypeProviding
+{
   var window: UIWindow?
   var router: AppRouter?
 
+  static let activityType = "com.longkimhoang.Midori.mainActivity"
+
   func scene(
     _ scene: UIScene,
-    willConnectTo _: UISceneSession,
+    willConnectTo session: UISceneSession,
     options _: UIScene.ConnectionOptions
   ) {
     guard let windowScene = scene as? UIWindowScene else {
@@ -25,6 +29,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     self.window = window
 
     router = AppRouter(window: window)
-    router?.start()
+    router?.start(restoringFrom: session.stateRestorationActivity)
   }
 }

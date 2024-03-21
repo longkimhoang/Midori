@@ -11,15 +11,13 @@
 		4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */; };
 		4F3B91182BA8416D0009F1D8 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */; };
 		4F3B911B2BA9A4A20009F1D8 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B911A2BA9A4A20009F1D8 /* AppRouter.swift */; };
+		4F3B911E2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B911D2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift */; };
 		4F3FE1962BA1B9ED005DF6E5 /* HomeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3FE1952BA1B9ED005DF6E5 /* HomeUI */; };
+		4F4032402BAC087A00B7AF43 /* CommonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F40323F2BAC087A00B7AF43 /* CommonUI */; };
 		4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB269992B94C8C6005BDD14 /* Dependencies */; };
 		4FB2699D2B94CDAF005BDD14 /* Domain in Resources */ = {isa = PBXBuildFile; fileRef = 4FB2699C2B94CDAF005BDD14 /* Domain */; };
-		4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA32B8C9269009639A3 /* MidoriApp.swift */; };
-		4FB78DA62B8C9269009639A3 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB78DA52B8C9269009639A3 /* AppView.swift */; };
 		4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DA72B8C926A009639A3 /* Assets.xcassets */; };
 		4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */; };
-		4FCF649D2B9EAAB400B6D983 /* AppTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */; };
-		4FCF649F2B9EAB2600B6D983 /* AppSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */; };
 		4FCF64A52B9EB45D00B6D983 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */; };
 		4FD31EFD2BA75AC000BF3EF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD31EFC2BA75AC000BF3EF8 /* AppDelegate.swift */; };
 		4FD31F002BA75BDE00BF3EF8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD31EFF2BA75BDE00BF3EF8 /* SceneDelegate.swift */; };
@@ -32,6 +30,7 @@
 		4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		4F3B911A2BA9A4A20009F1D8 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		4F3B911D2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+StateRestoration.swift"; sourceTree = "<group>"; };
 		4F3FE1912BA162A4005DF6E5 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		4F3FE1932BA18189005DF6E5 /* CommonUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonUI; sourceTree = "<group>"; };
 		4F3FE1942BA1B77A005DF6E5 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
@@ -40,15 +39,11 @@
 		4F9132AE2B93712C00CB7747 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		4FB2699C2B94CDAF005BDD14 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		4FB78DA02B8C9269009639A3 /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FB78DA32B8C9269009639A3 /* MidoriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidoriApp.swift; sourceTree = "<group>"; };
-		4FB78DA52B8C9269009639A3 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		4FB78DA72B8C926A009639A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FB78DA92B8C926A009639A3 /* Midori.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Midori.entitlements; sourceTree = "<group>"; };
 		4FB78DAB2B8C926A009639A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4FB78DB92B8F40DA009639A3 /* Networking.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Networking.xctestplan; sourceTree = "<group>"; };
 		4FC20A052BA0C77D00A9948B /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
-		4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
-		4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSplitView.swift; sourceTree = "<group>"; };
 		4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		4FD31EFC2BA75AC000BF3EF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4FD31EFE2BA75B3B00BF3EF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -61,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F4032402BAC087A00B7AF43 /* CommonUI in Frameworks */,
 				4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */,
 				4F3FE1962BA1B9ED005DF6E5 /* HomeUI in Frameworks */,
 			);
@@ -84,6 +80,15 @@
 				4F3B911A2BA9A4A20009F1D8 /* AppRouter.swift */,
 			);
 			path = Routing;
+			sourceTree = "<group>";
+		};
+		4F3B911C2BAB5D920009F1D8 /* Main Scene */ = {
+			isa = PBXGroup;
+			children = (
+				4FD31EFF2BA75BDE00BF3EF8 /* SceneDelegate.swift */,
+				4F3B911D2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift */,
+			);
+			path = "Main Scene";
 			sourceTree = "<group>";
 		};
 		4F6852C02B9F68AF00BC67CC /* Supporting Files */ = {
@@ -146,14 +151,12 @@
 			isa = PBXGroup;
 			children = (
 				4FD31EFC2BA75AC000BF3EF8 /* AppDelegate.swift */,
-				4FB78DA32B8C9269009639A3 /* MidoriApp.swift */,
-				4FD31EFF2BA75BDE00BF3EF8 /* SceneDelegate.swift */,
+				4F3B911C2BAB5D920009F1D8 /* Main Scene */,
 				4FB78DAA2B8C926A009639A3 /* Preview Content */,
 				4F6852C12B9F694100BC67CC /* Resources */,
 				4F3B91192BA9A4630009F1D8 /* Routing */,
 				4F6852C02B9F68AF00BC67CC /* Supporting Files */,
 				4F3B91162BA8415B0009F1D8 /* View Controllers */,
-				4FCF649B2B9EAA7E00B6D983 /* Views */,
 			);
 			path = Midori;
 			sourceTree = "<group>";
@@ -189,16 +192,6 @@
 			path = ci_scripts;
 			sourceTree = "<group>";
 		};
-		4FCF649B2B9EAA7E00B6D983 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				4FCF649E2B9EAB2600B6D983 /* AppSplitView.swift */,
-				4FCF649C2B9EAAB400B6D983 /* AppTabView.swift */,
-				4FB78DA52B8C9269009639A3 /* AppView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -218,6 +211,7 @@
 			packageProductDependencies = (
 				4FB269992B94C8C6005BDD14 /* Dependencies */,
 				4F3FE1952BA1B9ED005DF6E5 /* HomeUI */,
+				4F40323F2BAC087A00B7AF43 /* CommonUI */,
 			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
@@ -281,12 +275,9 @@
 			files = (
 				4FD31EFD2BA75AC000BF3EF8 /* AppDelegate.swift in Sources */,
 				4FD31F002BA75BDE00BF3EF8 /* SceneDelegate.swift in Sources */,
-				4FB78DA62B8C9269009639A3 /* AppView.swift in Sources */,
-				4FCF649F2B9EAB2600B6D983 /* AppSplitView.swift in Sources */,
-				4FCF649D2B9EAAB400B6D983 /* AppTabView.swift in Sources */,
+				4F3B911E2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift in Sources */,
 				4F3B911B2BA9A4A20009F1D8 /* AppRouter.swift in Sources */,
 				4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */,
-				4FB78DA42B8C9269009639A3 /* MidoriApp.swift in Sources */,
 				4F3B91182BA8416D0009F1D8 /* SidebarViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -536,6 +527,10 @@
 		4F3FE1952BA1B9ED005DF6E5 /* HomeUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeUI;
+		};
+		4F40323F2BAC087A00B7AF43 /* CommonUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CommonUI;
 		};
 		4FB269992B94C8C6005BDD14 /* Dependencies */ = {
 			isa = XCSwiftPackageProductDependency;

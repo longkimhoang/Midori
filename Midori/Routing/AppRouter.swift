@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CommonUI
 import Foundation
 import HomeUI
 import UIKit
@@ -24,7 +25,7 @@ final class AppRouter: ObservableObject {
     self.window = window
   }
 
-  func start() {
+  func start(restoringFrom _: NSUserActivity? = nil) {
     guard let window else { return }
 
     #if targetEnvironment(macCatalyst)
@@ -70,5 +71,20 @@ final class AppRouter: ObservableObject {
 
     window.rootViewController = splitViewController
     window.makeKeyAndVisible()
+  }
+}
+
+// MARK: - State restoration
+
+extension AppRouter {
+  func updateStateRestorationActivity() {
+    if splitViewController.isCollapsed {
+    } else {
+      if let viewController = splitViewController
+        .viewController(for: .secondary) as? StateRestorable
+      {
+        viewController.updateStateRestorationActivity()
+      }
+    }
   }
 }

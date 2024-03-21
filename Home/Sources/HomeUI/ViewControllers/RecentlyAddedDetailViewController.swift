@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CommonUI
 import HomeCore
 import MangaListUI
 import SnapKit
@@ -65,6 +66,21 @@ final class RecentlyAddedDetailViewController: UIViewController {
 
     view.window?.windowScene?.title = String(localized: "Recently added")
   }
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+
+    updateStateRestorationActivity()
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+
+    if let userActivity = view.window?.windowScene?.userActivity {
+      userActivity.userInfo?.removeValue(forKey: StateRestorationKeys.presented)
+      userActivity.userInfo?.removeValue(forKey: StateRestorationKeys.selectedListLayout)
+    }
+  }
 }
 
 // MARK: - Subscribers
@@ -82,5 +98,42 @@ private extension RecentlyAddedDetailViewController {
         }
       }
       .store(in: &cancellables)
+  }
+}
+
+// MARK: - State restoration
+
+extension RecentlyAddedDetailViewController: StateRestorable {
+  enum StateRestorationKeys {
+    static let presented = "RecentlyAddedDetailView.Presented"
+    static let selectedListLayout = "RecentlyAddedDetailView.SelectedListLayout"
+  }
+
+  func updateStateRestorationActivity() {
+    guard let windowScene = view.window?.windowScene,
+          let delegate = windowScene.delegate
+          as? (UIWindowSceneDelegate & StateRestorationActivityTypeProviding)
+    else {
+      return
+    }
+
+    let userActivity = windowScene.userActivity ??
+      NSUserActivity(activityType: type(of: delegate).activityType)
+
+    userActivity.addUserInfoEntries(from: [
+      StateRestorationKeys.presented: true,
+      StateRestorationKeys.selectedListLayout: mangaListViewController.layout.rawValue,
+    ])
+
+    windowScene.userActivity = userActivity
+  }
+
+  func restoreState(from activity: NSUserActivity?) {
+    guard let userInfo = activity?.userInfo else { return }
+
+    if let rawLayout = userInfo[StateRestorationKeys.selectedListLayout] as? Int,
+       let layout = MangaListLayout(rawValue: rawLayout) {
+      mangaListViewController.layout = layout
+    }
   }
 }

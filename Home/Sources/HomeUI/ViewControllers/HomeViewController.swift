@@ -341,6 +341,7 @@ public extension HomeViewController {
 extension HomeViewController {
   private func showRecentlyAddedDetail() {
     let viewController = RecentlyAddedDetailViewController()
+    viewController.userActivity = userActivity
     navigationController?.pushViewController(viewController, animated: true)
   }
 }
@@ -380,5 +381,13 @@ extension HomeViewController: UICollectionViewDataSourcePrefetching {
     cancelPrefetchingForItemsAt indexPaths: [IndexPath]
   ) {
     prefetcher.stopPrefetching(with: imageURLs(for: indexPaths))
+  }
+}
+
+// MARK: - State restoration
+
+public extension HomeViewController {
+  override func updateUserActivityState(_: NSUserActivity) {
+    navigationController?.topViewController
   }
 }

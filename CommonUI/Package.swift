@@ -11,18 +11,12 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/kean/Nuke.git", from: "12.4.0"),
-    .package(url: "https://github.com/flocked/AdvancedCollectionTableView.git", branch: "main"),
   ],
   targets: [
     .target(
       name: "CommonUI",
       dependencies: [
         .product(name: "Nuke", package: "Nuke"),
-        .product(
-          name: "AdvancedCollectionTableView",
-          package: "AdvancedCollectionTableView",
-          condition: .when(platforms: [.macOS])
-        ),
       ]
     ),
   ]
