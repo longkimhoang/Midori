@@ -77,6 +77,13 @@ final class AppRouter: ObservableObject {
         .store(in: &cancellables)
 
       splitViewController.setViewController(tabBarController, for: .compact)
+
+      if let navigationController =
+        tabBarController.selectedViewController as? UINavigationController,
+        let viewController = navigationController.topViewController as? StateRestorable
+      {
+        viewController.restoreState(from: activity)
+      }
     }
 
     window.rootViewController = splitViewController
@@ -89,6 +96,9 @@ final class AppRouter: ObservableObject {
 extension AppRouter {
   func updateStateRestorationActivity() {
     if splitViewController.isCollapsed {
+      if let viewController = tabBarController.selectedViewController as? StateRestorable {
+        viewController.updateStateRestorationActivity()
+      }
     } else {
       if let viewController = splitViewController
         .viewController(for: .secondary) as? StateRestorable

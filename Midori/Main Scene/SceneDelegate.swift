@@ -25,11 +25,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate,
       return
     }
 
-    guard let userActivity = connectionOptions.userActivities.first ??
-      session.stateRestorationActivity
-    else {
-      return
-    }
+    let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity
 
     let window = UIWindow(windowScene: windowScene)
     self.window = window
