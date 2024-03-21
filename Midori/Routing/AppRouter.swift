@@ -32,42 +32,45 @@ final class AppRouter: ObservableObject {
     splitViewController.primaryBackgroundStyle = .sidebar
     #endif
 
-    // MARK: Sidebar
+    do {
+      let sidebarViewController = SidebarViewController(destination: destination)
+      let homeViewController = HomeViewController()
 
-    let sidebarViewController = SidebarViewController(destination: destination)
-    // Publishes destination changes to the sidebar
-    $destination.assign(to: &sidebarViewController.$destination)
-    // Subscribes to the sidebar changes
-    sidebarViewController.$destination
-      .removeDuplicates()
-      .sink { [weak self] destination in
-        guard let self else { return }
+      // Publishes destination changes to the sidebar
+      $destination.assign(to: &sidebarViewController.$destination)
 
-        switch destination {
-        case .home:
-          splitViewController.setViewController(HomeViewController(), for: .secondary)
-        case .search:
-          print("Should set search VC")
+      // Subscribes to the sidebar changes
+      sidebarViewController.$destination
+        .removeDuplicates()
+        .sink { [weak self] destination in
+          guard let self else { return }
+
+          switch destination {
+          case .home:
+            splitViewController.setViewController(homeViewController, for: .secondary)
+          case .search:
+            print("Should set search VC")
+          }
         }
-      }
-      .store(in: &cancellables)
+        .store(in: &cancellables)
 
-    splitViewController.setViewController(sidebarViewController, for: .primary)
+      splitViewController.setViewController(sidebarViewController, for: .primary)
+    }
 
-    // MARK: Tab bar
+    do {
+      let tabBarController = UITabBarController()
+      let homeNavigationController = UINavigationController(rootViewController: HomeViewController())
+      tabBarController.viewControllers = [
+        homeNavigationController,
+      ]
+      // Publishes destination changes to the tab bar
+      $destination
+        .map(\.rawValue)
+        .assign(to: \.selectedIndex, on: tabBarController)
+        .store(in: &cancellables)
 
-    let tabBarController = UITabBarController()
-    let homeNavigationController = UINavigationController(rootViewController: HomeViewController())
-    tabBarController.viewControllers = [
-      homeNavigationController,
-    ]
-    // Publishes destination changes to the tab bar
-    $destination
-      .map(\.rawValue)
-      .assign(to: \.selectedIndex, on: tabBarController)
-      .store(in: &cancellables)
-
-    splitViewController.setViewController(tabBarController, for: .compact)
+      splitViewController.setViewController(tabBarController, for: .compact)
+    }
 
     window.rootViewController = splitViewController
     window.makeKeyAndVisible()
