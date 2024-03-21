@@ -65,7 +65,9 @@ final class RecentlyAddedDetailViewController: UIViewController {
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
 
+    #if !targetEnvironment(macCatalyst)
     view.window?.windowScene?.title = String(localized: "Recently added")
+    #endif
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -76,6 +78,10 @@ final class RecentlyAddedDetailViewController: UIViewController {
 
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
+
+    #if !targetEnvironment(macCatalyst)
+    view.window?.windowScene?.title = nil
+    #endif
 
     if let userActivity = view.window?.windowScene?.userActivity {
       userActivity.userInfo?.removeValue(forKey: StateRestorationKeys.RecentlyAdded.presented)
