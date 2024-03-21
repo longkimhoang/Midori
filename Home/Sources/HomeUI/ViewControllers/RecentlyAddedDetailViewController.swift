@@ -16,6 +16,7 @@ final class RecentlyAddedDetailViewController: UIViewController {
   @ViewLoading private var mangaListViewController: MangaListViewController
   private lazy var model = RecentlyAddedDetailModel()
   private lazy var cancellables: Set<AnyCancellable> = []
+  private lazy var layoutChangeBarButtonItem = mangaListViewController.layoutChangeBarButtonItem
 
   init() {
     super.init(nibName: nil, bundle: nil)
@@ -43,7 +44,7 @@ final class RecentlyAddedDetailViewController: UIViewController {
       make.edges.equalToSuperview()
     }
 
-    navigationItem.rightBarButtonItems = [mangaListViewController.layoutChangeBarButtonItem]
+    navigationItem.rightBarButtonItems = [layoutChangeBarButtonItem]
     #if targetEnvironment(macCatalyst)
     navigationItem.rightBarButtonItems?.append(
       UIBarButtonItem(systemItem: .refresh, primaryAction: UIAction { [weak self] _ in
@@ -77,8 +78,10 @@ final class RecentlyAddedDetailViewController: UIViewController {
     super.viewWillDisappear(animated)
 
     if let userActivity = view.window?.windowScene?.userActivity {
-      userActivity.userInfo?.removeValue(forKey: StateRestorationKeys.presented)
-      userActivity.userInfo?.removeValue(forKey: StateRestorationKeys.selectedListLayout)
+      userActivity.userInfo?.removeValue(forKey: StateRestorationKeys.RecentlyAdded.presented)
+      userActivity.userInfo?.removeValue(
+        forKey: StateRestorationKeys.RecentlyAdded.selectedListLayout
+      )
     }
   }
 }
@@ -104,11 +107,6 @@ private extension RecentlyAddedDetailViewController {
 // MARK: - State restoration
 
 extension RecentlyAddedDetailViewController: StateRestorable {
-  enum StateRestorationKeys {
-    static let presented = "RecentlyAddedDetailView.Presented"
-    static let selectedListLayout = "RecentlyAddedDetailView.SelectedListLayout"
-  }
-
   func updateStateRestorationActivity() {
     guard let windowScene = view.window?.windowScene,
           let delegate = windowScene.delegate
@@ -120,9 +118,10 @@ extension RecentlyAddedDetailViewController: StateRestorable {
     let userActivity = windowScene.userActivity ??
       NSUserActivity(activityType: type(of: delegate).activityType)
 
+    let layout = mangaListViewController.layout
     userActivity.addUserInfoEntries(from: [
-      StateRestorationKeys.presented: true,
-      StateRestorationKeys.selectedListLayout: mangaListViewController.layout.rawValue,
+      StateRestorationKeys.RecentlyAdded.presented: true,
+      StateRestorationKeys.RecentlyAdded.selectedListLayout: layout.rawValue,
     ])
 
     windowScene.userActivity = userActivity
@@ -131,9 +130,11 @@ extension RecentlyAddedDetailViewController: StateRestorable {
   func restoreState(from activity: NSUserActivity?) {
     guard let userInfo = activity?.userInfo else { return }
 
-    if let rawLayout = userInfo[StateRestorationKeys.selectedListLayout] as? Int,
-       let layout = MangaListLayout(rawValue: rawLayout) {
+    if let rawLayout = userInfo[StateRestorationKeys.RecentlyAdded.selectedListLayout] as? Int,
+       let layout = MangaListLayout(rawValue: rawLayout)
+    {
       mangaListViewController.layout = layout
+      layoutChangeBarButtonItem.layout = layout
     }
   }
 }

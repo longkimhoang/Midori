@@ -19,9 +19,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate,
   func scene(
     _ scene: UIScene,
     willConnectTo session: UISceneSession,
-    options _: UIScene.ConnectionOptions
+    options connectionOptions: UIScene.ConnectionOptions
   ) {
     guard let windowScene = scene as? UIWindowScene else {
+      return
+    }
+
+    guard let userActivity = connectionOptions.userActivities.first ??
+      session.stateRestorationActivity
+    else {
       return
     }
 
@@ -29,6 +35,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate,
     self.window = window
 
     router = AppRouter(window: window)
-    router?.start(restoringFrom: session.stateRestorationActivity)
+    router?.start(restoringFrom: userActivity)
+
+    // Remember this activity for later when this app quits or suspends.
+    scene.userActivity = userActivity
   }
 }

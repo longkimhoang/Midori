@@ -339,10 +339,13 @@ public extension HomeViewController {
 // MARK: - Presentations
 
 extension HomeViewController {
-  private func showRecentlyAddedDetail() {
+  private func showRecentlyAddedDetail(
+    animated: Bool = true,
+    restorationActivity: NSUserActivity? = nil
+  ) {
     let viewController = RecentlyAddedDetailViewController()
-    viewController.userActivity = userActivity
-    navigationController?.pushViewController(viewController, animated: true)
+    viewController.restoreState(from: restorationActivity)
+    navigationController?.pushViewController(viewController, animated: animated)
   }
 }
 
@@ -386,8 +389,15 @@ extension HomeViewController: UICollectionViewDataSourcePrefetching {
 
 // MARK: - State restoration
 
-public extension HomeViewController {
-  override func updateUserActivityState(_: NSUserActivity) {
-    navigationController?.topViewController
+extension HomeViewController: StateRestorable {
+  public func restoreState(from activity: NSUserActivity?) {
+    guard let activity else { return }
+
+    let recentlyAddedPresented =
+      activity.userInfo?[StateRestorationKeys.RecentlyAdded.presented] as? Bool ?? false
+
+    if recentlyAddedPresented {
+      showRecentlyAddedDetail(animated: false, restorationActivity: activity)
+    }
   }
 }

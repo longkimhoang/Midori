@@ -25,7 +25,7 @@ final class AppRouter: ObservableObject {
     self.window = window
   }
 
-  func start(restoringFrom _: NSUserActivity? = nil) {
+  func start(restoringFrom activity: NSUserActivity? = nil) {
     guard let window else { return }
 
     #if targetEnvironment(macCatalyst)
@@ -55,11 +55,18 @@ final class AppRouter: ObservableObject {
         .store(in: &cancellables)
 
       splitViewController.setViewController(sidebarViewController, for: .primary)
+
+      if let viewController = splitViewController
+        .viewController(for: .secondary) as? StateRestorable
+      {
+        viewController.restoreState(from: activity)
+      }
     }
 
     do {
       let tabBarController = UITabBarController()
-      let homeNavigationController = UINavigationController(rootViewController: HomeViewController())
+      let homeNavigationController =
+        UINavigationController(rootViewController: HomeViewController())
       tabBarController.viewControllers = [
         homeNavigationController,
       ]
