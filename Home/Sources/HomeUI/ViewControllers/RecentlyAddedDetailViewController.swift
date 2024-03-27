@@ -142,7 +142,6 @@ extension RecentlyAddedDetailViewController: StateRestorable {
     if let rawLayout = userInfo[StateRestorationKeys.RecentlyAdded.selectedListLayout] as? Int,
        let layout = MangaListLayout(rawValue: rawLayout)
     {
-      mangaListViewController.layout = layout
       layoutChangeBarButtonItem.layout = layout
     }
   }
