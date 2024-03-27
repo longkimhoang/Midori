@@ -16,7 +16,7 @@ final class RecentlyAddedDetailViewController: UIViewController {
   @ViewLoading private var mangaListViewController: MangaListViewController
   private lazy var model = RecentlyAddedDetailModel()
   private lazy var cancellables: Set<AnyCancellable> = []
-  private lazy var layoutChangeBarButtonItem = mangaListViewController.layoutChangeBarButtonItem
+  private lazy var layoutChangeBarButtonItem = MangaLayoutChangeBarButtonItem()
 
   init() {
     super.init(nibName: nil, bundle: nil)
@@ -107,6 +107,9 @@ private extension RecentlyAddedDetailViewController {
         }
       }
       .store(in: &cancellables)
+
+    layoutChangeBarButtonItem.$layout
+      .assign(to: &mangaListViewController.$layout)
   }
 }
 

@@ -149,74 +149,12 @@ private extension MangaListViewController {
 
 // MARK: - Layout change handling
 
-public final class LayoutChangeBarButtonItem: UIBarButtonItem {
-  private var layoutChangeSubscriber: AnyCancellable?
-  private var segmentedControl: UISegmentedControl {
-    customView as! UISegmentedControl
-  }
-
-  @Published public var layout: MangaListLayout
-
-  public init(layout: MangaListLayout) {
-    self.layout = layout
-    super.init()
-
-    let handler: UIActionHandler = { [weak self] action in
-      guard let self,
-            let segmentedControl = action.sender as? UISegmentedControl,
-            let selection = MangaListLayout(rawValue: segmentedControl.selectedSegmentIndex)
-      else { return }
-
-      self.layout = selection
-    }
-
-    let actions = MangaListLayout.allCases.map { $0.changeAction(handler: handler) }
-    let segmentedControl = UISegmentedControl(items: actions)
-    segmentedControl.selectedSegmentIndex = layout.rawValue
-    customView = segmentedControl
-
-    layoutChangeSubscriber = $layout.map(\.rawValue)
-      .assign(to: \.selectedSegmentIndex, on: segmentedControl)
-  }
-
-  @available(*, unavailable)
-  required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-}
-
-public extension MangaListViewController {
-  var layoutChangeBarButtonItem: LayoutChangeBarButtonItem {
-    let barButtonItem = LayoutChangeBarButtonItem(layout: layout)
-    barButtonItem.$layout.assign(to: &$layout)
-
-    return barButtonItem
-  }
-
-  private func updateLayout(to layout: MangaListLayout) {
+private extension MangaListViewController {
+  func updateLayout(to layout: MangaListLayout) {
     collectionView.setCollectionViewLayout(layout.collectionViewLayout, animated: true)
     var snapshot = dataSource.snapshot()
     snapshot.reconfigureItems(snapshot.itemIdentifiers)
     dataSource.apply(snapshot)
-  }
-}
-
-private extension MangaListLayout {
-  func changeAction(handler: @escaping UIActionHandler) -> UIAction {
-    switch self {
-    case .list:
-      UIAction(
-        title: String(localized: "List"),
-        image: UIImage(systemName: "list.bullet"),
-        handler: handler
-      )
-    case .grid:
-      UIAction(
-        title: String(localized: "Grid"),
-        image: UIImage(systemName: "square.grid.2x2"),
-        handler: handler
-      )
-    }
   }
 }
 
