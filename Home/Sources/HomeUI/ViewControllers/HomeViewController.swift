@@ -364,14 +364,16 @@ extension HomeViewController: UICollectionViewDataSourcePrefetching {
         return nil
       }
 
-      return switch section {
+      let manga: Manga? = switch section {
       case .popular:
-        data.popularMangas[id: itemIdentifier]?.coverThumbnailURL
+        data.popularMangas[id: itemIdentifier]
       case .latestUpdates:
-        data.latestChapters[id: itemIdentifier]?.manga?.coverThumbnailURL
+        data.latestChapters[id: itemIdentifier]?.manga
       case .recentlyAdded:
-        data.recentlyAddedMangas[id: itemIdentifier]?.coverThumbnailURL
+        data.recentlyAddedMangas[id: itemIdentifier]
       }
+
+      return manga?.thumbnailURL()
     }
   }
 
