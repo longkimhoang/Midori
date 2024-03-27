@@ -5,9 +5,9 @@
 //  Created by Long Kim on 27/3/24.
 //
 
+import CommonUI
 import HomeUI
 import UIKit
-import CommonUI
 
 @MainActor
 final class TabRouter: Routing {
@@ -24,7 +24,7 @@ final class TabRouter: Routing {
     guard let tabBarController else { return }
 
     tabBarController.viewControllers = [
-      UINavigationController(rootViewController: homeViewController)
+      UINavigationController(rootViewController: homeViewController),
     ]
 
     let initialDestination: AppDestination =
@@ -39,15 +39,19 @@ final class TabRouter: Routing {
       }
     tabBarController.selectedIndex = initialDestination.rawValue
 
-    if let navigationController = tabBarController.selectedViewController as? UINavigationController,
-       let viewController = navigationController.topViewController as? StateRestorable {
+    if let navigationController = tabBarController
+      .selectedViewController as? UINavigationController,
+      let viewController = navigationController.topViewController as? StateRestorable
+    {
       viewController.restoreState(from: restorationActivity)
     }
   }
 
   func updateStateRestorationActivity() {
-    if let navigationController = tabBarController.selectedViewController as? UINavigationController,
-       let viewController = navigationController.topViewController as? StateRestorable {
+    if let navigationController = tabBarController
+      .selectedViewController as? UINavigationController,
+      let viewController = navigationController.topViewController as? StateRestorable
+    {
       viewController.updateStateRestorationActivity()
     }
   }
