@@ -17,7 +17,6 @@ final class AppRouter: ObservableObject, Routing {
 
   private weak var window: UIWindow?
   private lazy var splitViewController = UISplitViewController(style: .doubleColumn)
-  private lazy var tabBarController = UITabBarController()
   private lazy var cancellables: Set<AnyCancellable> = []
 
   init(window: UIWindow) {
@@ -39,22 +38,8 @@ final class AppRouter: ObservableObject, Routing {
     window.rootViewController = splitViewController
     window.makeKeyAndVisible()
   }
-}
 
-// MARK: - State restoration
-
-extension AppRouter {
   func updateStateRestorationActivity() {
-    if splitViewController.isCollapsed {
-      if let viewController = tabBarController.selectedViewController as? StateRestorable {
-        viewController.updateStateRestorationActivity()
-      }
-    } else {
-      if let viewController = splitViewController
-        .viewController(for: .secondary) as? StateRestorable
-      {
-        viewController.updateStateRestorationActivity()
-      }
-    }
+    children.forEach { $0.updateStateRestorationActivity() }
   }
 }

@@ -16,7 +16,7 @@ final class SplitViewRouter: Routing {
   var children: [any Routing] = []
 
   private lazy var cancellables: Set<AnyCancellable> = []
-  private weak var splitViewController: UISplitViewController?
+  private weak var splitViewController: UISplitViewController!
   private lazy var homeViewController = HomeViewController()
 
   init(parent: some Routing, splitViewController: UISplitViewController) {
@@ -75,5 +75,17 @@ final class SplitViewRouter: Routing {
     children.append(tabRouter)
     tabRouter.start(restoringFrom: restorationActivity)
     #endif
+  }
+
+  func updateStateRestorationActivity() {
+    if splitViewController.isCollapsed {
+      children.forEach { $0.updateStateRestorationActivity() }
+    } else {
+      if let viewController = splitViewController
+        .viewController(for: .secondary) as? StateRestorable
+      {
+        viewController.updateStateRestorationActivity()
+      }
+    }
   }
 }

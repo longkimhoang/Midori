@@ -13,6 +13,9 @@ protocol Routing: AnyObject {
 
   var parent: (any Routing)? { get }
   var children: [any Routing] { get }
+
+  func start(restoringFrom activity: NSUserActivity?)
+  func updateStateRestorationActivity()
 }
 
 extension Routing {
