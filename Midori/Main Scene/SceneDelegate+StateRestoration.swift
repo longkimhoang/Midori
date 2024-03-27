@@ -8,11 +8,11 @@
 import CommonUI
 import UIKit
 
-extension SceneDelegate {
-  enum StateRestorationKeys {
-    static let selectedDestination = "selectedDestination"
-  }
+enum StateRestorationKeys {
+  static let selectedDestination = "selectedDestination"
+}
 
+extension SceneDelegate {
   func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
     router?.updateStateRestorationActivity()
     return scene.userActivity

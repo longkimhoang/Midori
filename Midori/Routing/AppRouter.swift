@@ -12,14 +12,13 @@ import HomeUI
 import UIKit
 
 @MainActor
-final class AppRouter: ObservableObject {
+final class AppRouter: ObservableObject, Routing {
+  var children: [any Routing] = []
+
   private weak var window: UIWindow?
   private lazy var splitViewController = UISplitViewController(style: .doubleColumn)
   private lazy var tabBarController = UITabBarController()
-
   private lazy var cancellables: Set<AnyCancellable> = []
-
-  @Published var destination: AppDestination = .home
 
   init(window: UIWindow) {
     self.window = window
@@ -32,59 +31,10 @@ final class AppRouter: ObservableObject {
     splitViewController.primaryBackgroundStyle = .sidebar
     #endif
 
-    do {
-      let sidebarViewController = SidebarViewController(destination: destination)
-      let homeViewController = HomeViewController()
+    let splitViewRouter = SplitViewRouter(parent: self, splitViewController: splitViewController)
+    children.append(splitViewRouter)
 
-      // Publishes destination changes to the sidebar
-      $destination.assign(to: &sidebarViewController.$destination)
-
-      // Subscribes to the sidebar changes
-      sidebarViewController.$destination
-        .removeDuplicates()
-        .sink { [weak self] destination in
-          guard let self else { return }
-
-          switch destination {
-          case .home:
-            splitViewController.setViewController(homeViewController, for: .secondary)
-          case .search:
-            print("Should set search VC")
-          }
-        }
-        .store(in: &cancellables)
-
-      splitViewController.setViewController(sidebarViewController, for: .primary)
-
-      if let viewController = splitViewController
-        .viewController(for: .secondary) as? StateRestorable
-      {
-        viewController.restoreState(from: activity)
-      }
-    }
-
-    do {
-      let tabBarController = UITabBarController()
-      let homeNavigationController =
-        UINavigationController(rootViewController: HomeViewController())
-      tabBarController.viewControllers = [
-        homeNavigationController,
-      ]
-      // Publishes destination changes to the tab bar
-      $destination
-        .map(\.rawValue)
-        .assign(to: \.selectedIndex, on: tabBarController)
-        .store(in: &cancellables)
-
-      splitViewController.setViewController(tabBarController, for: .compact)
-
-      if let navigationController =
-        tabBarController.selectedViewController as? UINavigationController,
-        let viewController = navigationController.topViewController as? StateRestorable
-      {
-        viewController.restoreState(from: activity)
-      }
-    }
+    splitViewRouter.start(restoringFrom: activity)
 
     window.rootViewController = splitViewController
     window.makeKeyAndVisible()

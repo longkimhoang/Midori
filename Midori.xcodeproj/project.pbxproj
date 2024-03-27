@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F0CE4B22BB4253A00F28D79 /* SplitViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4B12BB4253A00F28D79 /* SplitViewRouter.swift */; };
+		4F0CE4B42BB4289F00F28D79 /* Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4B32BB4289F00F28D79 /* Routing.swift */; };
+		4F0CE4B62BB42D3D00F28D79 /* TabRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4B52BB42D3D00F28D79 /* TabRouter.swift */; };
 		4F33C13B2BA69F76008EDEDC /* .swift-version in Resources */ = {isa = PBXBuildFile; fileRef = 4F33C13A2BA69F76008EDEDC /* .swift-version */; };
 		4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */; };
 		4F3B91182BA8416D0009F1D8 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */; };
@@ -26,6 +29,9 @@
 /* Begin PBXFileReference section */
 		4F0974252BA2FC41005403CA /* MangaList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MangaList; sourceTree = "<group>"; };
 		4F0974272BA2FCD2005403CA /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
+		4F0CE4B12BB4253A00F28D79 /* SplitViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewRouter.swift; sourceTree = "<group>"; };
+		4F0CE4B32BB4289F00F28D79 /* Routing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routing.swift; sourceTree = "<group>"; };
+		4F0CE4B52BB42D3D00F28D79 /* TabRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRouter.swift; sourceTree = "<group>"; };
 		4F33C13A2BA69F76008EDEDC /* .swift-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-version"; sourceTree = "<group>"; };
 		4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +84,9 @@
 			children = (
 				4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */,
 				4F3B911A2BA9A4A20009F1D8 /* AppRouter.swift */,
+				4F0CE4B32BB4289F00F28D79 /* Routing.swift */,
+				4F0CE4B12BB4253A00F28D79 /* SplitViewRouter.swift */,
+				4F0CE4B52BB42D3D00F28D79 /* TabRouter.swift */,
 			);
 			path = Routing;
 			sourceTree = "<group>";
@@ -273,11 +282,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F0CE4B42BB4289F00F28D79 /* Routing.swift in Sources */,
 				4FD31EFD2BA75AC000BF3EF8 /* AppDelegate.swift in Sources */,
+				4F0CE4B62BB42D3D00F28D79 /* TabRouter.swift in Sources */,
 				4FD31F002BA75BDE00BF3EF8 /* SceneDelegate.swift in Sources */,
 				4F3B911E2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift in Sources */,
 				4F3B911B2BA9A4A20009F1D8 /* AppRouter.swift in Sources */,
 				4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */,
+				4F0CE4B22BB4253A00F28D79 /* SplitViewRouter.swift in Sources */,
 				4F3B91182BA8416D0009F1D8 /* SidebarViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
