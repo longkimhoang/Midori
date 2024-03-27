@@ -15,7 +15,6 @@ import SwiftData
 import SwiftUI
 
 struct MangaListCollectionView: UIViewControllerRepresentable {
-  @Environment(\.mangaListEndReached) var mangaListEndReached
   let mangas: IdentifiedArrayOf<Manga>
   let layout: MangaListLayout
 
@@ -31,11 +30,6 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
   func updateUIViewController(_: ViewController, context: Context) {
     context.coordinator.mangas = mangas
     context.coordinator.layout = layout
-    context.coordinator.onScrollEndReached = {
-      Task {
-        await mangaListEndReached()
-      }
-    }
   }
 
   func makeCoordinator() -> Coordinator {

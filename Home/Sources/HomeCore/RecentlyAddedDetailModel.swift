@@ -82,7 +82,8 @@ public final class RecentlyAddedDetailModel: ObservableObject {
       logger.warning("Refreshing initial mangas failed with error: \(error)")
     }
 
-    mangas = mangas + newMangas
+    newMangas.append(contentsOf: mangas)
+    mangas = newMangas
     offset = mangas.count
   }
 }
