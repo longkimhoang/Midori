@@ -36,6 +36,13 @@ public final class MangaLayoutChangeBarButtonItem: UIBarButtonItem {
 
     layoutChangeSubscriber = $layout.map(\.rawValue)
       .assign(to: \.selectedSegmentIndex, on: segmentedControl)
+
+    #if targetEnvironment(macCatalyst)
+    let tooltipInteraction = UIToolTipInteraction(
+      defaultToolTip: String(localized: "Changes the layout of the mangas list.")
+    )
+    segmentedControl.addInteraction(tooltipInteraction)
+    #endif
   }
 
   @available(*, unavailable)
