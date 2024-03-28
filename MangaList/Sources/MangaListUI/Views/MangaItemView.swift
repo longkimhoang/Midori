@@ -6,6 +6,7 @@
 //
 
 import Database
+import MangaListCore
 import SwiftUI
 
 struct MangaItemView: View {

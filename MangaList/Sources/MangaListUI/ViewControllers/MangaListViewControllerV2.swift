@@ -1,40 +1,31 @@
 //
-//  MangaListViewController.swift
+//  MangaListViewControllerV2.swift
 //
 //
-//  Created by Long Kim on 18/3/24.
+//  Created by Long Kim on 28/3/24.
 //
 
-import Combine
-import CommonUI
+import ComposableArchitecture
 import Database
-import IdentifiedCollections
 import MangaListCore
 import SwiftUI
 import UIKit
 
-public final class MangaListViewController: UIViewController {
-  @ViewLoading private var collectionView: UICollectionView
+@ViewAction(for: MangaListFeature.self)
+public final class MangaListViewControllerV2: UIViewController {
+  private var layout: MangaListCore.MangaListLayout
+  @ViewLoading @IBOutlet private var collectionView: UICollectionView
   @ViewLoading private var dataSource: UICollectionViewDiffableDataSource<
     SectionIdentifier,
     Manga.ID
   >!
-  private lazy var listEndReachedSubject = PassthroughSubject<Void, Never>()
-  private lazy var cancellables: Set<AnyCancellable> = []
 
-  @Published public var mangas: IdentifiedArrayOf<Manga>
-  @Published public var layout: MangaListLayout
-  public var refresh: () async -> Void = {}
-  public lazy var listEndReachedPublisher = listEndReachedSubject.eraseToAnyPublisher()
+  public let store: StoreOf<MangaListFeature>
 
-  public init(
-    mangas: IdentifiedArrayOf<Manga> = [],
-    layout: MangaListLayout = .list
-  ) {
-    self.mangas = mangas
-    self.layout = layout
-
-    super.init(nibName: nil, bundle: nil)
+  public init?(coder: NSCoder, store: StoreOf<MangaListFeature>) {
+    self.store = store
+    layout = store.layout
+    super.init(coder: coder)
   }
 
   @available(*, unavailable)
@@ -42,63 +33,44 @@ public final class MangaListViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override public func loadView() {
-    let collectionView = UICollectionView(
-      frame: .zero,
-      collectionViewLayout: layout.collectionViewLayout
-    )
-    collectionView.delegate = self
+  override public func viewDidLoad() {
+    super.viewDidLoad()
+
+    collectionView.collectionViewLayout = layout.collectionViewLayout
     #if !targetEnvironment(macCatalyst)
     collectionView.refreshControl = UIRefreshControl(
       frame: .zero,
-      primaryAction: UIAction { action in
-        guard let refreshControl = action.sender as? UIRefreshControl else {
+      primaryAction: UIAction { [weak self] action in
+        guard let self, let refreshControl = action.sender as? UIRefreshControl else {
           return
         }
 
-        Task { [weak self] in
-          await self?.refresh()
+        Task {
+          await self.send(.refresh).finish()
           refreshControl.endRefreshing()
         }
       }
     )
     #endif
 
-    view = collectionView
-    self.collectionView = collectionView
-  }
-
-  override public func viewDidLoad() {
-    super.viewDidLoad()
-
     setupDataSource()
-    configureSubscribers()
-  }
-}
 
-// MARK: - Subscribers
+    observe { [weak self] in
+      guard let self else { return }
 
-private extension MangaListViewController {
-  func configureSubscribers() {
-    $mangas
-      .receive(on: DispatchQueue.main)
-      .sink { [weak self] mangas in
-        self?.updateDataSource(with: mangas)
+      updateDataSource(with: store.mangas)
+
+      if store.layout != layout {
+        layout = store.layout
+        updateLayout(to: layout)
       }
-      .store(in: &cancellables)
-
-    $layout
-      .receive(on: DispatchQueue.main)
-      .sink { [weak self] layout in
-        self?.updateLayout(to: layout)
-      }
-      .store(in: &cancellables)
+    }
   }
 }
 
 // MARK: - Data Source
 
-private extension MangaListViewController {
+private extension MangaListViewControllerV2 {
   func setupDataSource() {
     let mangaListCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Manga>(url: { $0.thumbnailURL() }) {
@@ -120,7 +92,7 @@ private extension MangaListViewController {
       UICollectionViewDiffableDataSource(collectionView: collectionView) {
         [weak self] collectionView, indexPath, itemIdentifier in
 
-        guard let self, let manga = mangas[id: itemIdentifier] else { return nil }
+        guard let self, let manga = store.mangas[id: itemIdentifier] else { return nil }
 
         return collectionView.dequeueConfiguredReusableCell(
           using: mangaListCellRegistration,
@@ -150,7 +122,7 @@ private extension MangaListViewController {
 
 // MARK: - Layout change handling
 
-private extension MangaListViewController {
+private extension MangaListViewControllerV2 {
   func updateLayout(to layout: MangaListLayout) {
     collectionView.setCollectionViewLayout(layout.collectionViewLayout, animated: true)
     var snapshot = dataSource.snapshot()
@@ -161,14 +133,14 @@ private extension MangaListViewController {
 
 // MARK: - Delegate
 
-extension MangaListViewController: UICollectionViewDelegate {
+extension MangaListViewControllerV2: UICollectionViewDelegate {
   public func collectionView(
     _: UICollectionView,
     willDisplay _: UICollectionViewCell,
     forItemAt indexPath: IndexPath
   ) {
-    guard indexPath.item == mangas.endIndex - 1 else { return }
-    listEndReachedSubject.send()
+    guard indexPath.item == store.mangas.endIndex - 1 else { return }
+    send(.listEndReached)
   }
 }
 
@@ -178,7 +150,7 @@ private enum SectionIdentifier {
   case main
 }
 
-private extension MangaListLayout {
+private extension MangaListCore.MangaListLayout {
   var collectionViewLayout: UICollectionViewLayout {
     switch self {
     case .list: .mangaList()

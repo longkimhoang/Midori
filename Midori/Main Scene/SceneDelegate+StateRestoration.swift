@@ -18,3 +18,7 @@ extension SceneDelegate {
     return scene.userActivity
   }
 }
+
+struct StateRestorationPayload: Codable {
+  let selectedDestination: AppDestination
+}

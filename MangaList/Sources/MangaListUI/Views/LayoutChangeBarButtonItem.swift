@@ -6,6 +6,7 @@
 //
 
 import Combine
+import MangaListCore
 import UIKit
 
 public final class MangaLayoutChangeBarButtonItem: UIBarButtonItem {

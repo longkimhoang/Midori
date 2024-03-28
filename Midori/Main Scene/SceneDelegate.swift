@@ -6,6 +6,9 @@
 //
 
 import CommonUI
+import ComposableArchitecture
+import HomeCore
+import SwiftUI
 import UIKit
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate,
@@ -19,21 +22,44 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate,
   func scene(
     _ scene: UIScene,
     willConnectTo session: UISceneSession,
-    options connectionOptions: UIScene.ConnectionOptions
+    options _: UIScene.ConnectionOptions
   ) {
     guard let windowScene = scene as? UIWindowScene else {
       return
     }
 
-    let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity
+    let userActivity = session.stateRestorationActivity ??
+      NSUserActivity(activityType: SceneDelegate.activityType)
 
     let window = UIWindow(windowScene: windowScene)
     self.window = window
 
     router = AppRouter(window: window)
-    router?.start(restoringFrom: userActivity)
+//    router?.start(restoringFrom: userActivity)
+
+    let store = Store(initialState: AppFeature.State(restoringFrom: userActivity)) {
+      AppFeature()
+    }
+
+    let rootViewController = UIStoryboard(name: "Main", bundle: nil)
+      .instantiateInitialViewController { coder in
+        SplitViewController(coder: coder, store: store, userActivity: userActivity)
+      }
+
+    window.rootViewController = rootViewController
+    window.makeKeyAndVisible()
 
     // Remember this activity for later when this app quits or suspends.
     scene.userActivity = userActivity
+  }
+}
+
+private extension AppFeature.State {
+  init(restoringFrom activity: NSUserActivity) {
+    if let payload = try? activity.typedPayload(StateRestorationPayload.self) {
+      self.init(destination: payload.selectedDestination)
+    } else {
+      self.init()
+    }
   }
 }

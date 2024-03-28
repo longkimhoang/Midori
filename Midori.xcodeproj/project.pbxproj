@@ -10,6 +10,12 @@
 		4F0CE4B22BB4253A00F28D79 /* SplitViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4B12BB4253A00F28D79 /* SplitViewRouter.swift */; };
 		4F0CE4B42BB4289F00F28D79 /* Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4B32BB4289F00F28D79 /* Routing.swift */; };
 		4F0CE4B62BB42D3D00F28D79 /* TabRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4B52BB42D3D00F28D79 /* TabRouter.swift */; };
+		4F0CE4B92BB5249200F28D79 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0CE4B82BB5249200F28D79 /* ComposableArchitecture */; };
+		4F0CE4BB2BB526E700F28D79 /* AppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4BA2BB526E700F28D79 /* AppFeature.swift */; };
+		4F0CE4BF2BB54E6C00F28D79 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F0CE4BE2BB54E6C00F28D79 /* Main.storyboard */; };
+		4F0CE4C12BB551C900F28D79 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4C02BB551C900F28D79 /* TabBarController.swift */; };
+		4F0CE4C32BB5520700F28D79 /* SidebarViewControllerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4C22BB5520700F28D79 /* SidebarViewControllerV2.swift */; };
+		4F0CE4C72BB5570C00F28D79 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CE4C62BB5570C00F28D79 /* SplitViewController.swift */; };
 		4F33C13B2BA69F76008EDEDC /* .swift-version in Resources */ = {isa = PBXBuildFile; fileRef = 4F33C13A2BA69F76008EDEDC /* .swift-version */; };
 		4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */; };
 		4F3B91182BA8416D0009F1D8 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */; };
@@ -32,6 +38,11 @@
 		4F0CE4B12BB4253A00F28D79 /* SplitViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewRouter.swift; sourceTree = "<group>"; };
 		4F0CE4B32BB4289F00F28D79 /* Routing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routing.swift; sourceTree = "<group>"; };
 		4F0CE4B52BB42D3D00F28D79 /* TabRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRouter.swift; sourceTree = "<group>"; };
+		4F0CE4BA2BB526E700F28D79 /* AppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFeature.swift; sourceTree = "<group>"; };
+		4F0CE4BE2BB54E6C00F28D79 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		4F0CE4C02BB551C900F28D79 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		4F0CE4C22BB5520700F28D79 /* SidebarViewControllerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewControllerV2.swift; sourceTree = "<group>"; };
+		4F0CE4C62BB5570C00F28D79 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		4F33C13A2BA69F76008EDEDC /* .swift-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-version"; sourceTree = "<group>"; };
 		4F33C13C2BA6CB79008EDEDC /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
 		4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +75,7 @@
 			files = (
 				4F4032402BAC087A00B7AF43 /* CommonUI in Frameworks */,
 				4FB2699A2B94C8C6005BDD14 /* Dependencies in Frameworks */,
+				4F0CE4B92BB5249200F28D79 /* ComposableArchitecture in Frameworks */,
 				4F3FE1962BA1B9ED005DF6E5 /* HomeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,6 +87,9 @@
 			isa = PBXGroup;
 			children = (
 				4F3B91172BA8416D0009F1D8 /* SidebarViewController.swift */,
+				4F0CE4C22BB5520700F28D79 /* SidebarViewControllerV2.swift */,
+				4F0CE4C62BB5570C00F28D79 /* SplitViewController.swift */,
+				4F0CE4C02BB551C900F28D79 /* TabBarController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -112,6 +127,7 @@
 		4F6852C12B9F694100BC67CC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4F0CE4BE2BB54E6C00F28D79 /* Main.storyboard */,
 				4FB78DA72B8C926A009639A3 /* Assets.xcassets */,
 				4FCF64A42B9EB45D00B6D983 /* Localizable.xcstrings */,
 			);
@@ -160,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				4FD31EFC2BA75AC000BF3EF8 /* AppDelegate.swift */,
+				4F0CE4BA2BB526E700F28D79 /* AppFeature.swift */,
 				4F3B911C2BAB5D920009F1D8 /* Main Scene */,
 				4FB78DAA2B8C926A009639A3 /* Preview Content */,
 				4F6852C12B9F694100BC67CC /* Resources */,
@@ -221,6 +238,7 @@
 				4FB269992B94C8C6005BDD14 /* Dependencies */,
 				4F3FE1952BA1B9ED005DF6E5 /* HomeUI */,
 				4F40323F2BAC087A00B7AF43 /* CommonUI */,
+				4F0CE4B82BB5249200F28D79 /* ComposableArchitecture */,
 			);
 			productName = Midori;
 			productReference = 4FB78DA02B8C9269009639A3 /* Midori.app */;
@@ -252,6 +270,8 @@
 			mainGroup = 4FB78D972B8C9269009639A3;
 			packageReferences = (
 				4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				4F0CE4B72BB5249200F28D79 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				4F0CE4C82BB5835200F28D79 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = 4FB78DA12B8C9269009639A3 /* Products */;
 			projectDirPath = "";
@@ -270,6 +290,7 @@
 				4FB2699D2B94CDAF005BDD14 /* Domain in Resources */,
 				4FB78DAC2B8C926A009639A3 /* Preview Assets.xcassets in Resources */,
 				4FCF64A52B9EB45D00B6D983 /* Localizable.xcstrings in Resources */,
+				4F0CE4BF2BB54E6C00F28D79 /* Main.storyboard in Resources */,
 				4FB78DA82B8C926A009639A3 /* Assets.xcassets in Resources */,
 				4F33C13B2BA69F76008EDEDC /* .swift-version in Resources */,
 			);
@@ -283,12 +304,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F0CE4B42BB4289F00F28D79 /* Routing.swift in Sources */,
+				4F0CE4C72BB5570C00F28D79 /* SplitViewController.swift in Sources */,
 				4FD31EFD2BA75AC000BF3EF8 /* AppDelegate.swift in Sources */,
 				4F0CE4B62BB42D3D00F28D79 /* TabRouter.swift in Sources */,
 				4FD31F002BA75BDE00BF3EF8 /* SceneDelegate.swift in Sources */,
+				4F0CE4C32BB5520700F28D79 /* SidebarViewControllerV2.swift in Sources */,
 				4F3B911E2BAB5DA50009F1D8 /* SceneDelegate+StateRestoration.swift in Sources */,
 				4F3B911B2BA9A4A20009F1D8 /* AppRouter.swift in Sources */,
+				4F0CE4BB2BB526E700F28D79 /* AppFeature.swift in Sources */,
 				4F33C13D2BA6CB79008EDEDC /* AppDestination.swift in Sources */,
+				4F0CE4C12BB551C900F28D79 /* TabBarController.swift in Sources */,
 				4F0CE4B22BB4253A00F28D79 /* SplitViewRouter.swift in Sources */,
 				4F3B91182BA8416D0009F1D8 /* SidebarViewController.swift in Sources */,
 			);
@@ -525,6 +550,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4F0CE4B72BB5249200F28D79 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.2;
+			};
+		};
+		4F0CE4C82BB5835200F28D79 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		4FB269982B94C8C6005BDD14 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
@@ -536,6 +577,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F0CE4B82BB5249200F28D79 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F0CE4B72BB5249200F28D79 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
 		4F3FE1952BA1B9ED005DF6E5 /* HomeUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeUI;
