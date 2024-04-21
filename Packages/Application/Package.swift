@@ -17,6 +17,7 @@ let package = Package(
     ),
   ],
   dependencies: [
+    .package(path: "Common"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
   ],
   targets: [
@@ -30,6 +31,7 @@ let package = Package(
       name: "ApplicationUI",
       dependencies: [
         "Application",
+        "Common",
       ]
     ),
     .testTarget(

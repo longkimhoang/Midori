@@ -6,6 +6,7 @@
 //
 
 import Application
+import Common
 import ComposableArchitecture
 import SwiftUI
 
@@ -18,11 +19,15 @@ public struct ApplicationView: View {
 
   public var body: some View {
     TabView(selection: $store.selectedTab.sending(\.selectTab)) {
-      Text("Home")
-        .tabItem {
-          Label("Home", systemImage: "house")
-        }
-        .tag(ApplicationFeature.Tab.home)
+      NavigationStack {
+        ColorView()
+          .navigationTitle("Hello")
+          .providingLayoutMargins()
+      }
+      .tabItem {
+        Label("Home", systemImage: "house")
+      }
+      .tag(ApplicationFeature.Tab.home)
 
       Text("Search")
         .tabItem {
@@ -30,5 +35,15 @@ public struct ApplicationView: View {
         }
         .tag(ApplicationFeature.Tab.search)
     }
+  }
+}
+
+private struct ColorView: View {
+  @Environment(\.layoutMarginsGuide) var layoutMargins
+
+  var body: some View {
+    Color.purple
+      .padding(.leading, layoutMargins.leading)
+      .padding(.trailing, layoutMargins.trailing)
   }
 }
