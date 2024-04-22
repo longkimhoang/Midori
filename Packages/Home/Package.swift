@@ -4,41 +4,31 @@
 import PackageDescription
 
 let package = Package(
-  name: "Application",
+  name: "Home",
   platforms: [.iOS(.v17)],
   products: [
+    // Products define the executables and libraries a package produces, making them visible to
+    // other packages.
     .library(
-      name: "Application",
-      targets: ["Application"]
-    ),
-    .library(
-      name: "ApplicationUI",
-      targets: ["ApplicationUI"]
+      name: "Home",
+      targets: ["Home"]
     ),
   ],
   dependencies: [
-    .package(path: "Common"),
-    .package(path: "Home"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
   ],
   targets: [
+    // Targets are the basic building blocks of a package, defining a module or a test suite.
+    // Targets can depend on other targets in this package and products from dependencies.
     .target(
-      name: "Application",
+      name: "Home",
       dependencies: [
-        "Home",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]
     ),
-    .target(
-      name: "ApplicationUI",
-      dependencies: [
-        "Application",
-        "Common",
-      ]
-    ),
     .testTarget(
-      name: "ApplicationTests",
-      dependencies: ["Application"]
+      name: "HomeTests",
+      dependencies: ["Home"]
     ),
   ]
 )
