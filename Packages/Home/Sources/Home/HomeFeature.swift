@@ -20,6 +20,8 @@ public struct HomeFeature {
 
     public var fetchStatus: FetchStatus = .pending
     public var path = StackState<Path.State>()
+
+    public init() {}
   }
 
   public enum Action {
