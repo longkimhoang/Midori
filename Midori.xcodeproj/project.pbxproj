@@ -16,6 +16,7 @@
 /* Begin PBXFileReference section */
 		4F0228712BD587CC005D9165 /* Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Common; sourceTree = "<group>"; };
 		4F0228722BD621B6005D9165 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
+		4F0228732BD62D3C005D9165 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		4F9EA9AB2BD51A310087B4BF /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F9EA9AE2BD51A310087B4BF /* MidoriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidoriApp.swift; sourceTree = "<group>"; };
 		4F9EA9B22BD51A320087B4BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -79,6 +80,7 @@
 			children = (
 				4F9EA9C32BD51AE60087B4BF /* Application */,
 				4F0228712BD587CC005D9165 /* Common */,
+				4F0228732BD62D3C005D9165 /* Domain */,
 				4F0228722BD621B6005D9165 /* Home */,
 			);
 			path = Packages;
