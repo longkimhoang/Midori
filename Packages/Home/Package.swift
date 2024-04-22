@@ -15,6 +15,7 @@ let package = Package(
     ),
   ],
   dependencies: [
+    .package(path: "Domain"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
   ],
   targets: [
@@ -23,6 +24,7 @@ let package = Package(
     .target(
       name: "Home",
       dependencies: [
+        .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]
     ),

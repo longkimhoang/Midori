@@ -11,11 +11,20 @@ import ComposableArchitecture
 public struct HomeFeature {
   @ObservableState
   public struct State: Equatable {
+    @CasePathable @dynamicMemberLookup
+    public enum FetchStatus: Equatable {
+      case pending
+      case success(HomeData)
+      case failure(reason: String)
+    }
+
+    public var fetchStatus: FetchStatus = .pending
     public var path = StackState<Path.State>()
   }
 
   public enum Action {
     case fetchHomeData
+    case homeDataResponse(Result<HomeData, any Error>)
     case path(StackActionOf<Path>)
   }
 
@@ -28,7 +37,20 @@ public struct HomeFeature {
   public init() {}
 
   public var body: some ReducerOf<Self> {
-    EmptyReducer()
-      .forEach(\.path, action: \.path)
+    Reduce { state, action in
+      switch action {
+      case .fetchHomeData:
+        return .none
+      case let .homeDataResponse(.success(data)):
+        state.fetchStatus = .success(data)
+        return .none
+      case let .homeDataResponse(.failure(error)):
+        state.fetchStatus = .failure(reason: error.localizedDescription)
+        return .none
+      case .path:
+        return .none
+      }
+    }
+    .forEach(\.path, action: \.path)
   }
 }
