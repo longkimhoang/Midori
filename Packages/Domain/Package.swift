@@ -17,11 +17,16 @@ let package = Package(
     ),
   ],
   dependencies: [
+    .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.2.2"),
   ],
   targets: [
     .target(
-      name: "Domain"
+      name: "Domain",
+      dependencies: [
+        "Networking",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
     ),
     .target(
       name: "Models",
