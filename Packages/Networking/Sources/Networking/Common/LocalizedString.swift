@@ -17,6 +17,13 @@ public struct LocalizedString: Decodable {
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.singleValueContainer()
-    values = try container.decode([String: String].self)
+    let values = try container.decode([String: String].self)
+    guard !values.isEmpty else {
+      throw DecodingError.dataCorrupted(
+        .init(codingPath: container.codingPath, debugDescription: "Values cannot be empty")
+      )
+    }
+
+    self.values = values
   }
 }
