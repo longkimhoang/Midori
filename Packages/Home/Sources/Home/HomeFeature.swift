@@ -44,9 +44,10 @@ public struct HomeFeature {
     Reduce { state, action in
       switch action {
       case .fetchHomeData:
-        return .run { _ in
-          let data = try await homeData.retrievePopularMangas()
-          debugPrint(data)
+        return .run { send in
+          async let popularMangas = try await homeData.retrievePopularMangas()
+          let data = try await HomeData(popularMangas: popularMangas)
+          await send(.homeDataResponse(.success(data)))
         } catch: { error, send in
           await send(.homeDataResponse(.failure(error)))
         }
