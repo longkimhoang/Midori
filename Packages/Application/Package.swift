@@ -34,6 +34,7 @@ let package = Package(
       dependencies: [
         "Application",
         "Common",
+        .product(name: "HomeUI", package: "Home"),
       ]
     ),
     .testTarget(

@@ -36,13 +36,20 @@ public struct HomeFeature {
     case manga
   }
 
+  @Dependency(\.homeData) var homeData
+
   public init() {}
 
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .fetchHomeData:
-        return .none
+        return .run { _ in
+          let data = try await homeData.retrievePopularMangas()
+          debugPrint(data)
+        } catch: { error, send in
+          await send(.homeDataResponse(.failure(error)))
+        }
       case let .homeDataResponse(.success(data)):
         state.fetchStatus = .success(data)
         return .none

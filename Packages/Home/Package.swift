@@ -13,9 +13,14 @@ let package = Package(
       name: "Home",
       targets: ["Home"]
     ),
+    .library(
+      name: "HomeUI",
+      targets: ["HomeUI"]
+    ),
   ],
   dependencies: [
     .package(path: "Domain"),
+    .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
   ],
   targets: [
@@ -24,6 +29,15 @@ let package = Package(
     .target(
       name: "Home",
       dependencies: [
+        "Networking",
+        .product(name: "Models", package: "Domain"),
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
+    ),
+    .target(
+      name: "HomeUI",
+      dependencies: [
+        "Home",
         .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]

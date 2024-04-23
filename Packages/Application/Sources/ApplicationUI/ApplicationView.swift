@@ -8,6 +8,7 @@
 import Application
 import Common
 import ComposableArchitecture
+import HomeUI
 import SwiftUI
 
 public struct ApplicationView: View {
@@ -19,15 +20,11 @@ public struct ApplicationView: View {
 
   public var body: some View {
     TabView(selection: $store.selectedTab.sending(\.selectTab)) {
-      NavigationStack {
-        ColorView()
-          .navigationTitle("Hello")
-          .providingLayoutMargins()
-      }
-      .tabItem {
-        Label("Home", systemImage: "house")
-      }
-      .tag(ApplicationFeature.Tab.home)
+      HomeView(store: store.scope(state: \.home, action: \.home))
+        .tabItem {
+          Label("Home", systemImage: "house")
+        }
+        .tag(ApplicationFeature.Tab.home)
 
       Text("Search")
         .tabItem {

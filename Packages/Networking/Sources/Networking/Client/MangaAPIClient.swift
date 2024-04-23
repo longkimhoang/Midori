@@ -21,9 +21,14 @@ extension MangaAPIClient: DependencyKey {
     return MangaAPIClient(
       listMangas: { request in
         let url = baseURL
-        let task = AF.request(url, parameters: request, encoder: .urlEncodedForm)
-          .validate(statusCode: CollectionOfOne(200))
-          .serializingDecodable(ListMangasResponse.self, decoder: .api)
+        let task = AF.request(
+          url,
+          parameters: request,
+          encoder: .urlEncodedForm(encoder: .api)
+        )
+        .validate(statusCode: CollectionOfOne(200))
+        .onURLRequestCreation { debugPrint($0) }
+        .serializingDecodable(ListMangasResponse.self, decoder: .api)
 
         return try await task.value
       }
