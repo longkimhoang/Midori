@@ -12,21 +12,21 @@ import SwiftData
 public final class Manga {
   @Attribute(.unique) public var mangaID: UUID
   public var title: LocalizedString
-  public var overview: String?
-  public var coverImageURL: URL?
+  public var overview: LocalizedString?
+  public var cover: Cover?
   public var createdAt: Date
 
   public init(
     mangaID: UUID,
     title: LocalizedString,
-    overview: String? = nil,
-    coverImageURL: URL? = nil,
+    overview: LocalizedString? = nil,
+    cover: Cover? = nil,
     createdAt: Date
   ) {
     self.mangaID = mangaID
     self.title = title
     self.overview = overview
-    self.coverImageURL = coverImageURL
+    self.cover = cover
     self.createdAt = createdAt
   }
 }

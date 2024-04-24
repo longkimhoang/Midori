@@ -1,8 +1,8 @@
 //
-//  Manga.swift
+//  Cover.swift
 //
 //
-//  Created by Long Kim on 23/4/24.
+//  Created by Long Kim on 24/4/24.
 //
 
 import Foundation
@@ -10,12 +10,11 @@ import HelperCoders
 import MetaCodable
 
 @Codable
-public struct Manga: Entity {
-  @Codable
-  public struct Attributes {
-    @CodedBy(LocalizedStringCoder()) public let title: LocalizedString
-    @CodedBy(LocalizedStringCoder()) public let description: LocalizedString?
-    public let createdAt: Date
+public struct Cover: Entity {
+  public struct Attributes: Codable {
+    public let locale: String
+    public let fileName: String
+    public let volume: String?
   }
 
   public let id: UUID

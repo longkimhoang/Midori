@@ -46,12 +46,13 @@ actor MangaImporter {
 
   func importMangas(_ mangas: [Networking.Manga]) throws {
     for manga in mangas {
+      let cover = manga.relationship(CoverRelationship.self).flatMap(\.referenced)
       let model = Manga(
         mangaID: manga.id,
-        title: LocalizedString(manga.attributes.title),
-        overview: nil,
-        coverImageURL: nil,
-        createdAt: manga.attributes.createdAt
+        title: LocalizedString(manga.title),
+        overview: manga.description.map(LocalizedString.init),
+        cover: cover.map { .init(fileName: $0.fileName, volume: $0.volume) },
+        createdAt: manga.createdAt
       )
 
       modelContext.insert(model)
