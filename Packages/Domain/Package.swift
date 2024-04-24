@@ -19,6 +19,7 @@ let package = Package(
   dependencies: [
     .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.2.2"),
+    .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
   ],
   targets: [
     .target(
@@ -26,17 +27,19 @@ let package = Package(
       dependencies: [
         "Networking",
         .product(name: "Dependencies", package: "swift-dependencies"),
-      ]
-    ),
-    .target(
-      name: "Models",
-      dependencies: [
-        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ]
     ),
     .testTarget(
       name: "DomainTests",
       dependencies: ["Domain"]
+    ),
+    .target(
+      name: "Models",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "NonEmpty", package: "swift-nonempty"),
+      ]
     ),
   ]
 )

@@ -29,6 +29,7 @@ let package = Package(
     .target(
       name: "Home",
       dependencies: [
+        "Domain",
         "Networking",
         .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

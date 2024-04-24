@@ -11,14 +11,14 @@ import SwiftData
 @Model
 public final class Manga {
   @Attribute(.unique) public var mangaID: UUID
-  @Attribute(.spotlight) public var title: String
+  public var title: LocalizedString
   public var overview: String?
   public var coverImageURL: URL?
   public var createdAt: Date
 
   public init(
     mangaID: UUID,
-    title: String,
+    title: LocalizedString,
     overview: String? = nil,
     coverImageURL: URL? = nil,
     createdAt: Date

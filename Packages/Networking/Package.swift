@@ -17,6 +17,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/Alamofire/Alamofire", from: "5.9.1"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.2.2"),
+    .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -27,6 +28,7 @@ let package = Package(
         "Alamofire",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        .product(name: "NonEmpty", package: "swift-nonempty"),
       ]
     ),
     .testTarget(
