@@ -7,6 +7,8 @@
 
 import Dependencies
 import DependenciesMacros
+import Foundation
+import IdentifiedCollections
 import Models
 import Networking
 import SwiftData
@@ -16,10 +18,12 @@ public struct MangaRepositoryClient: Sendable {
   public typealias Manga = Models.Manga
 
   public var importMangas: @Sendable ([Networking.Manga]) async throws -> Void
-  public var fetchMangas: @Sendable (
-    _ descriptor: FetchDescriptor<Manga>,
-    _ context: ModelContext
-  ) async throws -> [Manga]
+  @DependencyEndpoint(method: "fetchMangas")
+  public var fetchMangasUsingDescriptor: @Sendable @MainActor (
+    _ descriptor: FetchDescriptor<Manga>
+  ) throws -> [Manga]
+  @DependencyEndpoint(method: "fetchMangas")
+  public var fetchMangasUsingIDs: @Sendable @MainActor (_ ids: [UUID]) throws -> [Manga]
 }
 
 extension MangaRepositoryClient: DependencyKey {
@@ -31,8 +35,19 @@ extension MangaRepositoryClient: DependencyKey {
         let importer = MangaImporter(modelContainer: modelContainer)
         try await importer.importMangas(mangas)
       },
-      fetchMangas: { _, _ in
-        fatalError()
+      fetchMangasUsingDescriptor: { descriptor in
+        try modelContainer.mainContext.fetch(descriptor)
+      },
+      fetchMangasUsingIDs: { ids in
+        var descriptor = FetchDescriptor<Manga>()
+        descriptor.predicate = #Predicate { ids.contains($0.mangaID) }
+
+        let models = try IdentifiedArray(
+          uniqueElements: modelContainer.mainContext.fetch(descriptor),
+          id: \.mangaID
+        )
+
+        return ids.compactMap { models[id: $0] }
       }
     )
   }
