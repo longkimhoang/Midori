@@ -12,7 +12,7 @@ import MetaCodable
 @Codable
 public struct Manga: Entity {
   @Codable
-  public struct Attributes {
+  public struct Attributes: Sendable {
     @CodedBy(LocalizedStringCoder()) public let title: LocalizedString
     @CodedBy(LocalizedStringCoder()) public let description: LocalizedString?
     public let createdAt: Date

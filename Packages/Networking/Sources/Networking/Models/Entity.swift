@@ -9,7 +9,7 @@ import Foundation
 
 /// A type that represents an entity in the MangaDex API.
 @dynamicMemberLookup
-public protocol Entity<Attributes>: Identifiable, Decodable {
+public protocol Entity<Attributes>: Identifiable, Decodable, Sendable {
   associatedtype Attributes: Decodable
 
   /// The identifier of the entity.

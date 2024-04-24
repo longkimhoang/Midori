@@ -20,3 +20,5 @@ extension URLEncodedFormEncoder {
     return encoder
   }()
 }
+
+extension URLEncodedFormEncoder: @unchecked Sendable {}

@@ -28,6 +28,9 @@ let package = Package(
         "Networking",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+      ],
+      swiftSettings: [
+        .enableExperimentalFeature("StrictConcurrency"),
       ]
     ),
     .testTarget(

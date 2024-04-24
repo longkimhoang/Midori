@@ -13,7 +13,13 @@ import SwiftData
 
 @DependencyClient
 public struct MangaRepositoryClient: Sendable {
+  public typealias Manga = Models.Manga
+
   public var importMangas: @Sendable ([Networking.Manga]) async throws -> Void
+  public var fetchMangas: @Sendable (
+    _ descriptor: FetchDescriptor<Manga>,
+    _ context: ModelContext
+  ) async throws -> [Manga]
 }
 
 extension MangaRepositoryClient: DependencyKey {
@@ -24,6 +30,9 @@ extension MangaRepositoryClient: DependencyKey {
       importMangas: { mangas in
         let importer = MangaImporter(modelContainer: modelContainer)
         try await importer.importMangas(mangas)
+      },
+      fetchMangas: { _, _ in
+        fatalError()
       }
     )
   }

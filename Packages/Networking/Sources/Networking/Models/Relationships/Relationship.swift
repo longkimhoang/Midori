@@ -8,7 +8,7 @@
 import Foundation
 
 /// A type representing a relationship to other entities of a MangaDex API entity.
-public protocol Relationship<Referenced>: Identifiable, Decodable {
+public protocol Relationship<Referenced>: Identifiable, Decodable, Sendable {
   associatedtype Referenced: Entity
 
   /// The identifier of the referenced entity.

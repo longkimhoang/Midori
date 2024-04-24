@@ -32,6 +32,9 @@ let package = Package(
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
         .product(name: "NonEmpty", package: "swift-nonempty"),
         .product(name: "HelperCoders", package: "MetaCodable"),
+      ],
+      swiftSettings: [
+        .enableExperimentalFeature("StrictConcurrency"),
       ]
     ),
     .testTarget(

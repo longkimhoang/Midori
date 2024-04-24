@@ -27,7 +27,6 @@ extension MangaAPIClient: DependencyKey {
           encoder: .urlEncodedForm(encoder: .api)
         )
         .validate(statusCode: CollectionOfOne(200))
-        .onURLRequestCreation { debugPrint($0) }
         .serializingDecodable(ListMangasResponse.self, decoder: .api)
 
         return try await task.value

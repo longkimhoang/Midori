@@ -11,7 +11,7 @@ import MetaCodable
 
 @Codable
 public struct Cover: Entity {
-  public struct Attributes: Codable {
+  public struct Attributes: Codable, Sendable {
     public let locale: String
     public let fileName: String
     public let volume: String?
