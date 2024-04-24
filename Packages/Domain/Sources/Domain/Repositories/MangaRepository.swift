@@ -41,6 +41,7 @@ extension MangaRepositoryClient: DependencyKey {
       fetchMangasUsingIDs: { ids in
         var descriptor = FetchDescriptor<Manga>()
         descriptor.predicate = #Predicate { ids.contains($0.mangaID) }
+        descriptor.propertiesToFetch = [\.mangaID]
 
         let models = try IdentifiedArray(
           uniqueElements: modelContainer.mainContext.fetch(descriptor),

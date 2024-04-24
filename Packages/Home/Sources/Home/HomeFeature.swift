@@ -46,7 +46,11 @@ public struct HomeFeature {
       case .fetchHomeData:
         return .run { send in
           async let popularMangas = try await homeData.retrievePopularMangas()
-          let data = try await HomeData(popularMangas: popularMangas)
+          async let recentlyAddedMangas = try await homeData.retrieveRecentlyAddedMangas()
+          let data = try await HomeData(
+            popularMangas: popularMangas,
+            recentlyAddedMangas: recentlyAddedMangas
+          )
           await send(.homeDataResponse(.success(data)))
         } catch: { error, send in
           await send(.homeDataResponse(.failure(error)))

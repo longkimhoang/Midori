@@ -20,6 +20,7 @@ let package = Package(
     .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.2.2"),
     .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
+    .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.0.0"),
   ],
   targets: [
     .target(
@@ -28,6 +29,7 @@ let package = Package(
         "Networking",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
       ],
       swiftSettings: [
         .enableExperimentalFeature("StrictConcurrency"),

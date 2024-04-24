@@ -11,4 +11,5 @@ import Models
 
 public struct HomeData: Equatable {
   public let popularMangas: IdentifiedArrayOf<Manga>
+  public let recentlyAddedMangas: IdentifiedArrayOf<Manga>
 }
