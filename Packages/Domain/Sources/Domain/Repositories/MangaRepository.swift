@@ -23,7 +23,7 @@ public struct MangaRepositoryClient: Sendable {
     _ descriptor: FetchDescriptor<Manga>
   ) throws -> [Manga]
   @DependencyEndpoint(method: "fetchMangas")
-  public var fetchMangasUsingIDs: @Sendable @MainActor (_ ids: [UUID]) throws -> [Manga]
+  public var fetchMangasUsingMangaIDs: @Sendable @MainActor (_ mangaIDs: [UUID]) throws -> [Manga]
 }
 
 extension MangaRepositoryClient: DependencyKey {
@@ -38,7 +38,7 @@ extension MangaRepositoryClient: DependencyKey {
       fetchMangasUsingDescriptor: { descriptor in
         try modelContainer.mainContext.fetch(descriptor)
       },
-      fetchMangasUsingIDs: { ids in
+      fetchMangasUsingMangaIDs: { ids in
         var descriptor = FetchDescriptor<Manga>()
         descriptor.predicate = #Predicate { ids.contains($0.mangaID) }
         descriptor.propertiesToFetch = [\.mangaID]
@@ -70,19 +70,18 @@ actor MangaImporter {
   typealias Manga = Models.Manga
 
   func importMangas(_ mangas: [Networking.Manga]) throws {
-    for manga in mangas {
+    let models = mangas.map { manga in
       let cover = manga.relationship(CoverRelationship.self).flatMap(\.referenced)
-      let model = Manga(
+      return Manga(
         mangaID: manga.id,
-        title: LocalizedString(manga.title),
+        title: .init(manga.title),
         overview: manga.description.map(LocalizedString.init),
         cover: cover.map { .init(fileName: $0.fileName, volume: $0.volume) },
         createdAt: manga.createdAt
       )
-
-      modelContext.insert(model)
     }
 
+    models.forEach { modelContext.insert($0) }
     try modelContext.save()
   }
 }

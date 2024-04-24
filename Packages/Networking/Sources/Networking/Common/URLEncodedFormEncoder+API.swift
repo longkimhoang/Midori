@@ -10,7 +10,7 @@ import Foundation
 
 extension URLEncodedFormEncoder {
   /// The  shared`URLEncodedFormEncoder` instance configured to encode MangaDex API responses.
-  static let api: URLEncodedFormEncoder = {
+  static var api: URLEncodedFormEncoder {
     let encoder = URLEncodedFormEncoder(
       dateEncoding: .custom { date in
         date.formatted(.iso8601.year().month().day().time(includingFractionalSeconds: false))
@@ -18,7 +18,5 @@ extension URLEncodedFormEncoder {
     )
 
     return encoder
-  }()
+  }
 }
-
-extension URLEncodedFormEncoder: @unchecked Sendable {}

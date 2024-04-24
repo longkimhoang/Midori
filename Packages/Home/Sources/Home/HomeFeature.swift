@@ -6,9 +6,12 @@
 //
 
 import ComposableArchitecture
+import Models
+import Networking
+import Foundation
 
 @Reducer
-public struct HomeFeature {
+public struct HomeFeature: Sendable {
   @ObservableState
   public struct State: Equatable {
     @CasePathable @dynamicMemberLookup
@@ -24,19 +27,20 @@ public struct HomeFeature {
     public init() {}
   }
 
-  public enum Action {
+  public enum Action: Sendable {
     case fetchHomeData
-    case homeDataResponse(Result<HomeData, any Error>)
+    case homeDataResponse(Result<HomeData.FetchDescriptor, any Error>)
     case path(StackActionOf<Path>)
   }
 
-  @Reducer
+  @Reducer(state: .equatable, .sendable, action: .sendable)
   public enum Path {
     case recentlyAdded
     case manga
   }
 
   @Dependency(\.homeData) var homeData
+  @Dependency(\.mangaRepository) var mangaRepository
 
   public init() {}
 
@@ -47,16 +51,27 @@ public struct HomeFeature {
         return .run { send in
           async let popularMangas = try await homeData.retrievePopularMangas()
           async let recentlyAddedMangas = try await homeData.retrieveRecentlyAddedMangas()
-          let data = try await HomeData(
-            popularMangas: popularMangas,
-            recentlyAddedMangas: recentlyAddedMangas
+
+          let descriptor = try await HomeData.FetchDescriptor(
+            popularMangaIDs: popularMangas.map(\.id),
+            recentlyAddedMangaIDs: recentlyAddedMangas.map(\.id)
           )
-          await send(.homeDataResponse(.success(data)))
+          await send(.homeDataResponse(.success(descriptor)))
         } catch: { error, send in
           await send(.homeDataResponse(.failure(error)))
         }
-      case let .homeDataResponse(.success(data)):
-        state.fetchStatus = .success(data)
+      case let .homeDataResponse(.success(descriptor)):
+        do {
+          let data = try MainActor.assumeIsolated {
+            try HomeData(
+              popularMangas: fetchMangas(ids: descriptor.popularMangaIDs),
+              recentlyAddedMangas: fetchMangas(ids: descriptor.recentlyAddedMangaIDs)
+            )
+          }
+          state.fetchStatus = .success(data)
+        } catch {
+          state.fetchStatus = .failure(reason: error.localizedDescription)
+        }
         return .none
       case let .homeDataResponse(.failure(error)):
         state.fetchStatus = .failure(reason: error.localizedDescription)
@@ -66,5 +81,12 @@ public struct HomeFeature {
       }
     }
     .forEach(\.path, action: \.path)
+  }
+
+  @MainActor
+  private func fetchMangas(ids: [UUID]) throws -> IdentifiedArrayOf<Models.Manga> {
+    try IdentifiedArray(
+      uniqueElements: mangaRepository.fetchMangas(mangaIDs: ids)
+    )
   }
 }

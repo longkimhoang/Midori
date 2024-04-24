@@ -27,6 +27,9 @@ let package = Package(
       dependencies: [
         "Home",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ],
+      swiftSettings: [
+        .enableExperimentalFeature("StrictConcurrency"),
       ]
     ),
     .target(

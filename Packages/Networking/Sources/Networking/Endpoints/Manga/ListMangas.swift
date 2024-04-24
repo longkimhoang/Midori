@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct ListMangasRequest: Encodable {
-  public enum Reference: String, Encodable {
+public struct ListMangasRequest: Encodable, Sendable {
+  public enum Reference: String, Encodable, Sendable {
     case manga
     case cover = "cover_art"
     case author
@@ -17,7 +17,7 @@ public struct ListMangasRequest: Encodable {
     case creator
   }
 
-  public struct Order: Encodable {
+  public struct Order: Encodable, Sendable {
     public let latestUploadChapter: SortOrder?
     public let followedCount: SortOrder?
     public let createdAt: SortOrder?
@@ -54,7 +54,7 @@ public struct ListMangasRequest: Encodable {
   }
 }
 
-public struct ListMangasResponse: Decodable {
+public struct ListMangasResponse: Decodable, Sendable {
   public let limit: Int
   public let offset: Int
   public let data: [Manga]
