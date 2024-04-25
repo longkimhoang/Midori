@@ -13,17 +13,30 @@ import XCTest
 final class HomeFeatureTests: XCTestCase {
   @MainActor
   func testFetchData() async {
+    let uuid = UUIDGenerator.incrementing
+    let popularMangas: IdentifiedArrayOf<Manga> = [
+      Manga(id: uuid(), name: "Popular Manga 1", description: "Popular Manga 1"),
+      Manga(id: uuid(), name: "Popular Manga 2", description: "Popular Manga 2"),
+    ]
+    let recentlyAddedMangas: IdentifiedArrayOf<Manga> = [
+      Manga(id: uuid(), name: "Recent Manga 1", description: "Recent Manga 1"),
+      Manga(id: uuid(), name: "Recent Manga 2", description: "Recent Manga 2"),
+    ]
     let store = TestStore(initialState: HomeFeature.State()) {
       HomeFeature()
     } withDependencies: {
-      $0.homeData.retrievePopularMangas = { [] }
+      $0.homeData.retrievePopularMangas = { popularMangas }
+      $0.homeData.retrieveRecentlyAddedMangas = { recentlyAddedMangas }
     }
 
     await store.send(\.fetchHomeData)
 
     await store.receive(\.homeDataResponse.success) {
       $0.fetchStatus = .success(
-        HomeData(popularMangas: [])
+        HomeData(
+          popularMangas: popularMangas,
+          recentlyAddedMangas: recentlyAddedMangas
+        )
       )
     }
   }
@@ -39,6 +52,7 @@ final class HomeFeatureTests: XCTestCase {
       $0.homeData.retrievePopularMangas = {
         throw MockError(errorDescription: "Mock")
       }
+      $0.homeData.retrieveRecentlyAddedMangas = { [] }
     }
 
     await store.send(\.fetchHomeData)

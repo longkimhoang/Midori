@@ -38,12 +38,18 @@ public extension LocalizedString {
 }
 
 extension LocalizedString: LosslessStringConvertible {
-  public init?(_ description: String) {
+  public init(_ description: String) {
     self.init(values: ["en": description])
   }
 
   public var description: String {
     @Dependency(\.locale.language.languageCode) var languageCode
     return self[languageCode: languageCode ?? .english]
+  }
+}
+
+extension LocalizedString: ExpressibleByStringLiteral {
+  public init(stringLiteral value: String) {
+    self.init(value)
   }
 }
