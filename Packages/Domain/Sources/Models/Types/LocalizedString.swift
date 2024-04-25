@@ -5,11 +5,12 @@
 //  Created by Long Kim on 24/4/24.
 //
 
+import Dependencies
 import Foundation
 import NonEmpty
 
 /// A string value with localized variants.
-public struct LocalizedString: Codable {
+public struct LocalizedString: Equatable, Codable, Sendable {
   var values: NonEmptyDictionary<String, String>
 
   public init(values: NonEmptyDictionary<String, String>) {
@@ -21,8 +22,18 @@ public extension LocalizedString {
   /// Gets the localized variant with the specified `languageCode`.
   ///
   /// This method returns the default variant if the specified variant was not found.
-  subscript(languageCode code: String) -> String {
-    values[code] ?? values.first.value
+  subscript(languageCode code: Locale.LanguageCode) -> String {
+    if let code = code.identifier(.alpha2), let value = values[code] {
+      value
+    } else {
+      values.first.value
+    }
+  }
+
+  /// Gets the localized variant corresponding to the specified `Locale`.
+  func localized(for locale: Locale) -> String {
+    let languageCode = locale.language.languageCode ?? .english
+    return self[languageCode: languageCode]
   }
 }
 
@@ -32,6 +43,7 @@ extension LocalizedString: LosslessStringConvertible {
   }
 
   public var description: String {
-    values.first.value
+    @Dependency(\.locale.language.languageCode) var languageCode
+    return self[languageCode: languageCode ?? .english]
   }
 }

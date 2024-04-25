@@ -19,11 +19,10 @@ public struct MangaRepositoryClient: Sendable {
 
   public var importMangas: @Sendable ([Networking.Manga]) async throws -> Void
   @DependencyEndpoint(method: "fetchMangas")
-  public var fetchMangasUsingDescriptor: @Sendable @MainActor (
-    _ descriptor: FetchDescriptor<Manga>
+  public var fetchMangasUsingIDs: @Sendable (
+    _ ids: [UUID],
+    _ context: ModelContext
   ) throws -> [Manga]
-  @DependencyEndpoint(method: "fetchMangas")
-  public var fetchMangasUsingMangaIDs: @Sendable @MainActor (_ mangaIDs: [UUID]) throws -> [Manga]
 }
 
 extension MangaRepositoryClient: DependencyKey {
@@ -35,25 +34,16 @@ extension MangaRepositoryClient: DependencyKey {
         let importer = MangaImporter(modelContainer: modelContainer)
         try await importer.importMangas(mangas)
       },
-      fetchMangasUsingDescriptor: { descriptor in
-        try modelContainer.mainContext.fetch(descriptor)
-      },
-      fetchMangasUsingMangaIDs: { ids in
-        var descriptor = FetchDescriptor<Manga>()
-        descriptor.predicate = #Predicate { ids.contains($0.mangaID) }
-        descriptor.propertiesToFetch = [\.mangaID]
-
-        let models = try IdentifiedArray(
-          uniqueElements: modelContainer.mainContext.fetch(descriptor),
-          id: \.mangaID
-        )
-
-        return ids.compactMap { models[id: $0] }
+      fetchMangasUsingIDs: { ids, context in
+        let descriptor = FetchDescriptor<Manga>(predicate: #Predicate { ids.contains($0.mangaID) })
+        return try context.fetch(descriptor)
       }
     )
   }
 
-  public static let testValue = MangaRepositoryClient()
+  public static var testValue: MangaRepositoryClient {
+    MangaRepositoryClient()
+  }
 }
 
 public extension DependencyValues {
@@ -63,7 +53,7 @@ public extension DependencyValues {
   }
 }
 
-// MARK: - Implementation
+// MARK: - Importer
 
 @ModelActor
 actor MangaImporter {

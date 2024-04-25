@@ -9,12 +9,7 @@ import Foundation
 import IdentifiedCollections
 import Models
 
-public struct HomeData: Equatable {
+public struct HomeData: Equatable, Sendable {
   public let popularMangas: IdentifiedArrayOf<Manga>
   public let recentlyAddedMangas: IdentifiedArrayOf<Manga>
-
-  public struct FetchDescriptor: Sendable {
-    public let popularMangaIDs: [UUID]
-    public let recentlyAddedMangaIDs: [UUID]
-  }
 }

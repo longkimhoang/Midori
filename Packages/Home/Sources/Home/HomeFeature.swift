@@ -6,16 +6,16 @@
 //
 
 import ComposableArchitecture
+import Foundation
 import Models
 import Networking
-import Foundation
 
 @Reducer
 public struct HomeFeature: Sendable {
   @ObservableState
-  public struct State: Equatable {
+  public struct State: Equatable, Sendable {
     @CasePathable @dynamicMemberLookup
-    public enum FetchStatus: Equatable {
+    public enum FetchStatus: Equatable, Sendable {
       case pending
       case success(HomeData)
       case failure(reason: String)
@@ -29,7 +29,7 @@ public struct HomeFeature: Sendable {
 
   public enum Action: Sendable {
     case fetchHomeData
-    case homeDataResponse(Result<HomeData.FetchDescriptor, any Error>)
+    case homeDataResponse(Result<HomeData, any Error>)
     case path(StackActionOf<Path>)
   }
 
@@ -40,7 +40,6 @@ public struct HomeFeature: Sendable {
   }
 
   @Dependency(\.homeData) var homeData
-  @Dependency(\.mangaRepository) var mangaRepository
 
   public init() {}
 
@@ -52,26 +51,16 @@ public struct HomeFeature: Sendable {
           async let popularMangas = try await homeData.retrievePopularMangas()
           async let recentlyAddedMangas = try await homeData.retrieveRecentlyAddedMangas()
 
-          let descriptor = try await HomeData.FetchDescriptor(
-            popularMangaIDs: popularMangas.map(\.id),
-            recentlyAddedMangaIDs: recentlyAddedMangas.map(\.id)
+          let data = try await HomeData(
+            popularMangas: popularMangas,
+            recentlyAddedMangas: recentlyAddedMangas
           )
-          await send(.homeDataResponse(.success(descriptor)))
+          await send(.homeDataResponse(.success(data)))
         } catch: { error, send in
           await send(.homeDataResponse(.failure(error)))
         }
-      case let .homeDataResponse(.success(descriptor)):
-        do {
-          let data = try MainActor.assumeIsolated {
-            try HomeData(
-              popularMangas: fetchMangas(ids: descriptor.popularMangaIDs),
-              recentlyAddedMangas: fetchMangas(ids: descriptor.recentlyAddedMangaIDs)
-            )
-          }
-          state.fetchStatus = .success(data)
-        } catch {
-          state.fetchStatus = .failure(reason: error.localizedDescription)
-        }
+      case let .homeDataResponse(.success(data)):
+        state.fetchStatus = .success(data)
         return .none
       case let .homeDataResponse(.failure(error)):
         state.fetchStatus = .failure(reason: error.localizedDescription)
@@ -81,12 +70,5 @@ public struct HomeFeature: Sendable {
       }
     }
     .forEach(\.path, action: \.path)
-  }
-
-  @MainActor
-  private func fetchMangas(ids: [UUID]) throws -> IdentifiedArrayOf<Models.Manga> {
-    try IdentifiedArray(
-      uniqueElements: mangaRepository.fetchMangas(mangaIDs: ids)
-    )
   }
 }
