@@ -83,6 +83,46 @@ extension HomeCollectionView.Coordinator {
         )
       }
     }
+
+    // Supplementary views
+
+    let sectionHeaderRegistration =
+      UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
+        elementKind: UICollectionView.elementKindSectionHeader
+      ) { supplementaryView, _, indexPath in
+        guard let sectionIdentifier = HomeCollectionView.SectionIdentifier(
+          rawValue: indexPath.section
+        ) else {
+          return
+        }
+
+        let title = switch sectionIdentifier {
+        case .popular: "Popular new titles"
+        case .latestUpdates: "Latest updates"
+        case .recentlyAdded: "Recently added"
+        }
+
+        supplementaryView.contentConfiguration = UIHostingConfiguration {
+          HStack {
+            Text(title)
+            Spacer()
+          }
+          .font(.title)
+          .multilineTextAlignment(.leading)
+        }
+        .margins(.horizontal, 0)
+      }
+
+    dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+      if elementKind == UICollectionView.elementKindSectionHeader {
+        return collectionView.dequeueConfiguredReusableSupplementary(
+          using: sectionHeaderRegistration,
+          for: indexPath
+        )
+      }
+
+      return nil
+    }
   }
 
   func updateDataSource(with data: HomeData, animated: Bool = true) {

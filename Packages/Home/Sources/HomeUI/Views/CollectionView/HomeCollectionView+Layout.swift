@@ -55,6 +55,7 @@ extension HomeCollectionView {
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 32
     section.orthogonalScrollingBehavior = .groupPaging
+    section.boundarySupplementaryItems = [sectionHeaderItem()]
 
     return section
   }
@@ -84,6 +85,7 @@ extension HomeCollectionView {
     // Section
     let section = NSCollectionLayoutSection(group: group)
     section.orthogonalScrollingBehavior = .groupPaging
+    section.boundarySupplementaryItems = [sectionHeaderItem()]
 
     return section
   }
@@ -107,7 +109,22 @@ extension HomeCollectionView {
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 16
     section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+    section.boundarySupplementaryItems = [sectionHeaderItem()]
 
     return section
+  }
+
+  static func sectionHeaderItem() -> NSCollectionLayoutBoundarySupplementaryItem {
+    let itemSize = NSCollectionLayoutSize(
+      widthDimension: .fractionalWidth(1),
+      heightDimension: .estimated(44)
+    )
+    let item = NSCollectionLayoutBoundarySupplementaryItem(
+      layoutSize: itemSize,
+      elementKind: UICollectionView.elementKindSectionHeader,
+      alignment: .topLeading
+    )
+
+    return item
   }
 }
