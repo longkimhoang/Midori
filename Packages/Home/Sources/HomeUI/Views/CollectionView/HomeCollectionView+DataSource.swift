@@ -16,9 +16,9 @@ extension HomeCollectionView.Coordinator {
 
         cell.preservesSuperviewLayoutMargins = true
         cell.contentConfiguration = UIHostingConfiguration {
-          Text(manga.name.localized(for: .autoupdatingCurrent))
+          PopularMangaView(manga: manga)
         }
-        .background(.red)
+        .margins(.all, 0)
       }
 
     let latestChaptersCellRegistration =
