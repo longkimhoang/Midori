@@ -29,8 +29,8 @@ extension HomeCollectionView.ViewController {
       var retryButtonConfiguration = UIButton.Configuration.borderless()
       retryButtonConfiguration.title = "Retry"
       configuration.button = retryButtonConfiguration
-      configuration.buttonProperties.primaryAction = UIAction { _ in
-        // TODO: Add retry action
+      configuration.buttonProperties.primaryAction = UIAction { [weak self] _ in
+        self?.coordinator.store.send(.fetchHomeData)
       }
 
       contentUnavailableConfiguration = configuration
