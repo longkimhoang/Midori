@@ -59,6 +59,7 @@ public struct HomeFeature: Sendable {
         } catch: { error, send in
           await send(.homeDataResponse(.failure(error)))
         }
+        .animation()
       case let .homeDataResponse(.success(data)):
         state.fetchStatus = .success(data)
         return .none

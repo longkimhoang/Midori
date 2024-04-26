@@ -17,9 +17,13 @@ public struct HomeView: View {
   }
 
   public var body: some View {
-    Text("Home")
-      .task {
-        await store.send(.fetchHomeData).finish()
-      }
+    NavigationStack {
+      HomeCollectionView(store: store)
+        .navigationTitle("Hehe")
+        .ignoresSafeArea()
+        .task {
+          await store.send(.fetchHomeData).finish()
+        }
+    }
   }
 }
