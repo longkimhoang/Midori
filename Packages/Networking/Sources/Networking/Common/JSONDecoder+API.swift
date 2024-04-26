@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 
 extension JSONDecoder {
-  /// The  shared`JSONDecoder` instance configured to decode MangaDex API responses.
+  /// The  shared `JSONDecoder` instance configured to decode MangaDex API responses.
   static let api: JSONDecoder = {
     let formatStyle = Date.ISO8601FormatStyle().year().month().day()
       .time(includingFractionalSeconds: false)
@@ -25,6 +25,6 @@ extension JSONDecoder {
 }
 
 extension DataDecoder where Self == JSONDecoder {
-  /// The  shared`DataDecoder` instance configured to decode MangaDex API responses.
+  /// The  shared `DataDecoder` instance configured to decode MangaDex API responses.
   static var api: JSONDecoder { .api }
 }

@@ -35,3 +35,10 @@ public struct CoverRelationship: Relationship {
   public let id: UUID
   public let attributes: Cover.Attributes?
 }
+
+public struct MangaRelationship: Relationship {
+  public typealias Referenced = Manga
+
+  public let id: UUID
+  public let attributes: Manga.Attributes?
+}
