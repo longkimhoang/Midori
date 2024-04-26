@@ -17,6 +17,7 @@ extension HomeCollectionView {
 
   enum ItemIdentifier: Hashable {
     case popular(UUID)
+    case latestUpdates(UUID)
     case recentlyAdded(UUID)
   }
 }
