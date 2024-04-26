@@ -49,10 +49,12 @@ public struct HomeFeature: Sendable {
       case .fetchHomeData:
         return .run { send in
           async let popularMangas = try await homeData.retrievePopularMangas()
+          async let latestChapters = try await homeData.retrieveLatestChapters()
           async let recentlyAddedMangas = try await homeData.retrieveRecentlyAddedMangas()
 
           let data = try await HomeData(
             popularMangas: popularMangas,
+            latestChapters: latestChapters,
             recentlyAddedMangas: recentlyAddedMangas
           )
           await send(.homeDataResponse(.success(data)))

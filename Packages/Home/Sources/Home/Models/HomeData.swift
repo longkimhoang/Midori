@@ -11,5 +11,6 @@ import Models
 
 public struct HomeData: Equatable, Sendable {
   public let popularMangas: IdentifiedArrayOf<Manga>
+  public let latestChapters: IdentifiedArrayOf<Chapter>
   public let recentlyAddedMangas: IdentifiedArrayOf<Manga>
 }

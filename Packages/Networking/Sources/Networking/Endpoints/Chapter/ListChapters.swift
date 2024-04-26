@@ -54,4 +54,5 @@ public struct ListChaptersRequest: Encodable {
 public struct ListChaptersResponse: Decodable {
   public let limit: Int
   public let offset: Int
+  public let data: [Chapter]
 }
