@@ -17,11 +17,11 @@ public final class Manga {
   public var createdAt: Date
 
   public init(
-    mangaID: UUID,
+    mangaID: UUID = .init(),
     title: LocalizedString,
     overview: LocalizedString? = nil,
     cover: Cover? = nil,
-    createdAt: Date
+    createdAt: Date = .now
   ) {
     self.mangaID = mangaID
     self.title = title
@@ -29,4 +29,8 @@ public final class Manga {
     self.cover = cover
     self.createdAt = createdAt
   }
+
+  // MARK: Relationships
+
+  @Relationship(inverse: \Chapter.manga) public var chapters: [Chapter] = []
 }
