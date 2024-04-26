@@ -1,5 +1,5 @@
 //
-//  MangaRepository.swift
+//  MangaRepositoryClient.swift
 //
 //
 //  Created by Long Kim on 24/4/24.
