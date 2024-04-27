@@ -8,10 +8,12 @@
 import Foundation
 
 public struct Cover: Codable {
+  public let id: UUID
   public let fileName: String
   public let volume: String?
 
-  public init(fileName: String, volume: String? = nil) {
+  public init(id: UUID, fileName: String, volume: String? = nil) {
+    self.id = id
     self.fileName = fileName
     self.volume = volume
   }

@@ -5,20 +5,31 @@
 //  Created by Long Kim on 26/4/24.
 //
 
+import Common
 import Home
+import Nuke
 import SwiftUI
 
 extension HomeCollectionView.Coordinator {
   func configureDataSource(collectionView: UICollectionView) {
+    let pipeline = ImagePipeline.default
     let popularMangaCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-        cell, _, manga in
+        cell, indexPath, manga in
 
-        cell.preservesSuperviewLayoutMargins = true
+        let request = ImageRequest(url: manga.coverImageURL)
+        let image = pipeline.cache.cachedImage(for: request)?.image
         cell.contentConfiguration = UIHostingConfiguration {
-          PopularMangaView(manga: manga)
+          PopularMangaView(manga: manga, coverImage: image.map(Image.init))
         }
         .margins(.all, 0)
+
+        if image == nil {
+          Task { [weak self] in
+            _ = try await pipeline.image(for: request)
+            await self?.reconfigureItems(at: [indexPath])
+          }
+        }
       }
 
     let latestChaptersCellRegistration =
@@ -139,5 +150,13 @@ extension HomeCollectionView.Coordinator {
     )
 
     dataSource.apply(snapshot, animatingDifferences: animated)
+  }
+
+  @MainActor
+  private func reconfigureItems(at indexPaths: [IndexPath]) {
+    var snapshot = dataSource.snapshot()
+    snapshot.reconfigureItems(indexPaths.compactMap(dataSource.itemIdentifier(for:)))
+
+    dataSource.apply(snapshot, animatingDifferences: false)
   }
 }

@@ -66,7 +66,7 @@ actor MangaImporter {
         mangaID: manga.id,
         title: .init(manga.title),
         overview: manga.description.map(LocalizedString.init),
-        cover: cover.map { .init(fileName: $0.fileName, volume: $0.volume) },
+        cover: cover.map { .init(id: $0.id, fileName: $0.fileName, volume: $0.volume) },
         createdAt: manga.createdAt
       )
     }
