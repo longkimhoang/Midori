@@ -15,7 +15,9 @@ extension HomeCollectionView.Coordinator {
     let pipeline = ImagePipeline.default
     let popularMangaCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-        cell, indexPath, manga in
+        [weak self] cell, indexPath, manga in
+
+        guard let self else { return }
 
         let request = ImageRequest(url: manga.coverImageURL)
         let image = pipeline.cache.cachedImage(for: request)?.image
@@ -25,9 +27,9 @@ extension HomeCollectionView.Coordinator {
         .margins(.all, 0)
 
         if image == nil {
-          Task { [weak self] in
+          Task {
             _ = try await pipeline.image(for: request)
-            await self?.reconfigureItems(at: [indexPath])
+            await self.reconfigureItems(at: [indexPath])
           }
         }
       }
