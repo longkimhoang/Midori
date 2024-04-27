@@ -19,7 +19,7 @@ public struct HomeView: View {
   public var body: some View {
     NavigationStack {
       HomeCollectionView(store: store)
-        .navigationTitle("Hehe")
+        .navigationTitle(Text("Home", bundle: .module))
         .ignoresSafeArea()
         .task {
           await store.send(.fetchHomeData).finish()

@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "Home",
+  defaultLocalization: "en",
   platforms: [.iOS(.v17)],
   products: [
     // Products define the executables and libraries a package produces, making them visible to
@@ -23,6 +24,7 @@ let package = Package(
     .package(path: "Domain"),
     .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
+    .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -46,6 +48,7 @@ let package = Package(
         "Home",
         .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "Algorithms", package: "swift-algorithms"),
       ]
     ),
     .testTarget(

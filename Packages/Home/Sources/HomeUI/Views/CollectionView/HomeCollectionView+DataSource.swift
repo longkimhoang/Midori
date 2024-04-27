@@ -36,13 +36,23 @@ extension HomeCollectionView.Coordinator {
 
     let latestChaptersCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Chapter> {
-        cell, _, chapter in
+        [weak self] cell, indexPath, chapter in
 
-        cell.preservesSuperviewLayoutMargins = true
+        guard let self else { return }
+
+        let request = ImageRequest(url: chapter.coverImageURL)
+        let image = pipeline.cache.cachedImage(for: request)?.image
         cell.contentConfiguration = UIHostingConfiguration {
-          Text(chapter.title ?? "Oneshot")
+          LatestChapterView(chapter: chapter, coverImage: image.map(Image.init))
         }
-        .background(.blue)
+        .margins(.all, 0)
+
+        if image == nil {
+          Task {
+            _ = try await pipeline.image(for: request)
+            await self.reconfigureItems(at: [indexPath])
+          }
+        }
       }
 
     let recentlyAddedMangaCellRegistration =

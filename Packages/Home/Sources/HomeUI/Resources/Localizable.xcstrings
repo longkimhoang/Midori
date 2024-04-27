@@ -1,7 +1,21 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Artist name here" : {
 
+    },
+    "Ch. %@" : {
+      "comment" : "Shortform for chapter"
+    },
+    "Home" : {
+
+    },
+    "Oneshot" : {
+
+    },
+    "Vol. %@" : {
+      "comment" : "Shortform for volume"
+    }
   },
   "version" : "1.0"
 }
