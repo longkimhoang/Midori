@@ -127,21 +127,28 @@ extension HomeCollectionView.Coordinator {
           return
         }
 
-        let title = switch sectionIdentifier {
-        case .popular: "Popular new titles"
-        case .latestUpdates: "Latest updates"
-        case .recentlyAdded: "Recently added"
-        }
+        let topMargins: CGFloat = sectionIdentifier == .popular ? 16 : 8
 
         supplementaryView.contentConfiguration = UIHostingConfiguration {
-          HStack {
-            Text(title)
-            Spacer()
+          switch sectionIdentifier {
+          case .popular:
+            HStack {
+              Text("Popular new titles", bundle: .module)
+              Spacer()
+            }
+            .font(.title)
+          case .latestUpdates:
+            SectionTitleButton("Latest updates") {
+              // TODO: Navigate to latest updates
+            }
+          case .recentlyAdded:
+            SectionTitleButton("Recently added") {
+              // TODO: Navigate to recently added
+            }
           }
-          .font(.title)
-          .multilineTextAlignment(.leading)
         }
         .margins(.horizontal, 0)
+        .margins(.top, topMargins)
       }
 
     dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
