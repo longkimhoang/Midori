@@ -9,7 +9,6 @@ import Home
 import SwiftUI
 
 struct PopularMangaView: View {
-  @Environment(\.pixelLength) private var pixelLength
   @Environment(\.locale) private var locale
 
   let manga: Manga
