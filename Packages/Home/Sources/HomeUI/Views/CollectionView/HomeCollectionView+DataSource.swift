@@ -57,13 +57,21 @@ extension HomeCollectionView.Coordinator {
 
     let recentlyAddedMangaCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-        cell, _, manga in
+        cell, indexPath, manga in
 
-        cell.preservesSuperviewLayoutMargins = true
+        let request = ImageRequest(url: manga.coverImageURL)
+        let image = pipeline.cache.cachedImage(for: request)?.image
         cell.contentConfiguration = UIHostingConfiguration {
-          Text(manga.name.localized(for: .autoupdatingCurrent))
+          RecentlyAddedMangaView(manga: manga, coverImage: image.map(Image.init))
         }
-        .background(.green)
+        .margins(.all, 0)
+
+        if image == nil {
+          Task {
+            _ = try await pipeline.image(for: request)
+            await self.reconfigureItems(at: [indexPath])
+          }
+        }
       }
 
     dataSource = DataSource(collectionView: collectionView) {
