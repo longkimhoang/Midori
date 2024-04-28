@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Artist name here" : {
-
-    },
     "Ch. %@" : {
       "comment" : "Shortform for chapter"
     },

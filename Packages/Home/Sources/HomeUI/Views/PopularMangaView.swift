@@ -5,6 +5,7 @@
 //  Created by Long Kim on 27/4/24.
 //
 
+import Algorithms
 import Home
 import SwiftUI
 
@@ -48,9 +49,10 @@ struct PopularMangaView: View {
               .font(.title2)
               .lineLimit(3)
 
-            Text("Artist name here")
+            Text(subtitleText)
               .font(.title3)
               .foregroundStyle(.secondary)
+              .lineLimit(2)
           }
         }
       }
@@ -59,6 +61,10 @@ struct PopularMangaView: View {
     }
     .clipShape(.rect(cornerRadius: 16))
   }
+
+  private var subtitleText: String {
+    [manga.authorName, manga.artistName].compacted().formatted(.list(type: .and, width: .narrow))
+  }
 }
 
 #Preview("Without Image", traits: .sizeThatFitsLayout) {
@@ -66,7 +72,8 @@ struct PopularMangaView: View {
     manga: .init(
       id: UUID(),
       name: "Test manga",
-      description: "Test description"
+      description: "Test description",
+      authorName: "An author"
     )
   )
   .padding()
@@ -78,7 +85,8 @@ struct PopularMangaView: View {
     manga: .init(
       id: UUID(),
       name: "Test manga",
-      description: "Test description"
+      description: "Test description",
+      authorName: "An author"
     ),
     coverImage: Image(.previewCover)
   )

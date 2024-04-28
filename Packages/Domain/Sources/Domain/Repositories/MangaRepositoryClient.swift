@@ -35,7 +35,9 @@ extension MangaRepositoryClient: DependencyKey {
         try await importer.importMangas(mangas)
       },
       fetchMangasUsingIDs: { ids, context in
-        let descriptor = FetchDescriptor<Manga>(predicate: #Predicate { ids.contains($0.mangaID) })
+        let descriptor = FetchDescriptor<Manga>(
+          predicate: #Predicate { ids.contains($0.mangaID) && $0.author != nil }
+        )
         return try context.fetch(descriptor)
       }
     )
