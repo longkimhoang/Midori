@@ -94,4 +94,15 @@ final class HomeFeatureTests: XCTestCase {
       $0.fetchStatus = .failure(reason: "Mock")
     }
   }
+
+  @MainActor
+  func testNavigateToRecentlyAdded() async {
+    let store = TestStore(initialState: HomeFeature.State()) {
+      HomeFeature()
+    }
+
+    await store.send(.recentlyAddedButtonTapped) {
+      $0.path.append(.recentlyAdded(.init()))
+    }
+  }
 }

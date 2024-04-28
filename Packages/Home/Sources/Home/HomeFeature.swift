@@ -38,7 +38,7 @@ public struct HomeFeature: Sendable {
 
   @Reducer(state: .equatable, .sendable, action: .sendable)
   public enum Path {
-    case recentlyAdded
+    case recentlyAdded(RecentlyAddedFeature)
     case manga
   }
 
@@ -76,6 +76,7 @@ public struct HomeFeature: Sendable {
       case .latestUpdatesButtonTapped:
         return .none
       case .recentlyAddedButtonTapped:
+        state.path.append(.recentlyAdded(.init()))
         return .none
       case .path:
         return .none
