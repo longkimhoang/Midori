@@ -16,12 +16,18 @@ struct RelationshipCoder: HelperCoder {
       return try CoverRelationship(from: decoder)
     case .manga:
       return try MangaRelationship(from: decoder)
+    case .author:
+      return try AuthorRelationship(from: decoder)
+    case .artist:
+      return try ArtistRelationship(from: decoder)
     }
   }
 
   enum Kind: String, Decodable {
     case cover = "cover_art"
     case manga
+    case author
+    case artist
   }
 
   enum CodingKeys: String, CodingKey {

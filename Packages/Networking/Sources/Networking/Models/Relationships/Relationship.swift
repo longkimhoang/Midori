@@ -42,3 +42,17 @@ public struct MangaRelationship: Relationship {
   public let id: UUID
   public let attributes: Manga.Attributes?
 }
+
+public struct AuthorRelationship: Relationship {
+  public typealias Referenced = Author
+
+  public let id: UUID
+  public let attributes: Author.Attributes?
+}
+
+public struct ArtistRelationship: Relationship {
+  public typealias Referenced = Author
+
+  public let id: UUID
+  public let attributes: Author.Attributes?
+}
