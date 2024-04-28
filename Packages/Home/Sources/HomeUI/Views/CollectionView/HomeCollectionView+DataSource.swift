@@ -129,7 +129,7 @@ extension HomeCollectionView.Coordinator {
 
         let topMargins: CGFloat = sectionIdentifier == .popular ? 16 : 8
 
-        supplementaryView.contentConfiguration = UIHostingConfiguration {
+        supplementaryView.contentConfiguration = UIHostingConfiguration { [weak self] in
           switch sectionIdentifier {
           case .popular:
             HStack {
@@ -139,11 +139,11 @@ extension HomeCollectionView.Coordinator {
             .font(.title)
           case .latestUpdates:
             SectionTitleButton("Latest updates") {
-              // TODO: Navigate to latest updates
+              self?.store.send(.latestUpdatesButtonTapped)
             }
           case .recentlyAdded:
             SectionTitleButton("Recently added") {
-              // TODO: Navigate to recently added
+              self?.store.send(.recentlyAddedButtonTapped)
             }
           }
         }

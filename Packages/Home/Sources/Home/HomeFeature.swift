@@ -30,6 +30,9 @@ public struct HomeFeature: Sendable {
   public enum Action: Sendable {
     case fetchHomeData
     case homeDataResponse(Result<HomeData, any Error>)
+    case mangaTapped(Manga)
+    case latestUpdatesButtonTapped
+    case recentlyAddedButtonTapped
     case path(StackActionOf<Path>)
   }
 
@@ -67,6 +70,12 @@ public struct HomeFeature: Sendable {
         return .none
       case let .homeDataResponse(.failure(error)):
         state.fetchStatus = .failure(reason: error.localizedDescription)
+        return .none
+      case let .mangaTapped(manga):
+        return .none
+      case .latestUpdatesButtonTapped:
+        return .none
+      case .recentlyAddedButtonTapped:
         return .none
       case .path:
         return .none

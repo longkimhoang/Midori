@@ -36,7 +36,7 @@ final class HomeFeatureTests: XCTestCase {
         volume: "1",
         mangaTitle: "Manga 1",
         coverImageURL: nil
-      )
+      ),
     ]
     let recentlyAddedMangas: IdentifiedArrayOf<Manga> = [
       Manga(
