@@ -9,14 +9,11 @@ import Dependencies
 import DependenciesMacros
 import Foundation
 import IdentifiedCollections
-import Models
 import Networking
 import SwiftData
 
 @DependencyClient
 public struct MangaRepositoryClient: Sendable {
-  public typealias Manga = Models.Manga
-
   public var importMangas: @Sendable ([Networking.Manga]) async throws -> Void
   @DependencyEndpoint(method: "fetchMangas")
   public var fetchMangasUsingIDs: @Sendable (

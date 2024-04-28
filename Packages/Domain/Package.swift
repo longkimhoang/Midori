@@ -11,10 +11,6 @@ let package = Package(
       name: "Domain",
       targets: ["Domain"]
     ),
-    .library(
-      name: "Models",
-      targets: ["Models"]
-    ),
   ],
   dependencies: [
     .package(path: "Networking"),
@@ -30,6 +26,7 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
         .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+        .product(name: "NonEmpty", package: "swift-nonempty"),
       ],
       swiftSettings: [
         .enableExperimentalFeature("StrictConcurrency"),
@@ -38,13 +35,6 @@ let package = Package(
     .testTarget(
       name: "DomainTests",
       dependencies: ["Domain"]
-    ),
-    .target(
-      name: "Models",
-      dependencies: [
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "NonEmpty", package: "swift-nonempty"),
-      ]
     ),
   ]
 )

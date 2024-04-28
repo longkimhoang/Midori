@@ -9,14 +9,11 @@ import Dependencies
 import DependenciesMacros
 import Foundation
 import IdentifiedCollections
-import Models
 import Networking
 import SwiftData
 
 @DependencyClient
 public struct ChapterRepositoryClient: Sendable {
-  public typealias Chapter = Models.Chapter
-
   public var importChapters: @Sendable (_ chapters: [Networking.Chapter]) async throws -> Void
   @DependencyEndpoint(method: "fetchChapters")
   public var fetchChaptersUsingIDs: @Sendable (
@@ -57,9 +54,6 @@ public extension DependencyValues {
 
 @ModelActor
 actor ChapterRepository {
-  typealias Manga = Models.Manga
-  typealias Chapter = Models.Chapter
-
   func importChapters(_ chapters: [Networking.Chapter]) throws {
     // Fetch mangas to set up relationship to the chapter
     let mangaIDs = chapters.compactMap { $0.relationship(MangaRelationship.self) }.map(\.id)

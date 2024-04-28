@@ -5,8 +5,8 @@
 //  Created by Long Kim on 26/4/24.
 //
 
+import Domain
 import Foundation
-import Models
 
 public struct Chapter: Equatable, Identifiable, Sendable {
   public let id: UUID

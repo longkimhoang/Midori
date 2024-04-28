@@ -7,7 +7,6 @@
 
 import Foundation
 import IdentifiedCollections
-import Models
 
 public struct HomeData: Equatable, Sendable {
   public let popularMangas: IdentifiedArrayOf<Manga>

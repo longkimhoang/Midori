@@ -36,7 +36,6 @@ let package = Package(
         "Domain",
         "MangaList",
         "Networking",
-        .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       swiftSettings: [
@@ -48,7 +47,6 @@ let package = Package(
       dependencies: [
         "Common",
         "Home",
-        .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Algorithms", package: "swift-algorithms"),
       ]
