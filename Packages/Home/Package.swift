@@ -22,6 +22,7 @@ let package = Package(
   dependencies: [
     .package(path: "Common"),
     .package(path: "Domain"),
+    .package(path: "MangaList"),
     .package(path: "Networking"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
     .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
@@ -33,6 +34,7 @@ let package = Package(
       name: "Home",
       dependencies: [
         "Domain",
+        "MangaList",
         "Networking",
         .product(name: "Models", package: "Domain"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

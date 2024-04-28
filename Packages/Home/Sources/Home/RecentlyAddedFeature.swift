@@ -7,15 +7,22 @@
 
 import ComposableArchitecture
 import Foundation
+import MangaList
 
 @Reducer
 public struct RecentlyAddedFeature: Sendable {
   @ObservableState
-  public struct State: Equatable, Sendable {}
+  public struct State: Equatable, Sendable {
+    public var mangaList = MangaListFeature.State()
+  }
 
-  public enum Action: Sendable {}
+  public enum Action: Sendable {
+    case mangaList(MangaListFeature.Action)
+  }
 
   public var body: some ReducerOf<Self> {
-    EmptyReducer()
+    Scope(state: \.mangaList, action: \.mangaList) {
+      MangaListFeature()
+    }
   }
 }
