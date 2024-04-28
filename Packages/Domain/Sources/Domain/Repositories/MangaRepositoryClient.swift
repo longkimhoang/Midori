@@ -57,18 +57,39 @@ public extension DependencyValues {
 
 @ModelActor
 actor MangaImporter {
-  typealias Manga = Models.Manga
-
   func importMangas(_ mangas: [Networking.Manga]) throws {
     let models = mangas.map { manga in
       let cover = manga.relationship(CoverRelationship.self).flatMap(\.referenced)
-      return Manga(
+      let author = manga.relationship(AuthorRelationship.self).flatMap(\.referenced)
+      let artist = manga.relationship(ArtistRelationship.self).flatMap(\.referenced)
+      let model = Manga(
         mangaID: manga.id,
         title: .init(manga.title),
         overview: manga.description.map(LocalizedString.init),
         cover: cover.map { .init(id: $0.id, fileName: $0.fileName, volume: $0.volume) },
         createdAt: manga.createdAt
       )
+
+      if let author {
+        let authorModel = Author(
+          authorID: author.id,
+          name: author.name,
+          imageURL: author.imageURL
+        )
+
+        model.author = authorModel
+      }
+
+      // Artist might be the same as author, in that case
+      if let artist, artist.id != author?.id {
+        model.artist = Artist(
+          artistID: artist.id,
+          name: artist.name,
+          imageURL: artist.imageURL
+        )
+      }
+
+      return model
     }
 
     models.forEach { modelContext.insert($0) }

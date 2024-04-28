@@ -33,6 +33,6 @@ public final class Manga {
   // MARK: Relationships
 
   @Relationship(inverse: \Chapter.manga) public var chapters: [Chapter] = []
-  @Relationship(inverse: \Author.mangas) public var author: Author?
-  @Relationship(inverse: \Author.mangas) public var artist: Author?
+  @Relationship public var author: Author?
+  @Relationship public var artist: Artist?
 }
