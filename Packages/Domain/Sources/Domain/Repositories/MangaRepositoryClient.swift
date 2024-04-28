@@ -20,6 +20,11 @@ public struct MangaRepositoryClient: Sendable {
     _ ids: [UUID],
     _ context: ModelContext
   ) throws -> [Manga]
+  @DependencyEndpoint(method: "fetchMangas")
+  public var fetchMangasUsingDescriptor: @Sendable (
+    _ descriptor: FetchDescriptor<Manga>,
+    _ context: ModelContext
+  ) throws -> [Manga]
 }
 
 extension MangaRepositoryClient: DependencyKey {
@@ -36,6 +41,9 @@ extension MangaRepositoryClient: DependencyKey {
           predicate: #Predicate { ids.contains($0.mangaID) && $0.author != nil }
         )
         return try context.fetch(descriptor)
+      },
+      fetchMangasUsingDescriptor: { descriptor, context in
+        try context.fetch(descriptor)
       }
     )
   }
