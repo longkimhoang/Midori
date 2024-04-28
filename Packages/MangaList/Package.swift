@@ -13,12 +13,14 @@ let package = Package(
     ),
   ],
   dependencies: [
+    .package(path: "Domain"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
   ],
   targets: [
     .target(
       name: "MangaList",
       dependencies: [
+        "Domain",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       swiftSettings: [
