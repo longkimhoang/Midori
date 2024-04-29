@@ -5,11 +5,16 @@ import PackageDescription
 
 let package = Package(
   name: "MangaList",
+  defaultLocalization: "en",
   platforms: [.iOS(.v17)],
   products: [
     .library(
       name: "MangaList",
       targets: ["MangaList"]
+    ),
+    .library(
+      name: "MangaListUI",
+      targets: ["MangaListUI"]
     ),
   ],
   dependencies: [
@@ -30,6 +35,12 @@ let package = Package(
     .testTarget(
       name: "MangaListTests",
       dependencies: ["MangaList"]
+    ),
+    .target(
+      name: "MangaListUI",
+      dependencies: [
+        "MangaList",
+      ]
     ),
   ]
 )

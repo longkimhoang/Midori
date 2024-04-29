@@ -47,8 +47,8 @@ let package = Package(
       dependencies: [
         "Common",
         "Home",
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Algorithms", package: "swift-algorithms"),
+        .product(name: "MangaListUI", package: "MangaList"),
       ]
     ),
     .testTarget(

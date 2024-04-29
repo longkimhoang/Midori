@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Home
+import MangaListUI
 import SwiftUI
 
 struct RecentlyAddedView: View {
@@ -15,13 +16,11 @@ struct RecentlyAddedView: View {
   @Bindable var store: StoreOf<RecentlyAddedFeature>
 
   var body: some View {
-    List(store.mangaList.mangas) {
-      Text($0.title.localized(for: locale))
-    }
-    .navigationTitle(Text("Recently Added", bundle: .module))
-    .toolbarTitleDisplayMode(.inline)
-    .task {
-      await store.send(.fetchMangas).finish()
-    }
+    MangaListView(store: store.scope(state: \.mangaList, action: \.mangaList))
+      .navigationTitle(Text("Recently Added", bundle: .module))
+      .toolbarTitleDisplayMode(.inline)
+      .task {
+        await store.send(.fetchMangas).finish()
+      }
   }
 }
