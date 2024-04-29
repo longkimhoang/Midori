@@ -17,7 +17,7 @@ public struct MangaListView: View {
   }
 
   public var body: some View {
-    Text("Manga list")
+    MangaListCollectionView(store: store)
       .ignoresSafeArea()
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
@@ -31,6 +31,7 @@ public struct MangaListView: View {
             Text("Change layout", bundle: .module)
           }
           .pickerStyle(.segmented)
+          .help(Text("Changes the layout of the list view"))
         }
       }
   }

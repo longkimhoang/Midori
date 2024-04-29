@@ -14,7 +14,10 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
   func makeUIViewController(context: Context) -> ViewController {
     let initialLayout = store.withState(\.layout)
-    return ViewController(initialLayout: initialLayout, coordinator: context.coordinator)
+    let viewController = ViewController(initialLayout: initialLayout, coordinator: context.coordinator)
+    context.coordinator.configureDataSource(collectionView: viewController.collectionView)
+
+    return viewController
   }
 
   func updateUIViewController(_: ViewController, context _: Context) {}
@@ -45,7 +48,11 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
   }
 
   final class Coordinator: NSObject {
+    typealias DataSource = UICollectionViewDiffableDataSource<SectionIdentifier, Manga.ID>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, Manga.ID>
+
     let store: StoreOf<MangaListFeature>
+    var dataSource: DataSource!
 
     init(store: StoreOf<MangaListFeature>) {
       self.store = store
