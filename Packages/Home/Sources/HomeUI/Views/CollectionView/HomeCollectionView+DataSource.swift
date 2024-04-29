@@ -127,7 +127,11 @@ extension HomeCollectionView.Coordinator {
           return
         }
 
+        #if targetEnvironment(macCatalyst)
         let topMargins: CGFloat = sectionIdentifier == .popular ? 16 : 8
+        #else
+        let topMargins: CGFloat = 8
+        #endif
 
         supplementaryView.contentConfiguration = UIHostingConfiguration { [weak self] in
           switch sectionIdentifier {
