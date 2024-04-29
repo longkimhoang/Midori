@@ -18,6 +18,7 @@ let package = Package(
     ),
   ],
   dependencies: [
+    .package(path: "Common"),
     .package(path: "Domain"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.9.3"),
   ],
@@ -39,6 +40,7 @@ let package = Package(
     .target(
       name: "MangaListUI",
       dependencies: [
+        "Common",
         "MangaList",
       ]
     ),

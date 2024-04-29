@@ -41,11 +41,13 @@ extension MangaListCollectionView.ViewController {
       repeatingSubitem: item,
       count: itemCount
     )
+    group.interItemSpacing = .fixed(16)
 
     // Section
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 16
     section.contentInsetsReference = .layoutMargins
+    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
 
     return section
   }

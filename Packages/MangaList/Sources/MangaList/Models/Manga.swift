@@ -14,18 +14,21 @@ public struct Manga: Identifiable, Equatable, Sendable {
   public let description: LocalizedString?
   public let authorName: String
   public let artistName: String?
+  public let coverImageURL: URL?
 
   public init(
     id: UUID,
     title: LocalizedString,
     description: LocalizedString?,
     authorName: String,
-    artistName: String?
+    artistName: String?,
+    coverImageURL: URL?
   ) {
     self.id = id
     self.title = title
     self.description = description
     self.authorName = authorName
     self.artistName = artistName
+    self.coverImageURL = coverImageURL
   }
 }

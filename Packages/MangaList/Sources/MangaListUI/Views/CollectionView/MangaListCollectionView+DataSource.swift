@@ -5,19 +5,38 @@
 //  Created by Long Kim on 29/4/24.
 //
 
+import Common
 import IdentifiedCollections
 import MangaList
+import Nuke
 import SwiftUI
 import UIKit
 
 extension MangaListCollectionView.Coordinator {
   func configureDataSource(collectionView: UICollectionView) {
+    let pipeline = ImagePipeline.default
     let listCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-        cell, _, manga in
+        [weak self] cell, indexPath, manga in
 
+        guard let self else { return }
+
+        let request = ImageRequest(url: manga.coverImageURL)
+        let image = pipeline.cache.cachedImage(for: request)?.image
         cell.contentConfiguration = UIHostingConfiguration {
-          Text(manga.id.uuidString)
+          MangaListItemView(manga: manga, coverImage: image.map(Image.init))
+        }
+        .margins(.all, 16)
+        .background {
+          RoundedRectangle(cornerRadius: 16)
+            .fill(ListItemBackgroundStyle())
+        }
+
+        if image == nil {
+          Task {
+            _ = try await pipeline.image(for: request)
+            await self.reconfigureItems(at: [indexPath])
+          }
         }
       }
 
@@ -61,5 +80,13 @@ extension MangaListCollectionView.Coordinator {
     snapshot.appendItems(mangas.ids.elements, toSection: .main)
 
     dataSource.apply(snapshot, animatingDifferences: animated)
+  }
+
+  @MainActor
+  private func reconfigureItems(at indexPaths: [IndexPath]) {
+    var snapshot = dataSource.snapshot()
+    snapshot.reconfigureItems(indexPaths.compactMap(dataSource.itemIdentifier(for:)))
+
+    dataSource.apply(snapshot, animatingDifferences: false)
   }
 }
