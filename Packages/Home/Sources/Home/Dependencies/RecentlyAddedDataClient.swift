@@ -38,7 +38,6 @@ extension RecentlyAddedDataClient: DependencyKey {
 
     func fetchRecentMangas() throws -> IdentifiedArrayOf<MangaList.Manga> {
       var descriptor = FetchDescriptor.recentlyAddedMangas()
-      descriptor.propertiesToFetch = [\.mangaID, \.title, \.overview]
       descriptor.relationshipKeyPathsForPrefetching = [\.author, \.artist]
       let mangas = try mangaRepository.fetchMangas(
         descriptor: descriptor,

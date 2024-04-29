@@ -28,7 +28,7 @@ public struct HomeView: View {
       switch store.state {
       case .recentlyAdded:
         if let store = store.scope(state: \.recentlyAdded, action: \.recentlyAdded) {
-          Text("Recently added")
+          RecentlyAddedView(store: store)
         }
       case .manga:
         EmptyView()
