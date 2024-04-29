@@ -5,6 +5,7 @@
 //  Created by Long Kim on 29/4/24.
 //
 
+import Algorithms
 import MangaList
 import SwiftUI
 
@@ -35,6 +36,12 @@ struct MangaListItemView: View {
           .font(.headline)
           .lineLimit(1)
 
+        if !subtitle.isEmpty {
+          Text(subtitle)
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+        }
+
         if let description = manga.description?.localized(for: locale) {
           Text(description)
         }
@@ -45,6 +52,10 @@ struct MangaListItemView: View {
 
       Spacer()
     }
+  }
+
+  private var subtitle: String {
+    [manga.authorName, manga.artistName].compacted().formatted(.list(type: .and, width: .narrow))
   }
 }
 

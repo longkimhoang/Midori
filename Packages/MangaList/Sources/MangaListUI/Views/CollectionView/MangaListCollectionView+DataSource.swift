@@ -82,6 +82,12 @@ extension MangaListCollectionView.Coordinator {
     dataSource.apply(snapshot, animatingDifferences: animated)
   }
 
+  /// Reloads the whole data source, in anticipation of a layout change.
+  func reloadDataSourceForLayoutChange() {
+    let snapshot = dataSource.snapshot()
+    dataSource.applySnapshotUsingReloadData(snapshot)
+  }
+
   @MainActor
   private func reconfigureItems(at indexPaths: [IndexPath]) {
     var snapshot = dataSource.snapshot()

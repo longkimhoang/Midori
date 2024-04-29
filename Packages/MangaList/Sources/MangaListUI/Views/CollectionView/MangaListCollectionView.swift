@@ -30,6 +30,8 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
     )
 
     if viewController.layout != store.layout {
+      context.coordinator.reloadDataSourceForLayoutChange()
+
       let collectionViewLayout = ViewController.layout(for: store.layout)
       viewController.collectionView
         .setCollectionViewLayout(collectionViewLayout, animated: false) { completed in
