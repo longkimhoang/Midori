@@ -41,6 +41,7 @@ extension MangaListCollectionView.ViewController {
       repeatingSubitem: item,
       count: itemCount
     )
+    group.interItemSpacing = .fixed(16)
 
     // Section
     let section = NSCollectionLayoutSection(group: group)

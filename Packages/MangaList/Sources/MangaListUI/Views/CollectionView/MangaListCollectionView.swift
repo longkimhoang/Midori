@@ -14,22 +14,42 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
 
   func makeUIViewController(context: Context) -> ViewController {
     let initialLayout = store.withState(\.layout)
-    let viewController = ViewController(initialLayout: initialLayout, coordinator: context.coordinator)
+    let viewController = ViewController(
+      initialLayout: initialLayout,
+      coordinator: context.coordinator
+    )
     context.coordinator.configureDataSource(collectionView: viewController.collectionView)
 
     return viewController
   }
 
-  func updateUIViewController(_: ViewController, context _: Context) {}
+  func updateUIViewController(_ viewController: ViewController, context: Context) {
+    context.coordinator.updateDataSource(
+      with: store.mangas,
+      animated: context.transaction.animation != nil
+    )
+
+    if viewController.layout != store.layout {
+      let collectionViewLayout = ViewController.layout(for: store.layout)
+      viewController.collectionView
+        .setCollectionViewLayout(collectionViewLayout, animated: false) { completed in
+          if completed {
+            viewController.layout = store.layout
+          }
+        }
+    }
+  }
 
   func makeCoordinator() -> Coordinator {
     Coordinator(store: store)
   }
 
   final class ViewController: UICollectionViewController {
+    var layout: MangaListFeature.Layout
     weak var coordinator: Coordinator!
 
     init(initialLayout: MangaListFeature.Layout, coordinator: Coordinator) {
+      layout = initialLayout
       self.coordinator = coordinator
 
       super.init(collectionViewLayout: Self.layout(for: initialLayout))
