@@ -6,11 +6,13 @@
 //
 
 import ApplicationUI
+import MangaDetailUI
 import SwiftUI
 
 @main
 struct MidoriApp: App {
   var body: some Scene {
     ApplicationScene()
+    MangaDetailScene()
   }
 }

@@ -17,6 +17,8 @@ let package = Package(
     .library(name: "HomeUI", targets: ["HomeUI"]),
     .library(name: "MangaListCore", targets: ["MangaListCore"]),
     .library(name: "MangaListUI", targets: ["MangaListUI"]),
+    .library(name: "MangaDetailCore", targets: ["MangaDetailCore"]),
+    .library(name: "MangaDetailUI", targets: ["MangaDetailUI"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.2.2"),
@@ -71,6 +73,7 @@ let package = Package(
         "Domain",
         "Networking",
         "MangaListCore",
+        "MangaDetailCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]
     ),
@@ -97,6 +100,20 @@ let package = Package(
         "MangaListCore",
         "Common",
         .product(name: "Algorithms", package: "swift-algorithms"),
+      ]
+    ),
+    .target(
+      name: "MangaDetailCore",
+      dependencies: [
+        "Domain",
+        "Networking",
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
+    ),
+    .target(
+      name: "MangaDetailUI",
+      dependencies: [
+        "MangaDetailCore",
       ]
     ),
   ]

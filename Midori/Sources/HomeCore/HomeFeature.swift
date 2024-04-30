@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import MangaDetailCore
 import Networking
 
 @Reducer
@@ -29,7 +30,7 @@ public struct HomeFeature: Sendable {
   public enum Action: Sendable {
     case fetchHomeData
     case homeDataResponse(Result<HomeData, any Error>)
-    case mangaTapped(Manga)
+    case mangaTapped(Manga.ID)
     case latestUpdatesButtonTapped
     case recentlyAddedButtonTapped
     case path(StackActionOf<Path>)
@@ -38,7 +39,7 @@ public struct HomeFeature: Sendable {
   @Reducer(state: .equatable, .sendable, action: .sendable)
   public enum Path {
     case recentlyAdded(RecentlyAddedFeature)
-    case manga
+    case manga(MangaDetailFeature)
   }
 
   @Dependency(\.homeData) var homeData
@@ -70,7 +71,8 @@ public struct HomeFeature: Sendable {
       case let .homeDataResponse(.failure(error)):
         state.fetchStatus = .failure(reason: error.localizedDescription)
         return .none
-      case let .mangaTapped(manga):
+      case let .mangaTapped(mangaID):
+        state.path.append(.manga(.init(mangaID: mangaID)))
         return .none
       case .latestUpdatesButtonTapped:
         return .none

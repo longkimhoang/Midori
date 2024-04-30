@@ -12,5 +12,12 @@ extension HomeCollectionView.Coordinator: UICollectionViewDelegate {
     guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
       return
     }
+
+    switch itemIdentifier {
+    case let .recentlyAdded(mangaID):
+      store.send(.mangaTapped(mangaID))
+    default:
+      break
+    }
   }
 }
