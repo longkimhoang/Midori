@@ -18,16 +18,28 @@ struct RecentlyAddedDataClient: Sendable {
   typealias Manga = MangaListCore.Manga
 
   var fetchRecentMangasFromStorage: @Sendable () async throws -> IdentifiedArrayOf<Manga>
+  var fetchRecentMangas: @Sendable (_ offset: Int) async throws -> IdentifiedArrayOf<Manga>
 }
 
 extension RecentlyAddedDataClient: DependencyKey {
   static var liveValue: RecentlyAddedDataClient {
+    @Dependency(\.mangaAPI) var mangaAPI
+    @Dependency(\.mangaRepository) var mangaRepository
     @Dependency(\.modelContainer) var modelContainer
     let storeCoordinator = StoreCoordinator(modelContainer: modelContainer)
 
     return RecentlyAddedDataClient(
       fetchRecentMangasFromStorage: {
-        try await storeCoordinator.fetchRecentMangas()
+        try await storeCoordinator.fetchRecentMangas(limit: 100)
+      },
+      fetchRecentMangas: { offset in
+        let limit = 30
+        let response = try await mangaAPI.listMangas(
+          request: .init(limit: limit, offset: offset, order: .init(createdAt: .descending))
+        )
+
+        try await mangaRepository.importMangas(response.data)
+        return try await storeCoordinator.fetchRecentMangas(limit: limit, offset: offset)
       }
     )
   }
@@ -38,9 +50,14 @@ extension RecentlyAddedDataClient: DependencyKey {
   actor StoreCoordinator {
     @Dependency(\.mangaRepository) private var mangaRepository
 
-    func fetchRecentMangas() throws -> IdentifiedArrayOf<Manga> {
+    func fetchRecentMangas(
+      limit: Int? = nil,
+      offset: Int? = nil
+    ) throws -> IdentifiedArrayOf<Manga> {
       var descriptor = FetchDescriptor.recentlyAddedMangas()
       descriptor.relationshipKeyPathsForPrefetching = [\.author, \.artist]
+      descriptor.fetchLimit = limit
+      descriptor.fetchOffset = offset
       let mangas = try mangaRepository.fetchMangas(
         descriptor: descriptor,
         context: modelContext

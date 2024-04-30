@@ -16,6 +16,7 @@ public struct RecentlyAddedFeature: Sendable {
 
   @ObservableState
   public struct State: Equatable, Sendable {
+    @ObservationStateIgnored var isFetching: Bool = false
     public var mangaList = MangaListFeature.State()
   }
 
@@ -43,10 +44,22 @@ public struct RecentlyAddedFeature: Sendable {
         state.mangaList.mangas = mangas
         return .none
       case let .mangasResponse(.success(mangas), initial: false):
+        state.isFetching = false
         state.mangaList.mangas.append(contentsOf: mangas)
         return .none
       case .mangasResponse(.failure, _):
         return .none
+      case .mangaList(.delegate(.listEndReached)):
+        guard !state.isFetching else {
+          return .none
+        }
+
+        state.isFetching = true
+        let offset = state.mangaList.mangas.count
+        return .run { send in
+          let mangas = try await recentlyAddedData.fetchRecentMangas(offset: offset)
+          await send(.mangasResponse(.success(mangas), initial: false))
+        }
       case .mangaList:
         return .none
       }
