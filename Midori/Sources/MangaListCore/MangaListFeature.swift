@@ -22,6 +22,7 @@ public struct MangaListFeature: Sendable {
     public enum Delegate: Sendable {
       case refresh
       case listEndReached
+      case mangaSelected(Manga.ID)
     }
 
     case selectLayout(Layout)

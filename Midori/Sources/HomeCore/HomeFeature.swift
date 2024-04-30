@@ -79,10 +79,22 @@ public struct HomeFeature: Sendable {
       case .recentlyAddedButtonTapped:
         state.path.append(.recentlyAdded(.init()))
         return .none
+      case let .path(.element(id: _, action: action)):
+        return handlePathElementActions(state: &state, action: action)
       case .path:
         return .none
       }
     }
     .forEach(\.path, action: \.path)
+  }
+
+  private func handlePathElementActions(state: inout State, action: Path.Action) -> Effect<Action> {
+    switch action {
+    case let .recentlyAdded(.mangaList(.delegate(.mangaSelected(mangaID)))):
+      state.path.append(.manga(.init(mangaID: mangaID)))
+      return .none
+    default:
+      return .none
+    }
   }
 }

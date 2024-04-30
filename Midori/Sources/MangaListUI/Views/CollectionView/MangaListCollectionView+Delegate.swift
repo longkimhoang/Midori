@@ -18,4 +18,12 @@ extension MangaListCollectionView.Coordinator: UICollectionViewDelegate {
       store.send(.delegate(.listEndReached), animation: .default)
     }
   }
+
+  func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard let mangaID = dataSource.itemIdentifier(for: indexPath) else {
+      return
+    }
+
+    store.send(.delegate(.mangaSelected(mangaID)))
+  }
 }
