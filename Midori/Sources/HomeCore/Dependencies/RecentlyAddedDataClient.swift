@@ -58,7 +58,8 @@ extension RecentlyAddedDataClient: DependencyKey {
             description: manga.overview,
             authorName: author.name,
             artistName: manga.artist?.name,
-            coverImageURL: manga.coverThumbnailImageURL(for: .small)
+            coverImageThumbnailURL: manga.coverThumbnailImageURL(for: .small),
+            coverImageURL: manga.coverThumbnailImageURL(for: .medium)
           )
         }
       )

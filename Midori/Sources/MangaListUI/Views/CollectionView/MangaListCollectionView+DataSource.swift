@@ -22,7 +22,7 @@ extension MangaListCollectionView.Coordinator {
 
         guard let self else { return }
 
-        let request = ImageRequest(url: manga.coverImageURL)
+        let request = ImageRequest(url: manga.coverImageThumbnailURL)
         let image = pipeline.cache.cachedImage(for: request)?.image
         cell.contentConfiguration = UIHostingConfiguration {
           MangaListItemView(manga: manga, coverImage: image.map(Image.init))
@@ -43,10 +43,20 @@ extension MangaListCollectionView.Coordinator {
 
     let gridCellRegistration =
       UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-        cell, _, manga in
+        cell, indexPath, manga in
 
+        let request = ImageRequest(url: manga.coverImageURL)
+        let image = pipeline.cache.cachedImage(for: request)?.image
         cell.contentConfiguration = UIHostingConfiguration {
-          Text(manga.id.uuidString)
+          MangaGridItemView(manga: manga, coverImage: image.map(Image.init))
+        }
+        .margins(.all, 0)
+
+        if image == nil {
+          Task {
+            _ = try await pipeline.image(for: request)
+            self.reconfigureItems(at: [indexPath])
+          }
         }
       }
 
