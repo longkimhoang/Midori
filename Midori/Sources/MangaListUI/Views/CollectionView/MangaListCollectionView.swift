@@ -19,6 +19,7 @@ struct MangaListCollectionView: UIViewControllerRepresentable {
       coordinator: context.coordinator
     )
     context.coordinator.configureDataSource(collectionView: viewController.collectionView)
+    viewController.collectionView.delegate = context.coordinator
 
     return viewController
   }
