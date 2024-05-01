@@ -12,7 +12,15 @@ import Foundation
 public struct MangaDetailFeature: Sendable {
   @ObservableState
   public struct State: Equatable, Sendable {
+    @CasePathable @dynamicMemberLookup
+    public enum FetchStatus: Equatable, Sendable {
+      case pending
+      case success(MangaFeed)
+      case failure(reason: String)
+    }
+
     public let mangaID: UUID
+    public var fetchStatus: FetchStatus = .pending
 
     public init(mangaID: UUID) {
       self.mangaID = mangaID
