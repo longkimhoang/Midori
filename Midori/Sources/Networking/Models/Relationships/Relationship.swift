@@ -56,3 +56,10 @@ public struct ArtistRelationship: Relationship {
   public let id: UUID
   public let attributes: Author.Attributes?
 }
+
+public struct ScanlationGroupRelationship: Relationship {
+  public typealias Referenced = ScanlationGroup
+
+  public let id: UUID
+  public let attributes: ScanlationGroup.Attributes?
+}

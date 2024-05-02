@@ -23,6 +23,12 @@ public protocol Entity<Attributes>: Identifiable, Decodable, Sendable {
 }
 
 public extension Entity {
+  var relationships: Relationships {
+    Relationships()
+  }
+}
+
+public extension Entity {
   subscript<T>(dynamicMember keyPath: KeyPath<Attributes, T>) -> T {
     attributes[keyPath: keyPath]
   }

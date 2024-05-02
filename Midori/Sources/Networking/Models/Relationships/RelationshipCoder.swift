@@ -18,6 +18,8 @@ struct RelationshipCoder {
       return try AuthorRelationship(from: decoder)
     case .artist:
       return try ArtistRelationship(from: decoder)
+    case .scanlationGroup:
+      return try ScanlationGroupRelationship(from: decoder)
     }
   }
 
@@ -26,6 +28,7 @@ struct RelationshipCoder {
     case manga
     case author
     case artist
+    case scanlationGroup = "scanlation_group"
   }
 
   enum CodingKeys: String, CodingKey {
