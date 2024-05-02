@@ -15,6 +15,8 @@ import SwiftData
 @DependencyClient
 public struct MangaRepositoryClient: Sendable {
   public var importMangas: @Sendable ([Networking.Manga]) async throws -> Void
+  @DependencyEndpoint(method: "fetchManga")
+  public var fetchMangaByID: (_ id: UUID, _ context: ModelContext) throws -> Manga?
   @DependencyEndpoint(method: "fetchMangas")
   public var fetchMangasUsingIDs: @Sendable (
     _ ids: [UUID],
@@ -35,6 +37,14 @@ extension MangaRepositoryClient: DependencyKey {
       importMangas: { mangas in
         let importer = MangaImporter(modelContainer: modelContainer)
         try await importer.importMangas(mangas)
+      },
+      fetchMangaByID: { id, context in
+        var descriptor = FetchDescriptor<Manga>(
+          predicate: #Predicate { $0.mangaID == id && $0.author != nil }
+        )
+        descriptor.fetchLimit = 1
+
+        return try context.fetch(descriptor).first
       },
       fetchMangasUsingIDs: { ids, context in
         let descriptor = FetchDescriptor<Manga>(

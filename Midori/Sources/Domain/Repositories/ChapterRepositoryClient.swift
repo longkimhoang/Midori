@@ -20,6 +20,11 @@ public struct ChapterRepositoryClient: Sendable {
     _ ids: [UUID],
     _ context: ModelContext
   ) throws -> [Chapter]
+  @DependencyEndpoint(method: "fetchChapters")
+  public var fetchChaptersUsingDescriptor: @Sendable (
+    _ descriptor: FetchDescriptor<Chapter>,
+    _ context: ModelContext
+  ) throws -> [Chapter]
 }
 
 extension ChapterRepositoryClient: DependencyKey {
@@ -36,6 +41,9 @@ extension ChapterRepositoryClient: DependencyKey {
           ids.contains($0.chapterID) && $0.manga != nil
         })
         return try context.fetch(descriptor)
+      },
+      fetchChaptersUsingDescriptor: { descriptor, context in
+        try context.fetch(descriptor)
       }
     )
   }

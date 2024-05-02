@@ -18,4 +18,12 @@ public extension FetchDescriptor where T == Manga {
 
     return descriptor
   }
+
+  /// A fetch descriptor for a single manga by its ID.
+  static func mangaByID(_ mangaID: UUID) -> FetchDescriptor<Manga> {
+    var descriptor = FetchDescriptor<Manga>(predicate: #Predicate { $0.mangaID == mangaID })
+    descriptor.fetchLimit = 1
+
+    return descriptor
+  }
 }

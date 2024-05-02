@@ -27,11 +27,25 @@ public struct MangaDetailFeature: Sendable {
     }
   }
 
-  public enum Action: Sendable {}
+  public enum Action: Sendable {
+    case fetchMangaFeed
+    case mangaFeedResponse(Result<MangaFeed, any Error>)
+  }
 
   public init() {}
 
   public var body: some ReducerOf<Self> {
-    EmptyReducer()
+    Reduce { state, action in
+      switch action {
+      case .fetchMangaFeed:
+        return .none
+      case let .mangaFeedResponse(.success(mangaFeed)):
+        state.fetchStatus = .success(mangaFeed)
+        return .none
+      case let .mangaFeedResponse(.failure(error)):
+        state.fetchStatus = .failure(reason: error.localizedDescription)
+        return .none
+      }
+    }
   }
 }
