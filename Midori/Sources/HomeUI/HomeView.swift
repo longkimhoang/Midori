@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import HomeCore
+import MangaDetailUI
 import SwiftUI
 
 public struct HomeView: View {
@@ -31,7 +32,9 @@ public struct HomeView: View {
           RecentlyAddedView(store: store)
         }
       case .manga:
-        EmptyView()
+        if let store = store.scope(state: \.manga, action: \.manga) {
+          MangaDetailView(store: store)
+        }
       }
     }
   }

@@ -32,13 +32,20 @@ public struct MangaDetailFeature: Sendable {
     case mangaFeedResponse(Result<MangaFeed, any Error>)
   }
 
+  @Dependency(\.mangaFeed) private var mangaFeed
+
   public init() {}
 
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .fetchMangaFeed:
-        return .none
+        let mangaID = state.mangaID
+        return .run { send in
+          if let initialFeed = try await mangaFeed.fetchFeedFromStorage(mangaID: mangaID) {
+            await send(.mangaFeedResponse(.success(initialFeed)))
+          }
+        }
       case let .mangaFeedResponse(.success(mangaFeed)):
         state.fetchStatus = .success(mangaFeed)
         return .none

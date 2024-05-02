@@ -33,12 +33,8 @@ extension MangaFeedClient: DependencyKey {
 
   @ModelActor
   actor StoreCoordinator {
-    @Dependency(\.mangaRepository) var mangaRepository
-    @Dependency(\.chapterRepository) var chapterRepository
-
     func fetchMangaFeed(mangaID: UUID) throws -> MangaFeed? {
-      var mangaDescriptor = FetchDescriptor.mangaByID(mangaID)
-      mangaDescriptor.propertiesToFetch = [\.title]
+      let mangaDescriptor = FetchDescriptor.mangaByID(mangaID)
       guard let manga = try modelContext.fetch(mangaDescriptor).first else {
         return nil
       }

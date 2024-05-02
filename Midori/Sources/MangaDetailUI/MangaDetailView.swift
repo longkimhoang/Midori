@@ -10,6 +10,8 @@ import MangaDetailCore
 import SwiftUI
 
 public struct MangaDetailView: View {
+  @Environment(\.locale) private var locale
+
   public let store: StoreOf<MangaDetailFeature>
 
   public init(store: StoreOf<MangaDetailFeature>) {
@@ -17,6 +19,11 @@ public struct MangaDetailView: View {
   }
 
   public var body: some View {
-    EmptyView()
+    MangaDetailCollectionView(store: store)
+      .navigationTitle(store.fetchStatus.success?.title.localized(for: locale) ?? "")
+      .navigationBarTitleDisplayMode(.inline)
+      .task {
+        await store.send(.fetchMangaFeed).finish()
+      }
   }
 }
