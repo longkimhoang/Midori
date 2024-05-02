@@ -43,7 +43,9 @@ struct MangaInfoView: View {
 
       HStack {
         VStack(alignment: horizontalSizeClass == .compact ? .center : .leading) {
-          Text(info.title.localized(for: locale))
+          let title = info.title.localized(for: locale)
+
+          Text(title)
             .font(.title.weight(.medium))
 
           if !subtitle.isEmpty {
@@ -53,11 +55,14 @@ struct MangaInfoView: View {
           }
 
           if let description = info.description?.localized(for: locale) {
-            Text(description)
-              .lineLimit(4)
-              .padding(.top, 2)
+            ExpandableDescription(
+              title: title,
+              description: description
+            )
+            .padding(.top, 2)
           }
         }
+        .multilineTextAlignment(horizontalSizeClass == .compact ? .center : .leading)
 
         if horizontalSizeClass == .regular {
           Spacer()
@@ -68,5 +73,73 @@ struct MangaInfoView: View {
 
   private var subtitle: String {
     [info.authorName, info.artistName].compacted().formatted(.list(type: .and, width: .narrow))
+  }
+}
+
+private struct ExpandableDescription: View {
+  @State private var showsReadMoreButton: Bool = false
+  @State private var showsExpandedDescription: Bool = false
+
+  let title: String
+  let description: String
+
+  var body: some View {
+    HStack {
+      VStack(alignment: .leading) {
+        Text(description)
+          .multilineTextAlignment(.leading)
+          .lineLimit(4)
+          .foregroundStyle(.secondary)
+          .background {
+            GeometryReader { geometry in
+              Color.clear
+                .onAppear {
+                  let font = UIFont.preferredFont(forTextStyle: .body)
+                  let rect = description.boundingRect(
+                    with: CGSize(width: geometry.size.width, height: .greatestFiniteMagnitude),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: font],
+                    context: nil
+                  )
+
+                  showsReadMoreButton = rect.height > geometry.size.height
+                }
+            }
+          }
+
+        if showsReadMoreButton {
+          Button {
+            showsExpandedDescription = true
+          } label: {
+            Text("read more", bundle: .module)
+          }
+          .buttonStyle(.borderless)
+          .font(.subheadline.smallCaps())
+        }
+      }
+
+      Spacer()
+    }
+    .font(.subheadline)
+    .sheet(isPresented: $showsExpandedDescription) {
+      NavigationStack {
+        ScrollView {
+          Text(description)
+            .multilineTextAlignment(.leading)
+            .scenePadding(.minimum, edges: .horizontal)
+        }
+        .navigationTitle(title)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+          ToolbarItem(placement: .cancellationAction) {
+            Button {
+              showsExpandedDescription = false
+            } label: {
+              Text("Close", bundle: .module)
+            }
+          }
+        }
+      }
+    }
   }
 }

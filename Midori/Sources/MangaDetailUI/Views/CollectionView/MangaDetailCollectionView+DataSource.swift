@@ -104,7 +104,10 @@ extension MangaDetailCollectionView.Coordinator {
       snapshot.append(chapterIDs, to: ItemIdentifier.volume(volume))
     }
 
-    snapshot.expand(volumes)
+    if let volume = volumes.first {
+      snapshot.expand([volume])
+    }
+
     dataSource.apply(snapshot, to: .chapters)
   }
 }
