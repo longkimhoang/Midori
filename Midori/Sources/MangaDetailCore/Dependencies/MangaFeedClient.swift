@@ -40,15 +40,21 @@ extension MangaFeedClient: DependencyKey {
       }
 
       let chaptersDescriptor = FetchDescriptor.chaptersForManga(mangaID: mangaID)
-      let chapters = try modelContext.fetch(chaptersDescriptor).map { chapter in
-        MangaFeed.Chapter(
-          id: chapter.chapterID,
-          chapter: chapter.chapter,
-          volume: chapter.volume,
-          readableAt: chapter.readableAt,
-          scanlatorGroup: "<no scanlator>"
-        )
-      }
+      let chapters: [MangaFeed.Chapter] = try modelContext
+        .fetch(chaptersDescriptor)
+        .compactMap { chapter in
+          guard let scanlationGroup = chapter.scanlationGroup else {
+            return nil
+          }
+
+          return MangaFeed.Chapter(
+            id: chapter.chapterID,
+            chapter: chapter.chapter,
+            volume: chapter.volume,
+            readableAt: chapter.readableAt,
+            scanlatorGroup: scanlationGroup.name
+          )
+        }
 
       return MangaFeed(
         title: manga.title,

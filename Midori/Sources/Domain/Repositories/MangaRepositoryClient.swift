@@ -16,7 +16,7 @@ import SwiftData
 public struct MangaRepositoryClient: Sendable {
   public var importMangas: @Sendable ([Networking.Manga]) async throws -> Void
   @DependencyEndpoint(method: "fetchManga")
-  public var fetchMangaByID: (_ id: UUID, _ context: ModelContext) throws -> Manga?
+  public var fetchMangaByID: @Sendable (_ id: UUID, _ context: ModelContext) throws -> Manga?
   @DependencyEndpoint(method: "fetchMangas")
   public var fetchMangasUsingIDs: @Sendable (
     _ ids: [UUID],

@@ -33,4 +33,5 @@ public final class Chapter {
   // MARK: Relationships
 
   @Relationship public var manga: Manga?
+  @Relationship public var scanlationGroup: ScanlationGroup?
 }

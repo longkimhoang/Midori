@@ -88,6 +88,14 @@ actor ChapterRepository {
         model.manga = manga
       }
 
+      if let scanlationGroup = chapter.relationship(ScanlationGroupRelationship.self)?.referenced {
+        model.scanlationGroup = .init(
+          groupID: scanlationGroup.id,
+          name: scanlationGroup.name,
+          groupDescription: scanlationGroup.description
+        )
+      }
+
       return model
     }
 
