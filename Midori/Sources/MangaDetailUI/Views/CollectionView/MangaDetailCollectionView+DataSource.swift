@@ -33,12 +33,22 @@ extension MangaDetailCollectionView.Coordinator {
         cell.contentConfiguration = UIHostingConfiguration {
           Text(chapter.id.uuidString)
         }
+
+        cell.indentationWidth = 0
+        cell.accessories = [.disclosureIndicator()]
       }
 
     let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
       elementKind: SupplementaryItemKind.mangaInfoHeader
     ) { [weak self] supplementaryView, _, _ in
-      supplementaryView.contentConfiguration = UIHostingConfiguration {}
+      guard let self, let info = store.withState(\.fetchStatus.success?.info) else {
+        return
+      }
+
+      supplementaryView.contentConfiguration = UIHostingConfiguration {
+        MangaInfoView(info: info)
+      }
+      .margins(.vertical, 16)
     }
 
     dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {

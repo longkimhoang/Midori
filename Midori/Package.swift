@@ -114,6 +114,9 @@ let package = Package(
       name: "MangaDetailUI",
       dependencies: [
         "MangaDetailCore",
+        "Common",
+        .product(name: "NukeUI", package: "Nuke"),
+        .product(name: "Algorithms", package: "swift-algorithms"),
       ]
     ),
   ]

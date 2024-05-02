@@ -12,10 +12,24 @@ extension MangaDetailCollectionView.ViewController {
     var listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
     listConfiguration.separatorConfiguration.topSeparatorVisibility = .hidden
 
-    let layout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
-    layout.configuration.boundarySupplementaryItems = [mangaInfoItem()]
+    let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
+      _, layoutEnvironment in
 
-    return layout
+      let section = NSCollectionLayoutSection.list(
+        using: listConfiguration,
+        layoutEnvironment: layoutEnvironment
+      )
+      section.boundarySupplementaryItems = [mangaInfoItem()]
+
+      return section
+    }
+
+    let configuration = UICollectionViewCompositionalLayoutConfiguration()
+
+    return UICollectionViewCompositionalLayout(
+      sectionProvider: sectionProvider,
+      configuration: configuration
+    )
   }
 
   static func mangaInfoItem() -> NSCollectionLayoutBoundarySupplementaryItem {

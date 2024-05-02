@@ -35,7 +35,9 @@ extension MangaFeedClient: DependencyKey {
   actor StoreCoordinator {
     func fetchMangaFeed(mangaID: UUID) throws -> MangaFeed? {
       let mangaDescriptor = FetchDescriptor.mangaByID(mangaID)
-      guard let manga = try modelContext.fetch(mangaDescriptor).first else {
+      guard let manga = try modelContext.fetch(mangaDescriptor).first,
+            let author = manga.author
+      else {
         return nil
       }
 
@@ -56,8 +58,16 @@ extension MangaFeedClient: DependencyKey {
           )
         }
 
-      return MangaFeed(
+      let info = MangaFeed.MangaInfo(
         title: manga.title,
+        description: manga.overview,
+        authorName: author.name,
+        artistName: manga.artist?.name,
+        coverImageURL: manga.coverThumbnailImageURL(for: .medium)
+      )
+
+      return MangaFeed(
+        info: info,
         chapters: IdentifiedArray(
           uniqueElements: chapters
         )

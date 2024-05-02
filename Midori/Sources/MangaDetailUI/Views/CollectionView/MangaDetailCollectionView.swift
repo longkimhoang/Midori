@@ -51,6 +51,7 @@ struct MangaDetailCollectionView: UIViewControllerRepresentable {
 
     let store: StoreOf<MangaDetailFeature>
     var dataSource: DataSource!
+    weak var collectionView: UICollectionView!
 
     init(store: StoreOf<MangaDetailFeature>) {
       self.store = store

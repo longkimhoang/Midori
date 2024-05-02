@@ -20,10 +20,18 @@ public struct MangaDetailView: View {
 
   public var body: some View {
     MangaDetailCollectionView(store: store)
-      .navigationTitle(store.fetchStatus.success?.title.localized(for: locale) ?? "")
+      .navigationTitle(title ?? "")
       .navigationBarTitleDisplayMode(.inline)
       .task {
         await store.send(.fetchMangaFeed).finish()
       }
+  }
+
+  private var title: String? {
+    guard let info = store.fetchStatus.success?.info else {
+      return nil
+    }
+
+    return info.title.localized(for: locale)
   }
 }
