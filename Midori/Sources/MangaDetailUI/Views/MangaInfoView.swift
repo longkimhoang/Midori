@@ -124,9 +124,13 @@ private struct ExpandableDescription: View {
     .sheet(isPresented: $showsExpandedDescription) {
       NavigationStack {
         ScrollView {
-          Text(description)
-            .multilineTextAlignment(.leading)
-            .scenePadding(.minimum, edges: .horizontal)
+          HStack {
+            Text(description)
+              .multilineTextAlignment(.leading)
+
+            Spacer()
+          }
+          .scenePadding(.minimum, edges: .horizontal)
         }
         .navigationTitle(title)
         .toolbarTitleDisplayMode(.inline)

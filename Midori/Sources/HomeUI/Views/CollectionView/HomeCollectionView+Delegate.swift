@@ -14,7 +14,7 @@ extension HomeCollectionView.Coordinator: UICollectionViewDelegate {
     }
 
     switch itemIdentifier {
-    case let .recentlyAdded(mangaID):
+    case let .popular(mangaID), let .recentlyAdded(mangaID):
       store.send(.mangaTapped(mangaID))
     default:
       break
