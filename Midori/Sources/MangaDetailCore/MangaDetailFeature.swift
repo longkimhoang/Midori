@@ -30,7 +30,7 @@ public struct MangaDetailFeature: Sendable {
   public enum Action: Sendable {
     case fetchMangaFeed
     case mangaFeedResponse(Result<MangaFeed, any Error>)
-    case chaptersResponse(IdentifiedArrayOf<MangaFeed.Chapter>, initial: Bool)
+    case chaptersResponse(IdentifiedArrayOf<Chapter>, initial: Bool)
   }
 
   @Dependency(\.mangaFeed) private var mangaFeed

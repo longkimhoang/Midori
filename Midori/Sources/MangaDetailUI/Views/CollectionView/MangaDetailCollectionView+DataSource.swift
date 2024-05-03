@@ -27,7 +27,7 @@ extension MangaDetailCollectionView.Coordinator {
       }
 
     let chapterCellRegistration =
-      UICollectionView.CellRegistration<UICollectionViewListCell, MangaFeed.Chapter> {
+      UICollectionView.CellRegistration<UICollectionViewListCell, Chapter> {
         cell, _, chapter in
 
         cell.contentConfiguration = UIHostingConfiguration {
@@ -41,12 +41,12 @@ extension MangaDetailCollectionView.Coordinator {
     let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
       elementKind: SupplementaryItemKind.mangaInfoHeader
     ) { [weak self] supplementaryView, _, _ in
-      guard let self, let info = store.withState(\.fetchStatus.success?.info) else {
+      guard let self, let manga = store.withState(\.fetchStatus.success?.manga) else {
         return
       }
 
       supplementaryView.contentConfiguration = UIHostingConfiguration {
-        MangaInfoView(info: info)
+        MangaInfoView(manga: manga)
       }
       .margins(.vertical, 16)
     }

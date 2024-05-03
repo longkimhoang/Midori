@@ -11,24 +11,7 @@ import IdentifiedCollections
 import OrderedCollections
 
 public struct MangaFeed: Equatable, Sendable {
-  public struct MangaInfo: Equatable, Sendable {
-    public let id: UUID
-    public let title: LocalizedString
-    public let description: LocalizedString?
-    public let authorName: String
-    public let artistName: String?
-    public let coverImageURL: URL?
-  }
-
-  public struct Chapter: Identifiable, Equatable, Sendable {
-    public let id: UUID
-    public let chapter: String?
-    public let volume: String?
-    public let readableAt: Date
-    public let scanlatorGroup: String
-  }
-
-  public let info: MangaInfo
+  public let manga: Manga
   public var chapters: IdentifiedArrayOf<Chapter>
 }
 

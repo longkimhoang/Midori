@@ -28,10 +28,10 @@ public struct MangaDetailView: View {
   }
 
   private var title: String? {
-    guard let info = store.fetchStatus.success?.info else {
+    guard let manga = store.fetchStatus.success?.manga else {
       return nil
     }
 
-    return info.title.localized(for: locale)
+    return manga.title.localized(for: locale)
   }
 }

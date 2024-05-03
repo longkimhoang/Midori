@@ -15,8 +15,10 @@ import SwiftData
 @DependencyClient
 struct MangaFeedClient: Sendable {
   var fetchFeedFromStorage: @Sendable (_ mangaID: UUID) async throws -> MangaFeed?
-  var fetchChapters: @Sendable (_ mangaID: UUID, _ offset: Int?) async throws
-    -> IdentifiedArrayOf<MangaFeed.Chapter>
+  var fetchChapters: @Sendable (
+    _ mangaID: UUID,
+    _ offset: Int?
+  ) async throws -> IdentifiedArrayOf<Chapter>
 }
 
 extension MangaFeedClient: DependencyKey {
@@ -44,23 +46,23 @@ extension MangaFeedClient: DependencyKey {
   actor StoreCoordinator {
     func fetchMangaFeed(mangaID: UUID) throws -> MangaFeed? {
       let mangaDescriptor = FetchDescriptor.mangaByID(mangaID)
-      guard let manga = try modelContext.fetch(mangaDescriptor).first,
-            let author = manga.author
+      guard let mangaModel = try modelContext.fetch(mangaDescriptor).first,
+            let author = mangaModel.author
       else {
         return nil
       }
 
-      let info = MangaFeed.MangaInfo(
-        id: manga.mangaID,
-        title: manga.title,
-        description: manga.overview,
+      let manga = Manga(
+        id: mangaModel.mangaID,
+        title: mangaModel.title,
+        description: mangaModel.overview,
         authorName: author.name,
-        artistName: manga.artist?.name,
-        coverImageURL: manga.coverThumbnailImageURL(for: .medium)
+        artistName: mangaModel.artist?.name,
+        coverImageURL: mangaModel.coverThumbnailImageURL(for: .medium)
       )
 
       return try MangaFeed(
-        info: info,
+        manga: manga,
         chapters: fetchChapters(mangaID: mangaID)
       )
     }
@@ -68,16 +70,16 @@ extension MangaFeedClient: DependencyKey {
     func fetchChapters(
       mangaID: UUID,
       offset: Int? = nil
-    ) throws -> IdentifiedArrayOf<MangaFeed.Chapter> {
+    ) throws -> IdentifiedArrayOf<Chapter> {
       let chaptersDescriptor = FetchDescriptor.chaptersForManga(mangaID: mangaID, offset: offset)
-      let chapters: [MangaFeed.Chapter] = try modelContext
+      let chapters: [Chapter] = try modelContext
         .fetch(chaptersDescriptor)
         .compactMap { chapter in
           guard let scanlationGroup = chapter.scanlationGroup else {
             return nil
           }
 
-          return MangaFeed.Chapter(
+          return Chapter(
             id: chapter.chapterID,
             chapter: chapter.chapter,
             volume: chapter.volume,

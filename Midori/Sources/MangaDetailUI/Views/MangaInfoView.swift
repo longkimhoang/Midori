@@ -15,7 +15,7 @@ struct MangaInfoView: View {
   @Environment(\.locale) private var locale
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-  let info: MangaFeed.MangaInfo
+  let manga: Manga
 
   var body: some View {
     let layout = if horizontalSizeClass == .compact {
@@ -25,7 +25,7 @@ struct MangaInfoView: View {
     }
 
     layout {
-      LazyImage(url: info.coverImageURL) { state in
+      LazyImage(url: manga.coverImageURL) { state in
         Rectangle()
           .fill(.fill.tertiary)
           .overlay {
@@ -43,7 +43,7 @@ struct MangaInfoView: View {
 
       HStack {
         VStack(alignment: horizontalSizeClass == .compact ? .center : .leading) {
-          let title = info.title.localized(for: locale)
+          let title = manga.title.localized(for: locale)
 
           Text(title)
             .font(.title.weight(.medium))
@@ -54,7 +54,7 @@ struct MangaInfoView: View {
               .foregroundStyle(.secondary)
           }
 
-          if let description = info.description?.localized(for: locale) {
+          if let description = manga.description?.localized(for: locale) {
             ExpandableDescription(
               title: title,
               description: description
@@ -72,7 +72,7 @@ struct MangaInfoView: View {
   }
 
   private var subtitle: String {
-    [info.authorName, info.artistName].compacted().formatted(.list(type: .and, width: .narrow))
+    [manga.authorName, manga.artistName].compacted().formatted(.list(type: .and, width: .narrow))
   }
 }
 
