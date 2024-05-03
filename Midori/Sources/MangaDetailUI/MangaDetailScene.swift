@@ -34,7 +34,9 @@ public struct MangaDetailScene: Scene {
     }
 
     var body: some View {
-      MangaDetailView(store: store)
+      NavigationStack {
+        MangaDetailView(store: store)
+      }
     }
   }
 }

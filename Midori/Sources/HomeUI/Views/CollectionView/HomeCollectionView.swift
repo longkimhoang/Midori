@@ -10,6 +10,8 @@ import HomeCore
 import SwiftUI
 
 struct HomeCollectionView: UIViewControllerRepresentable {
+  @Environment(\.supportsMultipleWindows) private var supportsMultipleWindows
+  @Environment(\.openWindow) private var openWindow
   @Environment(\.refresh) private var refresh
 
   let store: StoreOf<HomeFeature>
@@ -32,7 +34,11 @@ struct HomeCollectionView: UIViewControllerRepresentable {
   }
 
   func makeCoordinator() -> Coordinator {
-    Coordinator(store: store)
+    Coordinator(
+      store: store,
+      supportsMultipleWindows: supportsMultipleWindows,
+      openWindow: openWindow
+    )
   }
 
   final class ViewController: UICollectionViewController {
@@ -61,10 +67,18 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     typealias DataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>
 
     let store: StoreOf<HomeFeature>
+    let supportsMultipleWindows: Bool
+    let openWindow: OpenWindowAction
     var dataSource: DataSource!
 
-    init(store: StoreOf<HomeFeature>) {
+    init(
+      store: StoreOf<HomeFeature>,
+      supportsMultipleWindows: Bool,
+      openWindow: OpenWindowAction
+    ) {
       self.store = store
+      self.supportsMultipleWindows = supportsMultipleWindows
+      self.openWindow = openWindow
     }
   }
 }
