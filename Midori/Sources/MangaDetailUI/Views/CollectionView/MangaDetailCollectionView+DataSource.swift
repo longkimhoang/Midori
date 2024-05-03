@@ -31,7 +31,7 @@ extension MangaDetailCollectionView.Coordinator {
         cell, _, chapter in
 
         cell.contentConfiguration = UIHostingConfiguration {
-          Text(chapter.id.uuidString)
+          ChapterView(chapter: chapter)
         }
 
         cell.indentationWidth = 0

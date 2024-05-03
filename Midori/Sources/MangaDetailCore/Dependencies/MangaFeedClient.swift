@@ -81,6 +81,7 @@ extension MangaFeedClient: DependencyKey {
 
           return Chapter(
             id: chapter.chapterID,
+            title: chapter.title,
             chapter: chapter.chapter,
             volume: chapter.volume,
             readableAt: chapter.readableAt,

@@ -1,10 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Ch. %@" : {
+
+    },
     "Close" : {
 
     },
     "No volume" : {
+
+    },
+    "Oneshot" : {
 
     },
     "read more" : {
