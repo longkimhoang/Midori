@@ -20,6 +20,7 @@ public struct MangaDetailView: View {
 
   public var body: some View {
     MangaDetailCollectionView(store: store)
+      .ignoresSafeArea()
       .navigationTitle(title ?? "")
       .navigationBarTitleDisplayMode(.inline)
       .task {
