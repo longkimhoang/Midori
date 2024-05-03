@@ -36,6 +36,7 @@ public struct ListMangasRequest: Encodable, Sendable {
   public let limit: Int
   public let offset: Int
   public let ids: [String]?
+  public let hasAvailableChapters: Bool
   public let createdAtSince: Date?
   public let includes: [Reference]
   public let order: Order?
@@ -44,6 +45,7 @@ public struct ListMangasRequest: Encodable, Sendable {
     limit: Int = 100,
     offset: Int = 0,
     ids: [UUID]? = nil,
+    hasAvailableChapters: Bool = true,
     createdAtSince: Date? = nil,
     includes: [Reference] = [.artist, .author, .cover],
     order: Order? = nil
@@ -51,6 +53,7 @@ public struct ListMangasRequest: Encodable, Sendable {
     self.limit = limit
     self.offset = offset
     self.ids = ids.map { $0.map { $0.uuidString.lowercased() } }
+    self.hasAvailableChapters = hasAvailableChapters
     self.createdAtSince = createdAtSince
     self.includes = includes
     self.order = order
