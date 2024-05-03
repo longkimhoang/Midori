@@ -35,7 +35,7 @@ extension MangaAPIClient: DependencyKey {
       mangaFeed: { request in
         let task = AF.request(request)
           .validate(statusCode: CollectionOfOne(200))
-          .serializingDecodable(MangaFeedResponse.self)
+          .serializingDecodable(MangaFeedResponse.self, decoder: .api)
 
         return try await task.value
       }

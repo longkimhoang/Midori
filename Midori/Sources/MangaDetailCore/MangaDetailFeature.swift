@@ -30,6 +30,7 @@ public struct MangaDetailFeature: Sendable {
   public enum Action: Sendable {
     case fetchMangaFeed
     case mangaFeedResponse(Result<MangaFeed, any Error>)
+    case chaptersResponse(IdentifiedArrayOf<MangaFeed.Chapter>, initial: Bool)
   }
 
   @Dependency(\.mangaFeed) private var mangaFeed
@@ -42,15 +43,26 @@ public struct MangaDetailFeature: Sendable {
       case .fetchMangaFeed:
         let mangaID = state.mangaID
         return .run { send in
-          if let initialFeed = try await mangaFeed.fetchFeedFromStorage(mangaID: mangaID) {
-            await send(.mangaFeedResponse(.success(initialFeed)))
+          guard let initialFeed = try await mangaFeed.fetchFeedFromStorage(mangaID: mangaID) else {
+            return
           }
+
+          await send(.mangaFeedResponse(.success(initialFeed)))
+
+          let chapters = try await mangaFeed.fetchChapters(mangaID: mangaID, offset: nil)
+          await send(.chaptersResponse(chapters, initial: true))
         }
       case let .mangaFeedResponse(.success(mangaFeed)):
         state.fetchStatus = .success(mangaFeed)
         return .none
       case let .mangaFeedResponse(.failure(error)):
         state.fetchStatus = .failure(reason: error.localizedDescription)
+        return .none
+      case let .chaptersResponse(chapters, initial: true):
+        state.fetchStatus.success?.chapters = chapters
+        return .none
+      case let .chaptersResponse(chapters, initial: false):
+        state.fetchStatus.success?.chapters.append(contentsOf: chapters)
         return .none
       }
     }

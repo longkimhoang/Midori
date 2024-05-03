@@ -12,6 +12,7 @@ import OrderedCollections
 
 public struct MangaFeed: Equatable, Sendable {
   public struct MangaInfo: Equatable, Sendable {
+    public let id: UUID
     public let title: LocalizedString
     public let description: LocalizedString?
     public let authorName: String
@@ -28,7 +29,7 @@ public struct MangaFeed: Equatable, Sendable {
   }
 
   public let info: MangaInfo
-  public let chapters: IdentifiedArrayOf<Chapter>
+  public var chapters: IdentifiedArrayOf<Chapter>
 }
 
 public extension MangaFeed {

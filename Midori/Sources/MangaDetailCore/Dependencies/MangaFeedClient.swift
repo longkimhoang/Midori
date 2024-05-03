@@ -15,16 +15,25 @@ import SwiftData
 @DependencyClient
 struct MangaFeedClient: Sendable {
   var fetchFeedFromStorage: @Sendable (_ mangaID: UUID) async throws -> MangaFeed?
+  var fetchChapters: @Sendable (_ mangaID: UUID, _ offset: Int?) async throws
+    -> IdentifiedArrayOf<MangaFeed.Chapter>
 }
 
 extension MangaFeedClient: DependencyKey {
   static var liveValue: MangaFeedClient {
+    @Dependency(\.mangaAPI) var mangaAPI
+    @Dependency(\.chapterRepository) var chapterRepository
     @Dependency(\.modelContainer) var modelContainer
     let storeCoordinator = StoreCoordinator(modelContainer: modelContainer)
 
     return MangaFeedClient(
       fetchFeedFromStorage: { mangaID in
         try await storeCoordinator.fetchMangaFeed(mangaID: mangaID)
+      },
+      fetchChapters: { mangaID, offset in
+        let feed = try await mangaAPI.mangaFeed(request: .init(mangaID: mangaID))
+        try await chapterRepository.importChapters(chapters: feed.data)
+        return try await storeCoordinator.fetchChapters(mangaID: mangaID, offset: offset)
       }
     )
   }
@@ -41,7 +50,26 @@ extension MangaFeedClient: DependencyKey {
         return nil
       }
 
-      let chaptersDescriptor = FetchDescriptor.chaptersForManga(mangaID: mangaID)
+      let info = MangaFeed.MangaInfo(
+        id: manga.mangaID,
+        title: manga.title,
+        description: manga.overview,
+        authorName: author.name,
+        artistName: manga.artist?.name,
+        coverImageURL: manga.coverThumbnailImageURL(for: .medium)
+      )
+
+      return try MangaFeed(
+        info: info,
+        chapters: fetchChapters(mangaID: mangaID)
+      )
+    }
+
+    func fetchChapters(
+      mangaID: UUID,
+      offset: Int? = nil
+    ) throws -> IdentifiedArrayOf<MangaFeed.Chapter> {
+      let chaptersDescriptor = FetchDescriptor.chaptersForManga(mangaID: mangaID, offset: offset)
       let chapters: [MangaFeed.Chapter] = try modelContext
         .fetch(chaptersDescriptor)
         .compactMap { chapter in
@@ -58,20 +86,7 @@ extension MangaFeedClient: DependencyKey {
           )
         }
 
-      let info = MangaFeed.MangaInfo(
-        title: manga.title,
-        description: manga.overview,
-        authorName: author.name,
-        artistName: manga.artist?.name,
-        coverImageURL: manga.coverThumbnailImageURL(for: .medium)
-      )
-
-      return MangaFeed(
-        info: info,
-        chapters: IdentifiedArray(
-          uniqueElements: chapters
-        )
-      )
+      return IdentifiedArray(uniqueElements: chapters)
     }
   }
 }
