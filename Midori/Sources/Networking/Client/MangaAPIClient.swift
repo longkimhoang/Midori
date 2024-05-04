@@ -14,6 +14,7 @@ import Foundation
 public struct MangaAPIClient: Sendable {
   public var listMangas: @Sendable (_ request: ListMangasRequest) async throws -> ListMangasResponse
   public var mangaFeed: @Sendable (_ request: MangaFeedRequest) async throws -> MangaFeedResponse
+  public var getManga: @Sendable (_ request: GetMangaRequest) async throws -> GetMangaResponse
 }
 
 extension MangaAPIClient: DependencyKey {
@@ -36,6 +37,13 @@ extension MangaAPIClient: DependencyKey {
         let task = AF.request(request)
           .validate(statusCode: CollectionOfOne(200))
           .serializingDecodable(MangaFeedResponse.self, decoder: .api)
+
+        return try await task.value
+      },
+      getManga: { request in
+        let task = AF.request(request)
+          .validate(statusCode: CollectionOfOne(200))
+          .serializingDecodable(GetMangaResponse.self, decoder: .api)
 
         return try await task.value
       }
