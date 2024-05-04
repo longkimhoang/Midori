@@ -125,7 +125,8 @@ extension HomeDataClient: DependencyKey {
             chapter: chapter.chapter,
             volume: chapter.volume,
             mangaTitle: manga.title,
-            coverImageURL: manga.coverThumbnailImageURL(for: .small)
+            coverImageURL: manga.coverThumbnailImageURL(for: .small),
+            mangaID: manga.mangaID
           )
           result[manga.mangaID] = item
         }

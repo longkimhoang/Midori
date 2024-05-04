@@ -61,8 +61,27 @@ extension HomeCollectionView.Coordinator: UICollectionViewDelegate {
           ])
         }
       )
-    case .latestUpdates:
-      return nil
+    case let .latestUpdates(chapterID):
+      guard let chapter = store.withState(\.fetchStatus.success?.latestChapters[id: chapterID])
+      else {
+        return nil
+      }
+
+      return UIContextMenuConfiguration(
+        identifier: chapterID as NSUUID,
+        actionProvider: { _ in
+          let viewMangaAction = UIAction(
+            title: String(localized: "View manga"),
+            image: UIImage(systemName: "book")
+          ) { _ in
+            self.store.send(.mangaTapped(chapter.mangaID))
+          }
+
+          return UIMenu(children: [
+            viewMangaAction,
+          ])
+        }
+      )
     }
   }
 }

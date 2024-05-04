@@ -81,7 +81,8 @@ struct LatestChapterView: View {
       chapter: "1",
       volume: "1",
       mangaTitle: "Test manga",
-      coverImageURL: nil
+      coverImageURL: nil,
+      mangaID: UUID()
     ),
     coverImage: Image(.previewCover)
   )
@@ -97,7 +98,8 @@ struct LatestChapterView: View {
       chapter: nil,
       volume: nil,
       mangaTitle: "Test manga",
-      coverImageURL: nil
+      coverImageURL: nil,
+      mangaID: UUID()
     ),
     coverImage: Image(.previewCover)
   )

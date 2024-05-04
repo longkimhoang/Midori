@@ -15,6 +15,7 @@ public struct Chapter: Equatable, Identifiable, Sendable {
   public let volume: String?
   public let mangaTitle: LocalizedString
   public let coverImageURL: URL?
+  public let mangaID: UUID
 
   public init(
     id: UUID,
@@ -22,7 +23,8 @@ public struct Chapter: Equatable, Identifiable, Sendable {
     chapter: String?,
     volume: String?,
     mangaTitle: LocalizedString,
-    coverImageURL: URL?
+    coverImageURL: URL?,
+    mangaID: UUID
   ) {
     self.id = id
     self.title = title
@@ -30,5 +32,6 @@ public struct Chapter: Equatable, Identifiable, Sendable {
     self.volume = volume
     self.mangaTitle = mangaTitle
     self.coverImageURL = coverImageURL
+    self.mangaID = mangaID
   }
 }
