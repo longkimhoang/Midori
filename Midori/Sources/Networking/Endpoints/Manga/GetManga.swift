@@ -41,6 +41,6 @@ public struct GetMangaRequest: URLRequestConvertible, Sendable {
   }
 }
 
-public struct GetMangaResponse: Decodable {
+public struct GetMangaResponse: Decodable, Sendable {
   public let data: Manga
 }

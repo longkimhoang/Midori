@@ -58,7 +58,7 @@ public struct MangaFeedRequest: URLRequestConvertible, Sendable {
   }
 }
 
-public struct MangaFeedResponse: Decodable {
+public struct MangaFeedResponse: Decodable, Sendable {
   public let limit: Int
   public let offset: Int
   public let total: Int
