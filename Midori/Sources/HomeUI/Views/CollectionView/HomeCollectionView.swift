@@ -59,9 +59,20 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     override func viewDidLoad() {
       super.viewDidLoad()
       collectionView.preservesSuperviewLayoutMargins = true
+
+      #if !targetEnvironment(macCatalyst)
+      let refreshControl = UIRefreshControl()
+      refreshControl.addTarget(
+        coordinator,
+        action: #selector(Coordinator.refresh(_:)),
+        for: .valueChanged
+      )
+      collectionView.refreshControl = refreshControl
+      #endif
     }
   }
 
+  @MainActor
   final class Coordinator: NSObject {
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>
     typealias DataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>
@@ -70,6 +81,7 @@ struct HomeCollectionView: UIViewControllerRepresentable {
     let supportsMultipleWindows: Bool
     let openWindow: OpenWindowAction
     var dataSource: DataSource!
+    var refresh: RefreshAction?
 
     init(
       store: StoreOf<HomeFeature>,

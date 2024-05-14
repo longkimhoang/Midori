@@ -11,7 +11,6 @@ import Nuke
 import SwiftUI
 
 extension HomeCollectionView.Coordinator {
-  @MainActor
   func configureDataSource(collectionView: UICollectionView) {
     let pipeline = ImagePipeline.default
     let popularMangaCellRegistration =
@@ -168,7 +167,6 @@ extension HomeCollectionView.Coordinator {
     }
   }
 
-  @MainActor
   func updateDataSource(with data: HomeData, animated: Bool = true) {
     var snapshot = Snapshot()
     snapshot.appendSections([.popular, .latestUpdates, .recentlyAdded])
@@ -185,7 +183,6 @@ extension HomeCollectionView.Coordinator {
     dataSource.apply(snapshot, animatingDifferences: animated)
   }
 
-  @MainActor
   private func reconfigureItems(at indexPaths: [IndexPath]) {
     var snapshot = dataSource.snapshot()
     snapshot.reconfigureItems(indexPaths.compactMap(dataSource.itemIdentifier(for:)))

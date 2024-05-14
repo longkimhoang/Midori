@@ -107,6 +107,7 @@ let package = Package(
       dependencies: [
         "Domain",
         "Networking",
+        "ReaderCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]
     ),
@@ -115,8 +116,21 @@ let package = Package(
       dependencies: [
         "MangaDetailCore",
         "Common",
+        "ReaderUI",
         .product(name: "NukeUI", package: "Nuke"),
         .product(name: "Algorithms", package: "swift-algorithms"),
+      ]
+    ),
+    .target(
+      name: "ReaderCore",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
+    ),
+    .target(
+      name: "ReaderUI",
+      dependencies: [
+        "ReaderCore",
       ]
     ),
   ]

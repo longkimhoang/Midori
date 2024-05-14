@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import ReaderCore
 
 @Reducer
 public struct MangaDetailFeature: Sendable {
@@ -21,6 +22,7 @@ public struct MangaDetailFeature: Sendable {
 
     public let mangaID: UUID
     public var fetchStatus: FetchStatus = .pending
+    @Presents public var reader: ReaderFeature.State?
 
     public init(mangaID: UUID) {
       self.mangaID = mangaID
@@ -31,6 +33,7 @@ public struct MangaDetailFeature: Sendable {
     case fetchMangaFeed
     case mangaFeedResponse(Result<MangaFeed, any Error>)
     case initialChaptersResponse(IdentifiedArrayOf<Chapter>)
+    case reader(PresentationAction<ReaderFeature.Action>)
   }
 
   @Dependency(\.mangaFeed) private var mangaFeed
@@ -61,7 +64,12 @@ public struct MangaDetailFeature: Sendable {
       case let .initialChaptersResponse(chapters):
         state.fetchStatus.success?.chapters = chapters
         return .none
+      case .reader:
+        return .none
       }
+    }
+    .ifLet(\.$reader, action: \.reader) {
+      ReaderFeature()
     }
   }
 }

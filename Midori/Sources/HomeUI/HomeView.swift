@@ -5,6 +5,7 @@
 //  Created by Long Kim on 24/4/24.
 //
 
+import Common
 import ComposableArchitecture
 import HomeCore
 import MangaDetailUI
@@ -23,8 +24,18 @@ public struct HomeView: View {
         .navigationTitle(Text("Home", bundle: .module))
         .ignoresSafeArea()
         .task {
+          guard store.fetchStatus == .pending else { return }
           await store.send(.fetchHomeData).finish()
         }
+      #if targetEnvironment(macCatalyst)
+        .toolbar {
+          ToolbarItem(placement: .primaryAction) {
+            Button("Refresh", bundle: .module, systemImage: "arrow.counterclockwise") {
+              store.send(.fetchHomeData)
+            }
+          }
+        }
+      #endif
     } destination: { store in
       switch store.state {
       case .recentlyAdded:

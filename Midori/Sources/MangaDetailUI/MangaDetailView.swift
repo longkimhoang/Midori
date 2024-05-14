@@ -7,12 +7,13 @@
 
 import ComposableArchitecture
 import MangaDetailCore
+import ReaderUI
 import SwiftUI
 
 public struct MangaDetailView: View {
   @Environment(\.locale) private var locale
 
-  public let store: StoreOf<MangaDetailFeature>
+  @Bindable public var store: StoreOf<MangaDetailFeature>
 
   public init(store: StoreOf<MangaDetailFeature>) {
     self.store = store
@@ -25,6 +26,9 @@ public struct MangaDetailView: View {
       .navigationBarTitleDisplayMode(.inline)
       .task {
         await store.send(.fetchMangaFeed).finish()
+      }
+      .fullScreenCover(item: $store.scope(state: \.reader, action: \.reader)) { store in
+        ReaderView(store: store)
       }
   }
 
