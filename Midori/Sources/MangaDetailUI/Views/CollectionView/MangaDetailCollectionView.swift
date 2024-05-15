@@ -36,6 +36,7 @@ struct MangaDetailCollectionView: UIViewControllerRepresentable {
       super.init(collectionViewLayout: Self.layout)
 
       coordinator.configureDataSource(collectionView: collectionView)
+      collectionView.delegate = coordinator
     }
 
     @available(*, unavailable)

@@ -124,6 +124,8 @@ let package = Package(
     .target(
       name: "ReaderCore",
       dependencies: [
+        "Networking",
+        .product(name: "Algorithms", package: "swift-algorithms"),
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ]
     ),

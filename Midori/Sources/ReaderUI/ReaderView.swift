@@ -18,5 +18,8 @@ public struct ReaderView: View {
 
   public var body: some View {
     Text("Reader")
+      .task {
+        await store.send(.fetchPageURLs).finish()
+      }
   }
 }

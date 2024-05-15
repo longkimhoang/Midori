@@ -33,6 +33,7 @@ public struct MangaDetailFeature: Sendable {
     case fetchMangaFeed
     case mangaFeedResponse(Result<MangaFeed, any Error>)
     case initialChaptersResponse(IdentifiedArrayOf<Chapter>)
+    case selectChapter(UUID)
     case reader(PresentationAction<ReaderFeature.Action>)
   }
 
@@ -63,6 +64,9 @@ public struct MangaDetailFeature: Sendable {
         return .none
       case let .initialChaptersResponse(chapters):
         state.fetchStatus.success?.chapters = chapters
+        return .none
+      case let .selectChapter(chapterID):
+        state.reader = .init(chapterID: chapterID)
         return .none
       case .reader:
         return .none
