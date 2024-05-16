@@ -15,6 +15,8 @@ public struct ReaderFeature: Sendable {
   @ObservableState
   public struct State: Equatable, Sendable {
     public var chapterID: UUID
+    public var displayMode: DisplayMode = .singlePage
+    public var pages: [Page] = []
 
     public init(chapterID: UUID) {
       self.chapterID = chapterID
@@ -23,6 +25,7 @@ public struct ReaderFeature: Sendable {
 
   public enum Action: Sendable {
     case fetchPageURLs
+    case chapterResponse(Result<Chapter, Error>)
   }
 
   @Dependency(\.atHomeAPI) private var atHomeAPI
@@ -34,7 +37,7 @@ public struct ReaderFeature: Sendable {
       switch action {
       case .fetchPageURLs:
         let chapterID = state.chapterID
-        return .run { _ in
+        return .run { send in
           let response = try await atHomeAPI.getURL(request: .init(chapterID: chapterID))
           let baseURL = response.baseURL
           let hash = response.chapter.hash
@@ -56,8 +59,15 @@ public struct ReaderFeature: Sendable {
           }
 
           let chapter = Chapter(pages: pages, dataSaverPages: dataSaverPages)
-          debugPrint(chapter)
+          await send(.chapterResponse(.success(chapter)))
+        } catch: { error, send in
+          await send(.chapterResponse(.failure(error)))
         }
+      case let .chapterResponse(.success(chapter)):
+        state.pages = chapter.pages
+        return .none
+      case .chapterResponse(.failure):
+        return .none
       }
     }
   }

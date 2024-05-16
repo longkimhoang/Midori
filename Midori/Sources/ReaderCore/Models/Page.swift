@@ -1,13 +1,13 @@
 //
-//  File.swift
-//  
+//  Page.swift
+//
 //
 //  Created by Long Kim on 16/5/24.
 //
 
 import Foundation
 
-public struct Page: Equatable, Identifiable, Sendable {
+public struct Page: Equatable, Sendable {
   public let chapterID: UUID
   public let pageNumber: Int
   public let url: URL
@@ -16,9 +16,5 @@ public struct Page: Equatable, Identifiable, Sendable {
     self.chapterID = chapterID
     self.pageNumber = pageNumber
     self.url = url
-  }
-
-  public var id: String {
-    "page:\(chapterID):\(pageNumber)"
   }
 }
