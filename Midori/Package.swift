@@ -133,6 +133,7 @@ let package = Package(
       name: "ReaderUI",
       dependencies: [
         "ReaderCore",
+        "Nuke",
       ]
     ),
   ]
