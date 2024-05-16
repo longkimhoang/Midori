@@ -125,11 +125,18 @@ private struct ExpandableDescription: View {
       NavigationStack {
         ScrollView {
           HStack {
-            Text(description)
-              .multilineTextAlignment(.leading)
+            if let markdownDescription = try? AttributedString(
+              markdown: description,
+              options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            ) {
+              Text(markdownDescription)
+            } else {
+              Text(description)
+            }
 
             Spacer()
           }
+          .multilineTextAlignment(.leading)
           .scenePadding(.minimum, edges: .horizontal)
         }
         .navigationTitle(title)
