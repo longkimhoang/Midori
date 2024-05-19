@@ -12,6 +12,7 @@ extension ImagePipeline {
   static let reader: ImagePipeline = {
     let sizeLimit = 1024 * 1024 * 300 // 300 MB
     var configuration = ImagePipeline.Configuration.withDataCache(sizeLimit: sizeLimit)
+    configuration.isProgressiveDecodingEnabled = true
 
     return ImagePipeline(configuration: configuration)
   }()
