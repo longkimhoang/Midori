@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "7BF9638A-8C61-4A7A-B503-20A561D5F5F7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Midori.xcodeproj",
+      "identifier" : "5329F1EB2CC027E700A6BD2B",
+      "name" : "Midori"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Storage",
+        "identifier" : "StorageTests",
+        "name" : "StorageTests"
+      }
+    }
+  ],
+  "version" : 1
+}
