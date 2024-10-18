@@ -7,18 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5329F2012CC02E1800A6BD2B /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 5329F2002CC02E1800A6BD2B /* Storage */; };
+		53D520D52CC241D4005CD999 /* MidoriFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D42CC241D4005CD999 /* MidoriFeatures */; };
+		53D520D72CC241D4005CD999 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D62CC241D4005CD999 /* Storage */; };
+		53D520D92CC241D4005CD999 /* MidoriUI in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D82CC241D4005CD999 /* MidoriUI */; };
+		53D520DC2CC24266005CD999 /* MidoriServices in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520DB2CC24266005CD999 /* MidoriServices */; };
+		53D520DF2CC24417005CD999 /* MidoriApp in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520DE2CC24417005CD999 /* MidoriApp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5329F1EC2CC027E700A6BD2B /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5329F1FE2CC02A5700A6BD2B /* Storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Storage; sourceTree = "<group>"; };
 		5383975B2CC0366D002F82D9 /* Midori.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Midori.xctestplan; sourceTree = "<group>"; };
+		53D520D02CC23EF4005CD999 /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
+		53D520D32CC24150005CD999 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UI; sourceTree = "<group>"; };
+		53D520DA2CC2422A005CD999 /* Services */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Services; sourceTree = "<group>"; };
+		53D520DD2CC243CC005CD999 /* App */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = App; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		53D520E12CC24422005CD999 /* Exceptions for "Midori" folder in "Midori" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5329F1EB2CC027E700A6BD2B /* Midori */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5329F1EE2CC027E700A6BD2B /* Midori */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				53D520E12CC24422005CD999 /* Exceptions for "Midori" folder in "Midori" target */,
+			);
 			path = Midori;
 			sourceTree = "<group>";
 		};
@@ -29,7 +50,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5329F2012CC02E1800A6BD2B /* Storage in Frameworks */,
+				53D520D72CC241D4005CD999 /* Storage in Frameworks */,
+				53D520D52CC241D4005CD999 /* MidoriFeatures in Frameworks */,
+				53D520DC2CC24266005CD999 /* MidoriServices in Frameworks */,
+				53D520DF2CC24417005CD999 /* MidoriApp in Frameworks */,
+				53D520D92CC241D4005CD999 /* MidoriUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,8 +64,12 @@
 		5329F1E32CC027E700A6BD2B = {
 			isa = PBXGroup;
 			children = (
-				5383975B2CC0366D002F82D9 /* Midori.xctestplan */,
+				53D520DD2CC243CC005CD999 /* App */,
+				53D520D02CC23EF4005CD999 /* Features */,
+				53D520DA2CC2422A005CD999 /* Services */,
 				5329F1FE2CC02A5700A6BD2B /* Storage */,
+				53D520D32CC24150005CD999 /* UI */,
+				5383975B2CC0366D002F82D9 /* Midori.xctestplan */,
 				5329F1FF2CC02E1800A6BD2B /* Frameworks */,
 				5329F1EE2CC027E700A6BD2B /* Midori */,
 				5329F1ED2CC027E700A6BD2B /* Products */,
@@ -82,7 +111,11 @@
 			);
 			name = Midori;
 			packageProductDependencies = (
-				5329F2002CC02E1800A6BD2B /* Storage */,
+				53D520D42CC241D4005CD999 /* MidoriFeatures */,
+				53D520D62CC241D4005CD999 /* Storage */,
+				53D520D82CC241D4005CD999 /* MidoriUI */,
+				53D520DB2CC24266005CD999 /* MidoriServices */,
+				53D520DE2CC24417005CD999 /* MidoriApp */,
 			);
 			productName = Midori;
 			productReference = 5329F1EC2CC027E700A6BD2B /* Midori.app */;
@@ -100,6 +133,7 @@
 				TargetAttributes = {
 					5329F1EB2CC027E700A6BD2B = {
 						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1610;
 					};
 				};
 			};
@@ -269,13 +303,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Midori/Preview Content\"";
 				DEVELOPMENT_TEAM = ZZTDCDTRL8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = Midori/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -288,6 +323,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.longkimhoang.Midori;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Midori/Midori-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -298,13 +335,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Midori/Preview Content\"";
 				DEVELOPMENT_TEAM = ZZTDCDTRL8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = Midori/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -317,6 +355,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.longkimhoang.Midori;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Midori/Midori-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -346,9 +385,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5329F2002CC02E1800A6BD2B /* Storage */ = {
+		53D520D42CC241D4005CD999 /* MidoriFeatures */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MidoriFeatures;
+		};
+		53D520D62CC241D4005CD999 /* Storage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Storage;
+		};
+		53D520D82CC241D4005CD999 /* MidoriUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MidoriUI;
+		};
+		53D520DB2CC24266005CD999 /* MidoriServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MidoriServices;
+		};
+		53D520DE2CC24417005CD999 /* MidoriApp */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MidoriApp;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
