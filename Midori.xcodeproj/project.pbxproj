@@ -22,6 +22,7 @@
 		53D520D32CC24150005CD999 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UI; sourceTree = "<group>"; };
 		53D520DA2CC2422A005CD999 /* Services */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Services; sourceTree = "<group>"; };
 		53D520DD2CC243CC005CD999 /* App */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = App; sourceTree = "<group>"; };
+		53D520EF2CC27036005CD999 /* MangaDexAPIClient */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MangaDexAPIClient; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -66,6 +67,7 @@
 			children = (
 				53D520DD2CC243CC005CD999 /* App */,
 				53D520D02CC23EF4005CD999 /* Features */,
+				53D520EF2CC27036005CD999 /* MangaDexAPIClient */,
 				53D520DA2CC2422A005CD999 /* Services */,
 				5329F1FE2CC02A5700A6BD2B /* Storage */,
 				53D520D32CC24150005CD999 /* UI */,

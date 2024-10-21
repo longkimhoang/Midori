@@ -1,5 +1,5 @@
 {
-  "originHash" : "64492e16737d9ea8385832640bf9b96f01df75c17bbe704ce2c62b4ee2228b58",
+  "originHash" : "f206aaf67078ae37a63c7ea4148acff28b34595b8cbc938018edfd4887f7ac45",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "9fa31f4403da54855f1e2aeaeff478f4f0e40b13",
         "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Get",
+      "state" : {
+        "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
+        "version" : "2.2.1"
       }
     },
     {

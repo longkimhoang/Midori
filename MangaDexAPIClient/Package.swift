@@ -4,32 +4,29 @@
 import PackageDescription
 
 let package = Package(
-    name: "Services",
+    name: "MangaDexAPIClient",
     platforms: [.iOS(.v18)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to
         // other packages.
         .library(
-            name: "MidoriServices",
-            targets: ["MidoriServices"]
+            name: "MangaDexAPIClient",
+            targets: ["MangaDexAPIClient"]
         ),
-        .library(name: "LiveServices", targets: ["LiveServices"]),
     ],
     dependencies: [
-        .package(path: "MangaDexAPIClient"),
+        .package(url: "https://github.com/kean/Get", from: "2.2.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "MidoriServices",
-            dependencies: ["MangaDexAPIClient"],
-            path: "Sources/Services"
+            name: "MangaDexAPIClient",
+            dependencies: ["Get"]
         ),
-        .target(name: "LiveServices"),
         .testTarget(
-            name: "ServicesTests",
-            dependencies: ["MidoriServices"]
+            name: "MangaDexAPIClientTests",
+            dependencies: ["MangaDexAPIClient"]
         ),
     ]
 )
