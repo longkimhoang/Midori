@@ -7,10 +7,16 @@
 
 /// A localized string from the MangaDex API.
 public struct LocalizedString: Decodable, Sendable {
-    /// The default value. Usually English.
-    public let defaultVariant: String
-    /// Other localized variants. Can be empty.
-    public let localizedVariants: [String: String]
+    // Typealias for a languageCode-string pair
+    typealias Variant = (String, String)
+
+    // A lot of localized strings only have 1 variant, so a dictionary is overkill
+    enum Storage {
+        case single(Variant)
+        case multiple(Variant, [String: String]) // a primary variant and other variants, if any
+    }
+
+    let storage: Storage
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -22,8 +28,27 @@ public struct LocalizedString: Decodable, Sendable {
             )
         }
 
-        defaultVariant = localizedVariants["en"] ?? value
-        localizedVariants[key] = nil
-        self.localizedVariants = localizedVariants
+        if localizedVariants.count == 1 {
+            storage = .single((key, value))
+        } else {
+            localizedVariants[key] = nil
+            storage = .multiple((key, value), localizedVariants)
+        }
+    }
+
+    /// The default value. Usually English.
+    public var defaultVariant: String {
+        switch storage {
+        case .single(let (_, value)): value
+        case let .multiple((_, defaultVariant), _): defaultVariant
+        }
+    }
+
+    /// Other localized variants. Can be empty.
+    public var localizedVariants: [String: String] {
+        switch storage {
+        case .single: [:]
+        case let .multiple(_, localizedVariants): localizedVariants
+        }
     }
 }
