@@ -18,6 +18,7 @@ public extension APIClient {
     static func mangaDex(server: MangaDexServer = .production) -> APIClient {
         APIClient(baseURL: URL(string: server.baseURL)) {
             $0.decoder = .mangaDexAPI
+            $0.delegate = MangaDexAPIClientDelegate()
         }
     }
 }
