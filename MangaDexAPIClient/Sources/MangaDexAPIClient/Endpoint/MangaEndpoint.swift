@@ -22,6 +22,12 @@ public extension MangaDexAPI {
 
 // MARK: - Get Manga List
 
+public struct GetMangaListResponse: Decodable {
+    public let limit: Int
+    public let offset: Int
+    public let data: [Manga]
+}
+
 public extension MangaDexAPI.Manga {
     enum Reference: String, Sendable {
         case manga
@@ -45,7 +51,7 @@ public extension MangaDexAPI.Manga {
         includes: [Reference] = [.artist, .author, .cover],
         createdAtSince: Date? = nil,
         ids: [UUID]? = nil
-    ) -> Request<Data> {
+    ) -> Request<GetMangaListResponse> {
         var query: [URLQueryItem] = []
 
         query.append(contentsOf: pagination.queryItems)
@@ -70,6 +76,8 @@ public extension MangaDexAPI.Manga {
         )
     }
 }
+
+// MARK: - Helpers
 
 private extension [MangaDexAPI.Manga.ListSortOptions: SortOrder] {
     var queryItems: [URLQueryItem] {
