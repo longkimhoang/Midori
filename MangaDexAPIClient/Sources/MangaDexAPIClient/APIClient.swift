@@ -8,8 +8,9 @@
 import Foundation
 import Get
 
-public enum MangaDexServer {
+public enum MangaDexServer: CaseIterable, Sendable {
     case production
+    case development
 }
 
 public extension APIClient {
@@ -21,10 +22,11 @@ public extension APIClient {
     }
 }
 
-private extension MangaDexServer {
+extension MangaDexServer {
     var baseURL: String {
         switch self {
         case .production: "https://api.mangadex.org"
+        case .development: "https://api.mangadex.dev"
         }
     }
 }
