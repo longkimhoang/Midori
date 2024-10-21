@@ -26,7 +26,8 @@ let package = Package(
         ),
         .testTarget(
             name: "MangaDexAPIClientTests",
-            dependencies: ["MangaDexAPIClient"]
+            dependencies: ["MangaDexAPIClient"],
+            resources: [.process("Resources")]
         ),
     ]
 )
