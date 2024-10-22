@@ -19,6 +19,9 @@ public final class PersistenceContainer: Sendable {
         self.dbWriter = dbWriter
         try! migrator.migrate(dbWriter)
     }
+
+    /// A read only view of the database.
+    var dbReader: DatabaseReader { dbWriter }
 }
 
 // MARK: - Dependency
