@@ -1,4 +1,4 @@
-@testable import Models
+@testable import MidoriModels
 import Testing
 
 @Test func example() async throws {
