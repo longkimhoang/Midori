@@ -1,5 +1,5 @@
 {
-  "originHash" : "f206aaf67078ae37a63c7ea4148acff28b34595b8cbc938018edfd4887f7ac45",
+  "originHash" : "56d6c014c6b55649a8c5d1b84feb2993c86fd5e4be4ea8e70592e8fffc5ac516",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -134,6 +134,15 @@
       "state" : {
         "revision" : "0687f71944021d616d34d922343dcef086855920",
         "version" : "600.0.1"
+      }
+    },
+    {
+      "identity" : "swift-tagged",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-tagged",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7061233809f745e2ba6c3e8c6f984a8f36257226"
       }
     },
     {
