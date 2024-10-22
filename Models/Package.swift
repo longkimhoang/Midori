@@ -25,7 +25,7 @@ let package = Package(
             dependencies: [.product(name: "Tagged", package: "swift-tagged")]
         ),
         .testTarget(
-            name: "MidoriModelsTests",
+            name: "ModelsTests",
             dependencies: ["MidoriModels"]
         ),
     ]
