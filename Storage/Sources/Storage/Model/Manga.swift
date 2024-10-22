@@ -42,11 +42,11 @@ extension Manga: FetchableRecord, PersistableRecord {
     private static let authorForeignKey = ForeignKey(["authorId"])
     private static let artistForeignKey = ForeignKey(["artistId"])
 
-    private static let latestCover = hasOne(MangaCover.self, key: "coverId")
-    private static let covers = hasMany(MangaCover.self)
-    private static let author = belongsTo(Author.self, key: "author", using: authorForeignKey)
-    private static let artist = belongsTo(Author.self, key: "artist", using: artistForeignKey)
-    private static let chapters = hasMany(Chapter.self)
+    public static let latestCover = hasOne(MangaCover.self, key: "coverId")
+    public static let covers = hasMany(MangaCover.self)
+    public static let author = belongsTo(Author.self, key: "author", using: authorForeignKey)
+    public static let artist = belongsTo(Author.self, key: "artist", using: artistForeignKey)
+    public static let chapters = hasMany(Chapter.self)
 
     /// The latest cover of the manga, if available.
     public var latestCover: QueryInterfaceRequest<MangaCover> {

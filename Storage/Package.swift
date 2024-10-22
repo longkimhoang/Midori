@@ -15,6 +15,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "Models"),
         .package(url: "https://github.com/groue/GRDB.swift", from: "7.0.0-beta.6"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.2"),
@@ -25,6 +26,7 @@ let package = Package(
         .target(
             name: "Storage",
             dependencies: [
+                .product(name: "MidoriModels", package: "Models"),
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "DependenciesMacros", package: "swift-dependencies"),

@@ -15,18 +15,23 @@ import Tagged
 /// At runtime, consumers can decide which variant to use by using the ``subscript(language:)``
 /// function.
 @DebugDescription
-public struct LocalizedString: Sendable, CustomDebugStringConvertible {
+public struct LocalizedString: Equatable, Sendable, CustomDebugStringConvertible {
+    public struct Variant: Equatable, Sendable {
+        public let languageCode: LanguageCode
+        public let value: String
+    }
+
     /// The language code
     public typealias LanguageCode = Tagged<LocalizedString, String>
 
     /// The default value. Usually English.
-    public let defaultVariant: (LanguageCode, String)
+    public let defaultVariant: Variant
 
     /// Other localized variants. Can be empty.
     public let localizedVariants: [LanguageCode: String]
 
     public init(
-        defaultVariant: (LanguageCode, String),
+        defaultVariant: Variant,
         localizedVariants: [LanguageCode: String] = [:]
     ) {
         self.defaultVariant = defaultVariant
@@ -51,7 +56,7 @@ extension LocalizedString: CustomStringConvertible {
 
 extension LocalizedString: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self.init(defaultVariant: ("en", value))
+        self.init(defaultVariant: Variant(languageCode: "en", value: value))
     }
 }
 
@@ -60,8 +65,7 @@ extension LocalizedString: ExpressibleByStringLiteral {
 public extension LocalizedString {
     /// Returns whether the localized string contains the language specified.
     func contains(language: LanguageCode) -> Bool {
-        let (defaultLanguage, defaultValue) = defaultVariant
-        if defaultLanguage == language {
+        if defaultVariant.languageCode == language {
             return true
         }
 
@@ -70,12 +74,11 @@ public extension LocalizedString {
 
     /// Returns the value for the given language, or the value for the default variant if not found.
     subscript(language: LanguageCode) -> String {
-        let (defaultLanguage, defaultValue) = defaultVariant
-        if defaultLanguage == language {
-            return defaultValue
+        if defaultVariant.languageCode == language {
+            return defaultVariant.value
         }
 
-        return localizedVariants[language] ?? defaultValue
+        return localizedVariants[language] ?? defaultVariant.value
     }
 
     /// Returns the value for the given locale, or the value for the default variant if not found.
