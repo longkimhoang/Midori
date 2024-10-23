@@ -36,23 +36,34 @@ struct MangaRepositoryTests {
                 artistID: artist.id
             )
             try manga.save(db)
+
+            let oldManga = Manga(
+                id: UUID(),
+                title: "title",
+                // slightly over 1 month
+                createdAt: Date(timeIntervalSinceReferenceDate: -2_668_410),
+                authorID: author.id,
+                artistID: artist.id
+            )
+            try oldManga.save(db)
         }
 
         try await confirmation("Fetched popular mangas") { fetched in
             try await withDependencies {
                 $0.calendar = Calendar(identifier: .gregorian)
-                $0.date = .constant(Date(timeIntervalSinceReferenceDate: 1000))
+                $0.date = .constant(Date(timeIntervalSinceReferenceDate: 10000))
             } operation: {
                 for try await result in repository.fetchPopularMangas().first().values {
-                    let expected = Manga(
-                        id: mangaID,
-                        title: "title",
-                        author: .init(id: authorID, name: "author"),
-                        artist: .init(id: artistID, name: "artist")
-                    )
+                    let expected = [
+                        Manga(
+                            id: mangaID,
+                            title: "title",
+                            author: .init(id: authorID, name: "author"),
+                            artist: .init(id: artistID, name: "artist")
+                        ),
+                    ]
 
-                    let manga = try #require(result.first)
-                    #expect(manga == expected)
+                    #expect(result == expected)
                     fetched()
                 }
             }
