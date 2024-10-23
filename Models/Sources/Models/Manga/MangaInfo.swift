@@ -11,6 +11,11 @@ public struct MangaInfo: Identifiable, Equatable, Decodable, Sendable {
     public struct Manga: Equatable, Decodable, Sendable {
         public let id: UUID
         public let title: String
+
+        public init(id: UUID, title: String) {
+            self.id = id
+            self.title = title
+        }
     }
 
     public struct Author: Equatable, Decodable, Sendable {

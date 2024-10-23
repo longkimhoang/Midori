@@ -7,20 +7,9 @@
 
 import Dependencies
 import Foundation
-import GRDB
 import MidoriModels
 @testable import Storage
 import Testing
-
-struct Test: Codable, FetchableRecord {
-    struct PartialAuthor: Codable {
-        let name: String
-    }
-
-    let manga: Manga
-    let author: PartialAuthor
-    let artist: PartialAuthor?
-}
 
 @Suite("MangaRepository")
 struct MangaRepositoryTests {
@@ -28,15 +17,25 @@ struct MangaRepositoryTests {
     let repository = MangaRepository.liveValue
 
     @Test func fetchPopularMangas() async throws {
-        let id = UUID()
-        let record = Manga(
-            id: id,
-            title: "title",
-            createdAt: Date(timeIntervalSinceReferenceDate: 2000)
-        )
+        let mangaID = UUID()
+        let authorID = UUID()
+        let artistID = UUID()
 
         try await dbWriter.write { db in
-            try record.save(db)
+            let author = Author(id: authorID, name: "author")
+            try author.save(db)
+
+            let artist = Author(id: artistID, name: "artist")
+            try artist.save(db)
+
+            let manga = Manga(
+                id: mangaID,
+                title: "title",
+                createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                authorID: author.id,
+                artistID: artist.id
+            )
+            try manga.save(db)
         }
 
         try await confirmation("Fetched popular mangas") { fetched in
@@ -45,6 +44,14 @@ struct MangaRepositoryTests {
                 $0.date = .constant(Date(timeIntervalSinceReferenceDate: 1000))
             } operation: {
                 for try await result in repository.fetchPopularMangas().first().values {
+                    let expected = MangaInfo(
+                        manga: .init(id: mangaID, title: "title"),
+                        author: .init(id: authorID, name: "author"),
+                        artist: .init(id: artistID, name: "artist")
+                    )
+
+                    let manga = try #require(result.first)
+                    #expect(manga == expected)
                     fetched()
                 }
             }
