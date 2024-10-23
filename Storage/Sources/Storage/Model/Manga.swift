@@ -9,11 +9,21 @@ import Foundation
 import GRDB
 
 public struct Manga: Codable, Identifiable, Sendable {
+    public struct AlternateTitle: Codable, Equatable, Sendable {
+        public let language: String
+        public let value: String
+
+        public init(language: String, value: String) {
+            self.language = language
+            self.value = value
+        }
+    }
+
     public let id: UUID
     public let title: String
     public let createdAt: Date
     // Alternate titles in other languages. Not all mangas have this.
-    public let alternateTitles: [String: String]
+    public let alternateTitles: [AlternateTitle]
     public let coverId: UUID?
     public let authorID: UUID?
     public let artistID: UUID?
@@ -22,7 +32,7 @@ public struct Manga: Codable, Identifiable, Sendable {
         id: UUID,
         title: String,
         createdAt: Date,
-        alternateTitles: [String: String] = [:],
+        alternateTitles: [AlternateTitle] = [],
         coverId: UUID? = nil,
         authorID: UUID? = nil,
         artistID: UUID? = nil

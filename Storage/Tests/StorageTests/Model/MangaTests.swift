@@ -21,7 +21,7 @@ import Testing
             id: id,
             title: "title",
             createdAt: date,
-            alternateTitles: ["ja_ro": "こんにちは"]
+            alternateTitles: [.init(language: "ja_ro", value: "こんにちは")]
         )
 
         let manga = try persistenceContainer.dbWriter.write { db in
@@ -32,7 +32,9 @@ import Testing
         #expect(manga.title == "title")
         #expect(manga.createdAt.timeIntervalSince1970
             .isApproximatelyEqual(to: date.timeIntervalSince1970))
-        #expect(manga.alternateTitles == ["ja_ro": "こんにちは"])
+        let alternateTitle = try #require(manga.alternateTitles.first)
+        #expect(alternateTitle.language == "ja_ro")
+        #expect(alternateTitle.value == "こんにちは")
     }
 
     @Test func fetchesLatestCoverSuccessfully() throws {
