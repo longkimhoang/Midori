@@ -8,7 +8,12 @@
 import Foundation
 
 public struct MangaInfo: Identifiable, Equatable, Decodable, Sendable {
-    public struct AuthorInfo: Equatable, Decodable, Sendable {
+    public struct Manga: Equatable, Decodable, Sendable {
+        public let id: UUID
+        public let title: String
+    }
+
+    public struct Author: Equatable, Decodable, Sendable {
         public let id: UUID
         public let name: String
 
@@ -18,15 +23,15 @@ public struct MangaInfo: Identifiable, Equatable, Decodable, Sendable {
         }
     }
 
-    public let id: UUID
-    public let title: String
-    public let author: AuthorInfo
-    public let artist: AuthorInfo?
+    public let manga: Manga
+    public let author: Author
+    public let artist: Author?
 
-    public init(id: UUID, title: String, author: AuthorInfo, artist: AuthorInfo?) {
-        self.id = id
-        self.title = title
+    public init(manga: Manga, author: Author, artist: Author?) {
+        self.manga = manga
         self.author = author
         self.artist = artist
     }
+
+    public var id: UUID { manga.id }
 }

@@ -13,7 +13,7 @@ import GRDB
 final class GRDBStorageValuePublisher<
     Output: Sendable,
     Reducer: ValueReducer
->: StorageValuePublisher
+>: StorageValuePublisher<Output>
     where Reducer.Value == Output
 {
     private let database: DatabaseReader
@@ -30,15 +30,15 @@ final class GRDBStorageValuePublisher<
         self.observation = observation
     }
 
-    @MainActor func receivesFirstValueImmediately() -> Self {
+    @MainActor override func receivesFirstValueImmediately() -> Self {
         Self(database: database, scheduler: .immediate, observation: observation)
     }
 
-    func schedule(on queue: DispatchQueue) -> Self {
+    override func schedule(on queue: DispatchQueue) -> Self {
         Self(database: database, scheduler: .async(onQueue: queue), observation: observation)
     }
 
-    func receive<S>(subscriber: S) where S: Subscriber, S.Input == Reducer.Value,
+    override func receive<S>(subscriber: S) where S: Subscriber, S.Input == Reducer.Value,
         S.Failure == Error
     {
         let implementation = observation.publisher(
@@ -66,5 +66,13 @@ extension GRDBStorageValuePublisher {
         _ transform: @escaping @Sendable (Output) throws -> Value
     ) -> GRDBStorageValuePublisher<Value, ValueReducers.Map<Reducer, Value>> {
         .init(database: database, scheduler: scheduler, observation: observation.map(transform))
+    }
+}
+
+extension GRDBStorageValuePublisher where Output: Equatable {
+    func removeDuplicates()
+        -> GRDBStorageValuePublisher<Output, ValueReducers.RemoveDuplicates<Reducer>>
+    {
+        .init(database: database, scheduler: scheduler, observation: observation.removeDuplicates())
     }
 }

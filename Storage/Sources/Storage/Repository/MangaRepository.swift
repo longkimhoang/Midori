@@ -13,7 +13,7 @@ import MidoriModels
 
 @DependencyClient
 public struct MangaRepository: Sendable {
-    public var fetchPopularMangas: @Sendable () -> any StorageValuePublisher<[MangaInfo]> = {
+    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[MangaInfo]> = {
         EmptyStorageValuePublisher()
     }
 }
@@ -21,21 +21,21 @@ public struct MangaRepository: Sendable {
 extension MangaRepository: DependencyKey {
     public static let liveValue = Self(
         fetchPopularMangas: {
-            GRDBStorageValuePublisher { db in
-                @Dependency(\.calendar) var calendar
-                @Dependency(\.date) var date
+            @Dependency(\.calendar) var calendar
+            @Dependency(\.date.now) var now
 
+            return GRDBStorageValuePublisher { db in
                 let lastMonth = calendar.date(
                     byAdding: .month,
                     value: -1,
-                    to: date(),
+                    to: now,
                     wrappingComponents: false
                 )
 
                 return try Manga
+                    .select(Column("id"), Column("title"), Column("createdAt"))
                     .filter(Column("createdAt") >= lastMonth)
                     .limit(10)
-                    .select(Column("id"), Column("title"))
                     .including(required: Manga.author.select(Column("id"), Column("name")))
                     .including(optional: Manga.artist.select(Column("id"), Column("name")))
                     .asRequest(of: MangaInfo.self)
