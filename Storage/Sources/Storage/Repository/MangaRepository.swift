@@ -8,17 +8,22 @@
 import Combine
 import Dependencies
 import DependenciesMacros
+import Foundation
 import GRDB
 import MidoriModels
 
 @DependencyClient
 public struct MangaRepository: Sendable {
-    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[MangaInfo]> = {
+    public typealias Manga = MidoriModels.Manga
+
+    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[Manga]> = {
         EmptyStorageValuePublisher()
     }
 }
 
 extension MangaRepository: DependencyKey {
+    private typealias MangaEntity = Storage.Manga
+
     public static let liveValue = Self(
         fetchPopularMangas: {
             @Dependency(\.calendar) var calendar
@@ -32,22 +37,23 @@ extension MangaRepository: DependencyKey {
                     wrappingComponents: false
                 )
 
-                return try Manga
-                    .select(Column("id"), Column("title"), Column("createdAt"))
+                let author = MangaEntity.author.select(Column("id"), Column("name"))
+                let artist = MangaEntity.artist.select(Column("id"), Column("name"))
+
+                return try MangaEntity
                     .filter(Column("createdAt") >= lastMonth)
                     .limit(10)
-                    .including(required: Manga.author.select(Column("id"), Column("name")))
-                    .including(optional: Manga.artist.select(Column("id"), Column("name")))
+                    .including(required: author)
+                    .including(optional: artist)
                     .asRequest(of: MangaInfo.self)
                     .fetchAll(db)
             }
+            .map { $0.map(Manga.init) }
         }
     )
 
     public static let testValue = Self()
 }
-
-extension MangaInfo: @retroactive FetchableRecord {}
 
 public extension DependencyValues {
     var mangaRepository: MangaRepository {

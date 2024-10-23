@@ -44,8 +44,9 @@ struct MangaRepositoryTests {
                 $0.date = .constant(Date(timeIntervalSinceReferenceDate: 1000))
             } operation: {
                 for try await result in repository.fetchPopularMangas().first().values {
-                    let expected = MangaInfo(
-                        manga: .init(id: mangaID, title: "title"),
+                    let expected = Manga(
+                        id: mangaID,
+                        title: "title",
                         author: .init(id: authorID, name: "author"),
                         artist: .init(id: artistID, name: "artist")
                     )
