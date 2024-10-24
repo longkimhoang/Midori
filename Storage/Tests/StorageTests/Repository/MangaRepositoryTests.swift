@@ -42,8 +42,7 @@ struct MangaRepositoryTests {
                     title: "title2",
                     createdAt: Date(timeIntervalSinceReferenceDate: 2000),
                     followCount: 400,
-                    authorID: author.id,
-                    artistID: artist.id
+                    authorID: author.id
                 ),
                 Manga(
                     id: UUID(),
@@ -55,16 +54,6 @@ struct MangaRepositoryTests {
                 ),
             ]
             try mangas.forEach { try $0.save(db) }
-
-            let oldManga = Manga(
-                id: UUID(),
-                title: "title",
-                // slightly over 1 month
-                createdAt: Date(timeIntervalSinceReferenceDate: -2_668_410),
-                authorID: author.id,
-                artistID: artist.id
-            )
-            try oldManga.save(db)
         }
 
         try await confirmation("Fetched popular mangas") { fetched in
@@ -74,17 +63,16 @@ struct MangaRepositoryTests {
             } operation: {
                 for try await result in repository.fetchPopularMangas().first().values {
                     let expected = [
-                        Manga(
+                        MangaOverview(
                             id: mangaIDs[1],
                             title: "title2",
-                            author: .init(id: authorID, name: "author"),
-                            artist: .init(id: artistID, name: "artist")
+                            author: "author"
                         ),
-                        Manga(
+                        MangaOverview(
                             id: mangaIDs[0],
                             title: "title",
-                            author: .init(id: authorID, name: "author"),
-                            artist: .init(id: artistID, name: "artist")
+                            author: "author",
+                            artist: "artist"
                         ),
                     ]
 

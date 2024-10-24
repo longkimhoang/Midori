@@ -12,17 +12,12 @@ import MidoriModels
 // MARK: - Manga Info
 
 struct MangaInfo: Decodable, FetchableRecord {
-    struct PartialAuthor: Decodable {
-        let id: UUID
-        let name: String
-    }
-
     let manga: Manga
-    let author: PartialAuthor
-    let artist: PartialAuthor?
+    let author: String
+    let artist: String?
 }
 
-extension MidoriModels.Manga {
+extension MidoriModels.MangaOverview {
     init(_ info: MangaInfo) {
         let manga = info.manga
         let author = info.author
@@ -34,11 +29,5 @@ extension MidoriModels.Manga {
             author: .init(author),
             artist: artist.map { .init($0) }
         )
-    }
-}
-
-private extension MidoriModels.Manga.Author {
-    init(_ author: MangaInfo.PartialAuthor) {
-        self.init(id: author.id, name: author.name)
     }
 }
