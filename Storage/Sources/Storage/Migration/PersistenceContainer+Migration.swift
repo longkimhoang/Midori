@@ -28,6 +28,7 @@ extension PersistenceContainer {
                 t.column("title", .text)
                 t.column("createdAt", .datetime)
                 t.column("alternateTitles", .jsonText)
+                t.column("followCount", .integer)
                 t.belongsTo("author")
                 t.belongsTo("artist", inTable: "author")
             }

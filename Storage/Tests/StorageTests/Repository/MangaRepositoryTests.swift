@@ -17,7 +17,7 @@ struct MangaRepositoryTests {
     let repository = MangaRepository.liveValue
 
     @Test func fetchPopularMangas() async throws {
-        let mangaID = UUID()
+        let mangaIDs = [UUID(), UUID()]
         let authorID = UUID()
         let artistID = UUID()
 
@@ -28,14 +28,33 @@ struct MangaRepositoryTests {
             let artist = Author(id: artistID, name: "artist")
             try artist.save(db)
 
-            let manga = Manga(
-                id: mangaID,
-                title: "title",
-                createdAt: Date(timeIntervalSinceReferenceDate: 2000),
-                authorID: author.id,
-                artistID: artist.id
-            )
-            try manga.save(db)
+            let mangas = [
+                Manga(
+                    id: mangaIDs[0],
+                    title: "title",
+                    createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                    followCount: 1000,
+                    authorID: author.id,
+                    artistID: artist.id
+                ),
+                Manga(
+                    id: mangaIDs[1],
+                    title: "title2",
+                    createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                    followCount: 400,
+                    authorID: author.id,
+                    artistID: artist.id
+                ),
+                Manga(
+                    id: UUID(),
+                    title: "title3",
+                    // slightly over 1 month
+                    createdAt: Date(timeIntervalSinceReferenceDate: -2_668_410),
+                    authorID: author.id,
+                    artistID: artist.id
+                ),
+            ]
+            try mangas.forEach { try $0.save(db) }
 
             let oldManga = Manga(
                 id: UUID(),
@@ -56,7 +75,13 @@ struct MangaRepositoryTests {
                 for try await result in repository.fetchPopularMangas().first().values {
                     let expected = [
                         Manga(
-                            id: mangaID,
+                            id: mangaIDs[1],
+                            title: "title2",
+                            author: .init(id: authorID, name: "author"),
+                            artist: .init(id: artistID, name: "artist")
+                        ),
+                        Manga(
+                            id: mangaIDs[0],
                             title: "title",
                             author: .init(id: authorID, name: "author"),
                             artist: .init(id: artistID, name: "artist")

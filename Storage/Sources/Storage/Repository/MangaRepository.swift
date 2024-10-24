@@ -42,6 +42,7 @@ extension MangaRepository: DependencyKey {
 
                 return try MangaEntity
                     .filter(Column("createdAt") >= lastMonth)
+                    .order(Column("followCount"))
                     .limit(10)
                     .including(required: author)
                     .including(optional: artist)
