@@ -100,4 +100,76 @@ struct MangaRepositoryTests {
             }
         }
     }
+
+    @Test func saveMangas() async throws {
+        let mangaIDs = [UUID(), UUID()]
+        let authorID = UUID()
+        let artistID = UUID()
+
+        try await dbWriter.write { db in
+            let author = Author(id: authorID, name: "author")
+            try author.save(db)
+
+            let artist = Author(id: artistID, name: "artist")
+            try artist.save(db)
+        }
+
+        let input = [
+            Manga(
+                id: mangaIDs[0],
+                title: "title",
+                createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                followCount: 1000,
+                alternateTitles: [
+                    .init(defaultVariant: .init(
+                        languageCode: "en",
+                        value: "alternate title"
+                    )),
+                    .init(defaultVariant: .init(
+                        languageCode: "ja-ro",
+                        value: "こんにちは"
+                    )),
+                ],
+                author: .init(id: authorID, name: "author"),
+                artist: .init(id: artistID, name: "artist")
+            ),
+            Manga(
+                id: mangaIDs[1],
+                title: "title2",
+                createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                followCount: 400,
+                author: .init(id: authorID, name: "author")
+            ),
+        ]
+
+        try await repository.saveMangas(mangas: input)
+
+        let mangas = try await dbWriter.read { db in
+            try Manga.fetchAll(db)
+        }
+
+        let expected = [
+            Manga(
+                id: mangaIDs[0],
+                title: "title",
+                createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                alternateTitles: [
+                    .init(language: "en", value: "alternate title"),
+                    .init(language: "ja-ro", value: "こんにちは"),
+                ],
+                followCount: 1000,
+                authorID: authorID,
+                artistID: artistID
+            ),
+            Manga(
+                id: mangaIDs[1],
+                title: "title2",
+                createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                followCount: 400,
+                authorID: authorID
+            ),
+        ]
+
+        #expect(mangas == expected)
+    }
 }

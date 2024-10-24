@@ -8,7 +8,7 @@
 import Foundation
 import GRDB
 
-struct Manga: Codable, Identifiable, Sendable {
+struct Manga: Codable, Identifiable, Equatable, Sendable {
     struct AlternateTitle: Codable, Equatable, Sendable {
         let language: String
         let value: String
