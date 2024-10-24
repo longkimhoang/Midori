@@ -19,6 +19,7 @@ struct Manga: Codable, Identifiable, Sendable {
     let createdAt: Date
     // Alternate titles in other languages. Not all mangas have this.
     let alternateTitles: [AlternateTitle]
+    let description: [String: String]?
     let followCount: Int
     let coverID: UUID?
     let authorID: UUID?
@@ -29,6 +30,7 @@ struct Manga: Codable, Identifiable, Sendable {
         title: String,
         createdAt: Date,
         alternateTitles: [AlternateTitle] = [],
+        description: [String: String]? = nil,
         followCount: Int = 0,
         coverID: UUID? = nil,
         authorID: UUID? = nil,
@@ -38,6 +40,7 @@ struct Manga: Codable, Identifiable, Sendable {
         self.title = title
         self.createdAt = createdAt
         self.alternateTitles = alternateTitles
+        self.description = description
         self.followCount = followCount
         self.coverID = coverID
         self.authorID = authorID

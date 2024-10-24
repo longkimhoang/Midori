@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NonEmpty
 import Tagged
 
 /// A string with localized variants.
@@ -16,47 +17,45 @@ import Tagged
 /// function.
 @DebugDescription
 public struct LocalizedString: Equatable, Sendable, CustomDebugStringConvertible {
-    public struct Variant: Equatable, Sendable {
-        public let languageCode: LanguageCode
-        public let value: String
-    }
-
     /// The language code
     public typealias LanguageCode = Tagged<LocalizedString, String>
 
-    /// The default value. Usually English.
-    public let defaultVariant: Variant
-
-    /// Other localized variants. Can be empty.
-    public let localizedVariants: [LanguageCode: String]
+    /// The localized variants. Can be empty.
+    public let localizedVariants: NonEmptyDictionary<LanguageCode, String>
 
     public init(
-        defaultVariant: Variant,
-        localizedVariants: [LanguageCode: String] = [:]
+        localizedVariants: NonEmptyDictionary<LanguageCode, String>
     ) {
-        self.defaultVariant = defaultVariant
         self.localizedVariants = localizedVariants
     }
 
     public var debugDescription: String {
         """
         LocalizedString {
-            default = \(defaultVariant),
-            otherVariants = \(localizedVariants.debugDescription)
+            variants = \(localizedVariants.debugDescription)
         }
         """
     }
 }
 
-extension LocalizedString: CustomStringConvertible {
-    public var description: String {
-        "LocalizedString(default=\(defaultVariant), \(localizedVariants.count) other variants)"
+public extension LocalizedString {
+    init?(_ dictionary: [String: String]) {
+        let localizedVariants: [LanguageCode: String] = dictionary
+            .reduce(into: [:]) { result, pair in
+                result[LanguageCode(pair.key)] = pair.value
+            }
+
+        guard let localizedVariants = NonEmptyDictionary(rawValue: localizedVariants) else {
+            return nil
+        }
+
+        self.init(localizedVariants: localizedVariants)
     }
 }
 
 extension LocalizedString: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self.init(defaultVariant: Variant(languageCode: "en", value: value))
+        self.init(localizedVariants: ["en": value])
     }
 }
 
@@ -65,20 +64,12 @@ extension LocalizedString: ExpressibleByStringLiteral {
 public extension LocalizedString {
     /// Returns whether the localized string contains the language specified.
     func contains(language: LanguageCode) -> Bool {
-        if defaultVariant.languageCode == language {
-            return true
-        }
-
-        return localizedVariants.keys.contains(language)
+        localizedVariants.keys.contains(language)
     }
 
     /// Returns the value for the given language, or the value for the default variant if not found.
     subscript(language: LanguageCode) -> String {
-        if defaultVariant.languageCode == language {
-            return defaultVariant.value
-        }
-
-        return localizedVariants[language] ?? defaultVariant.value
+        localizedVariants[language] ?? localizedVariants.first.value
     }
 
     /// Returns the value for the given locale, or the value for the default variant if not found.

@@ -16,7 +16,7 @@ import MidoriModels
 public struct MangaRepository: Sendable {
     public typealias Manga = MidoriModels.Manga
 
-    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[MangaOverview]> = {
+    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[Manga]> = {
         EmptyStorageValuePublisher()
     }
 }
@@ -37,19 +37,19 @@ extension MangaRepository: DependencyKey {
                     wrappingComponents: false
                 )
 
-                let author = MangaEntity.author.select(Column("name").forKey("author"))
-                let artist = MangaEntity.artist.select(Column("name").forKey("artist"))
+                let author = MangaEntity.author.select(Column("id"), Column("name"))
+                let artist = MangaEntity.artist.select(Column("id"), Column("name"))
 
                 return try MangaEntity
                     .filter(Column("createdAt") >= lastMonth)
-                    .order(Column("followCount"))
+                    .order(Column("followCount").desc)
                     .limit(10)
-                    .annotated(withRequired: author)
-                    .annotated(withOptional: artist)
+                    .including(required: author)
+                    .including(optional: artist)
                     .asRequest(of: MangaInfo.self)
                     .fetchAll(db)
             }
-            .map { $0.map(MangaOverview.init) }
+            .map { $0.map(Manga.init) }
         }
     )
 

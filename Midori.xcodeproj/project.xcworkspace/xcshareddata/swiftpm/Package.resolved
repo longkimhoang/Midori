@@ -1,5 +1,5 @@
 {
-  "originHash" : "56d6c014c6b55649a8c5d1b84feb2993c86fd5e4be4ea8e70592e8fffc5ac516",
+  "originHash" : "a3403308e48c24183a51e844c7f509026f9fe277313e0b3cb8792d4b9a7f84a3",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -107,6 +107,15 @@
       "state" : {
         "revision" : "16a27ab7ae0abfefbbcba73581b3e2380b47a579",
         "version" : "2.2.2"
+      }
+    },
+    {
+      "identity" : "swift-nonempty",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-nonempty",
+      "state" : {
+        "revision" : "1fd3f067ebc3900d200aa7e977fdb614cc5533bc",
+        "version" : "0.5.0"
       }
     },
     {

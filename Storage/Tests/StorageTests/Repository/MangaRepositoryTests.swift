@@ -63,16 +63,20 @@ struct MangaRepositoryTests {
             } operation: {
                 for try await result in repository.fetchPopularMangas().first().values {
                     let expected = [
-                        MangaOverview(
-                            id: mangaIDs[1],
-                            title: "title2",
-                            author: "author"
-                        ),
-                        MangaOverview(
+                        Manga(
                             id: mangaIDs[0],
                             title: "title",
-                            author: "author",
-                            artist: "artist"
+                            createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                            followCount: 1000,
+                            author: .init(id: authorID, name: "author"),
+                            artist: .init(id: artistID, name: "artist")
+                        ),
+                        Manga(
+                            id: mangaIDs[1],
+                            title: "title2",
+                            createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                            followCount: 400,
+                            author: .init(id: authorID, name: "author")
                         ),
                     ]
 
