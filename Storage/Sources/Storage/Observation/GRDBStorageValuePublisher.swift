@@ -67,6 +67,16 @@ extension GRDBStorageValuePublisher {
     ) -> GRDBStorageValuePublisher<Value, ValueReducers.Map<Reducer, Value>> {
         .init(database: database, scheduler: scheduler, observation: observation.map(transform))
     }
+
+    func removeDuplicates(by predicate: @escaping @Sendable (Output, Output) -> Bool)
+        -> GRDBStorageValuePublisher<Output, ValueReducers.RemoveDuplicates<Reducer>>
+    {
+        .init(
+            database: database,
+            scheduler: scheduler,
+            observation: observation.removeDuplicates(by: predicate)
+        )
+    }
 }
 
 extension GRDBStorageValuePublisher where Output: Equatable {
