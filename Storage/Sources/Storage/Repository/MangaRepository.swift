@@ -19,6 +19,8 @@ public struct MangaRepository: Sendable {
     public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[Manga]> = {
         EmptyStorageValuePublisher()
     }
+
+    public var saveMangas: @Sendable (_ mangas: [Manga]) async throws -> Void
 }
 
 extension MangaRepository: DependencyKey {
@@ -50,6 +52,13 @@ extension MangaRepository: DependencyKey {
                     .fetchAll(db)
             }
             .map { $0.map(Manga.init) }
+        },
+        saveMangas: { mangas in
+            @Dependency(\.persistenceContainer.dbWriter) var dbWriter
+
+            try await dbWriter.write { db in
+                try mangas.map(MangaEntity.init).forEach { try $0.upsert(db) }
+            }
         }
     )
 

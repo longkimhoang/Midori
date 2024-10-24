@@ -33,6 +33,10 @@ struct MangaRepositoryTests {
                     id: mangaIDs[0],
                     title: "title",
                     createdAt: Date(timeIntervalSinceReferenceDate: 2000),
+                    alternateTitles: [
+                        .init(language: "en", value: "alternate title"),
+                        .init(language: "ja-ro", value: "こんにちは"),
+                    ],
                     followCount: 1000,
                     authorID: author.id,
                     artistID: artist.id
@@ -68,6 +72,16 @@ struct MangaRepositoryTests {
                             title: "title",
                             createdAt: Date(timeIntervalSinceReferenceDate: 2000),
                             followCount: 1000,
+                            alternateTitles: [
+                                .init(defaultVariant: .init(
+                                    languageCode: "en",
+                                    value: "alternate title"
+                                )),
+                                .init(defaultVariant: .init(
+                                    languageCode: "ja-ro",
+                                    value: "こんにちは"
+                                )),
+                            ],
                             author: .init(id: authorID, name: "author"),
                             artist: .init(id: artistID, name: "artist")
                         ),

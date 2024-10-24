@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import NonEmpty
 import Tagged
 
 /// A string with localized variants.
@@ -17,45 +16,55 @@ import Tagged
 /// function.
 @DebugDescription
 public struct LocalizedString: Equatable, Sendable, CustomDebugStringConvertible {
+    public struct DefaultVariant: Equatable, Sendable {
+        public let languageCode: LanguageCode
+        public let value: String
+
+        public init(languageCode: LanguageCode, value: String) {
+            self.languageCode = languageCode
+            self.value = value
+        }
+    }
+
     /// The language code
     public typealias LanguageCode = Tagged<LocalizedString, String>
 
-    /// The localized variants. Can be empty.
-    public let localizedVariants: NonEmptyDictionary<LanguageCode, String>
+    /// The default variant.
+    public let defaultVariant: DefaultVariant
+
+    /// Other localized variants. Can be empty.
+    public let localizedVariants: [LanguageCode: String]
 
     public init(
-        localizedVariants: NonEmptyDictionary<LanguageCode, String>
+        defaultVariant: DefaultVariant,
+        localizedVariants: [LanguageCode: String] = [:]
     ) {
+        self.defaultVariant = defaultVariant
         self.localizedVariants = localizedVariants
     }
 
     public var debugDescription: String {
         """
         LocalizedString {
-            variants = \(localizedVariants.debugDescription)
+            defaultVariant = { code=\(defaultVariant.languageCode), value=\(defaultVariant.value) }
+            localizedVariants = \(localizedVariants.debugDescription)
         }
         """
     }
 }
 
 public extension LocalizedString {
-    init?(_ dictionary: [String: String]) {
-        let localizedVariants: [LanguageCode: String] = dictionary
-            .reduce(into: [:]) { result, pair in
-                result[LanguageCode(pair.key)] = pair.value
-            }
-
-        guard let localizedVariants = NonEmptyDictionary(rawValue: localizedVariants) else {
+    init?(_ dictionary: [LanguageCode: String]) {
+        guard let (key, value) = dictionary.first else {
             return nil
         }
 
-        self.init(localizedVariants: localizedVariants)
-    }
-}
+        let defaultVariant = DefaultVariant(languageCode: key, value: value)
+        let localizedVariants = dictionary.dropFirst().reduce(into: [:]) { result, pair in
+            result[pair.key] = pair.value
+        }
 
-extension LocalizedString: ExpressibleByStringLiteral {
-    public init(stringLiteral value: String) {
-        self.init(localizedVariants: ["en": value])
+        self.init(defaultVariant: defaultVariant, localizedVariants: localizedVariants)
     }
 }
 
@@ -69,7 +78,7 @@ public extension LocalizedString {
 
     /// Returns the value for the given language, or the value for the default variant if not found.
     subscript(language: LanguageCode) -> String {
-        localizedVariants[language] ?? localizedVariants.first.value
+        localizedVariants[language] ?? defaultVariant.value
     }
 
     /// Returns the value for the given locale, or the value for the default variant if not found.

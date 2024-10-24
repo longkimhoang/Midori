@@ -16,7 +16,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-tagged", branch: "main"),
-        .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,7 +24,6 @@ let package = Package(
             name: "MidoriModels",
             dependencies: [
                 .product(name: "Tagged", package: "swift-tagged"),
-                .product(name: "NonEmpty", package: "swift-nonempty"),
             ]
         ),
         .testTarget(

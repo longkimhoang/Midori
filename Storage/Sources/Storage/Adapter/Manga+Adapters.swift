@@ -8,7 +8,6 @@
 import Foundation
 import GRDB
 import MidoriModels
-import NonEmpty
 
 struct MangaInfo: Decodable, FetchableRecord {
     struct PartialAuthor: Decodable {
@@ -24,10 +23,10 @@ struct MangaInfo: Decodable, FetchableRecord {
 extension Manga {
     init(_ manga: MidoriModels.Manga) {
         let alternateTitles = manga.alternateTitles.map {
-            let (languageCode, value) = $0.localizedVariants.first
+            let defaultVariant = $0.defaultVariant
             return AlternateTitle(
-                language: languageCode.rawValue,
-                value: value
+                language: defaultVariant.languageCode.rawValue,
+                value: defaultVariant.value
             )
         }
 
@@ -73,6 +72,14 @@ private extension MidoriModels.Manga.Author {
 
 private extension LocalizedString {
     init(_ title: Manga.AlternateTitle) {
-        self.init(localizedVariants: [LanguageCode(title.language): title.value])
+        self.init(defaultVariant: .init(languageCode: .init(title.language), value: title.value))
+    }
+
+    init?(_ dictionary: [String: String]) {
+        let dictionary: [LanguageCode: String] = dictionary.reduce(into: [:]) { result, pair in
+            result[LanguageCode(pair.key)] = pair.value
+        }
+
+        self.init(dictionary)
     }
 }
