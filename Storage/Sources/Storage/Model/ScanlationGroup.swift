@@ -6,25 +6,21 @@
 //
 
 import Foundation
-import GRDB
+import SwiftData
 
-struct ScanlationGroup: Codable, Identifiable, Sendable {
-    let id: UUID
-    let name: String
-    let description: String?
+@Model
+public final class ScanlationGroupEntity {
+    #Unique<ScanlationGroupEntity>([\.id])
 
-    init(id: UUID, name: String, description: String? = nil) {
+    public var id: UUID
+    public var name: String
+    public var groupDescription: String?
+
+    public init(id: UUID, name: String, groupDescription: String? = nil) {
         self.id = id
         self.name = name
-        self.description = description
+        self.groupDescription = groupDescription
     }
-}
 
-extension ScanlationGroup: FetchableRecord, PersistableRecord {
-    private static let chapters = hasMany(Chapter.self)
-
-    /// The chapters this group worked on.
-    var chapters: QueryInterfaceRequest<Chapter> {
-        request(for: ScanlationGroup.chapters)
-    }
+    @Relationship public var chapters: [ChapterEntity] = []
 }

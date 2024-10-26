@@ -26,13 +26,6 @@
     },
     {
       "target" : {
-        "containerPath" : "container:Models",
-        "identifier" : "ModelsTests",
-        "name" : "ModelsTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:MangaDexAPIClient",
         "identifier" : "MangaDexAPIClientTests",
         "name" : "MangaDexAPIClientTests"

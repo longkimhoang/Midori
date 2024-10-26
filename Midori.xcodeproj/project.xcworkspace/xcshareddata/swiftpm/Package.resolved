@@ -1,5 +1,5 @@
 {
-  "originHash" : "5c836dc29b90ca10ee1123e644428a32d326db8f5ec14958dcc36f12c4c874df",
+  "originHash" : "4c68293a538cc442b43634a850b13f82104fb772528f8690d68717414620b0ca",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
         "version" : "2.2.1"
-      }
-    },
-    {
-      "identity" : "grdb.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/GRDB.swift",
-      "state" : {
-        "revision" : "84d25dfc9dc1766feb8c80fb04b9f7e2337fb83e",
-        "version" : "7.0.0-beta.6"
       }
     },
     {
@@ -60,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "fc5cbeec88114ff987f6c3cad3a7f3a3713fdb56",
-        "version" : "1.15.1"
+        "revision" : "56149436a3c3dbf605a89a204aaa904de8ba4580",
+        "version" : "1.15.2"
       }
     },
     {
@@ -107,6 +98,15 @@
       "state" : {
         "revision" : "16a27ab7ae0abfefbbcba73581b3e2380b47a579",
         "version" : "2.2.2"
+      }
+    },
+    {
+      "identity" : "swift-nonempty",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-nonempty",
+      "state" : {
+        "revision" : "1fd3f067ebc3900d200aa7e977fdb614cc5533bc",
+        "version" : "0.5.0"
       }
     },
     {

@@ -7,123 +7,129 @@
 
 import Dependencies
 import Foundation
+@testable import MidoriStorage
 import Numerics
-@testable import Storage
+import SwiftData
 import Testing
 
-@Suite struct MangaTests {
-    @Dependency(\.persistenceContainer) var persistenceContainer
+@Suite("Manga model")
+struct MangaTests {
+    @Dependency(\.modelContainer) var modelContainer
 
     @Test func savesSuccessfully() throws {
+        let context = ModelContext(modelContainer)
+
         let id = UUID()
         let date = Date()
-        let record = MangaEntity(
+        let manga = MangaEntity(
             id: id,
             title: "title",
             createdAt: date,
-            alternateTitles: [.init(language: "ja_ro", value: "こんにちは")]
+            alternateTitles: [.init(localizedVariants: ["ja_ro": "こんにちは"])]
         )
 
-        let manga = try persistenceContainer.dbWriter.write { db in
-            try record.saveAndFetch(db)
-        }
+        context.insert(manga)
 
-        #expect(manga.id == id)
-        #expect(manga.title == "title")
-        #expect(manga.createdAt.timeIntervalSince1970
-            .isApproximatelyEqual(to: date.timeIntervalSince1970))
-        let alternateTitle = try #require(manga.alternateTitles.first)
-        #expect(alternateTitle.language == "ja_ro")
-        #expect(alternateTitle.value == "こんにちは")
+        #expect(throws: Never.self) {
+            try context.save()
+        }
     }
 
     @Test func fetchesLatestCoverSuccessfully() throws {
+        let context = ModelContext(modelContainer)
         let coverID = UUID()
-        let cover = try persistenceContainer.dbWriter.write { db in
-            let manga = MangaEntity(id: UUID(), title: "title", createdAt: Date())
-            try manga.save(db)
 
-            let cover = MangaCover(
-                id: coverID,
-                mangaID: manga.id,
-                fileName: "fileName",
-                volume: nil
-            )
-            try cover.save(db)
+        let manga = MangaEntity(id: UUID(), title: "title", createdAt: Date())
+        context.insert(manga)
 
-            return try manga.latestCover.fetchOne(db)
+        let cover = MangaCoverEntity(
+            id: coverID,
+            fileName: "fileName",
+            volume: nil
+        )
+        cover.manga = manga
+        context.insert(cover)
+
+        manga.currentCover = cover
+
+        #expect(throws: Never.self) {
+            try context.save()
         }
 
-        #expect(cover?.id == coverID)
+        #expect(manga.currentCover?.id == coverID)
     }
 
     @Test func fetchesAllCoversSuccessfully() throws {
+        let context = ModelContext(modelContainer)
         let coverIDs: [UUID] = [UUID(), UUID(), UUID()]
-        let covers = try persistenceContainer.dbWriter.write { db in
-            let manga = MangaEntity(id: UUID(), title: "title", createdAt: Date())
-            try manga.save(db)
+        let manga = MangaEntity(id: UUID(), title: "title", createdAt: Date())
+        context.insert(manga)
 
-            for coverID in coverIDs {
-                let cover = MangaCover(
-                    id: coverID,
-                    mangaID: manga.id,
-                    fileName: "fileName",
-                    volume: nil
-                )
-                try cover.save(db)
-            }
-
-            return try manga.covers.fetchAll(db)
+        for coverID in coverIDs {
+            let cover = MangaCoverEntity(
+                id: coverID,
+                fileName: "fileName",
+                volume: nil
+            )
+            cover.manga = manga
+            context.insert(cover)
         }
 
-        #expect(covers.map(\.id) == coverIDs)
+        #expect(throws: Never.self) {
+            try context.save()
+        }
+
+        #expect(manga.covers.map(\.id).sorted() == coverIDs.sorted())
     }
 
     @Test func fetchAuthorSuccessfully() throws {
+        let context = ModelContext(modelContainer)
         let authorID = UUID()
-        let author = try persistenceContainer.dbWriter.write { db in
-            let author = Author(
-                id: authorID,
-                name: "artist",
-                imageURL: URL(string: "https://example.com")
-            )
-            try author.save(db)
+        let author = AuthorEntity(
+            id: authorID,
+            name: "author",
+            imageURL: URL(string: "https://example.com")
+        )
+        context.insert(author)
 
-            let manga = MangaEntity(
-                id: UUID(),
-                title: "title",
-                createdAt: Date(),
-                authorID: authorID
-            )
-            try manga.save(db)
+        let manga = MangaEntity(
+            id: UUID(),
+            title: "title",
+            createdAt: Date()
+        )
+        manga.author = author
 
-            return try manga.author.fetchOne(db)
+        #expect(throws: Never.self) {
+            try context.save()
         }
 
-        #expect(author?.id == authorID)
+        #expect(manga.author?.id == authorID)
+        #expect(author.mangasAsAuthor.map(\.id).sorted() == [manga.id])
     }
 
     @Test func fetchArtistSuccessfully() throws {
+        let context = ModelContext(modelContainer)
         let artistID = UUID()
-        let artist = try persistenceContainer.dbWriter.write { db in
-            let artist = Author(
-                id: artistID,
-                name: "artist",
-                imageURL: URL(string: "https://example.com")
-            )
-            try artist.save(db)
+        let artist = AuthorEntity(
+            id: artistID,
+            name: "artist",
+            imageURL: URL(string: "https://example.com")
+        )
+        context.insert(artist)
 
-            let manga = MangaEntity(
-                id: UUID(),
-                title: "title",
-                createdAt: Date(),
-                artistID: artistID
-            )
-            try manga.save(db)
+        let manga = MangaEntity(
+            id: UUID(),
+            title: "title",
+            createdAt: Date()
+        )
+        manga.artist = artist
+        context.insert(manga)
 
-            return try manga.artist.fetchOne(db)
+        #expect(throws: Never.self) {
+            try context.save()
         }
 
-        #expect(artist?.id == artistID)
+        #expect(manga.artist?.id == artistID)
+        #expect(artist.mangasAsAritst.map(\.id).sorted() == [manga.id])
     }
 }

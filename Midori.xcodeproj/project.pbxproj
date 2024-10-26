@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5353E89E2CCB92120092464B /* MidoriStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5353E89D2CCB92120092464B /* MidoriStorage */; };
-		53D520D52CC241D4005CD999 /* MidoriFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D42CC241D4005CD999 /* MidoriFeatures */; };
-		53D520D92CC241D4005CD999 /* MidoriUI in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D82CC241D4005CD999 /* MidoriUI */; };
-		53D520DC2CC24266005CD999 /* MidoriServices in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520DB2CC24266005CD999 /* MidoriServices */; };
-		53D520DF2CC24417005CD999 /* MidoriApp in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520DE2CC24417005CD999 /* MidoriApp */; };
+		53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4B2CCD388D005A4538 /* MidoriApp */; };
+		53AA5E4E2CCD38B6005A4538 /* MidoriFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4D2CCD38B6005A4538 /* MidoriFeatures */; };
+		53AA5E502CCD38B6005A4538 /* MangaDexAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4F2CCD38B6005A4538 /* MangaDexAPIClient */; };
+		53AA5E522CCD38B6005A4538 /* MidoriServices in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E512CCD38B6005A4538 /* MidoriServices */; };
+		53AA5E542CCD38B6005A4538 /* MidoriStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E532CCD38B6005A4538 /* MidoriStorage */; };
+		53AA5E562CCD38B6005A4538 /* MidoriUI in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E552CCD38B6005A4538 /* MidoriUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5329F1EC2CC027E700A6BD2B /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5329F1FE2CC02A5700A6BD2B /* Storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Storage; sourceTree = "<group>"; };
-		534BEF922CC6C858009EA189 /* Models */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Models; sourceTree = "<group>"; };
 		5383975B2CC0366D002F82D9 /* Midori.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Midori.xctestplan; sourceTree = "<group>"; };
 		53D520D02CC23EF4005CD999 /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		53D520D32CC24150005CD999 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UI; sourceTree = "<group>"; };
@@ -52,11 +52,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53D520D52CC241D4005CD999 /* MidoriFeatures in Frameworks */,
-				5353E89E2CCB92120092464B /* MidoriStorage in Frameworks */,
-				53D520DC2CC24266005CD999 /* MidoriServices in Frameworks */,
-				53D520DF2CC24417005CD999 /* MidoriApp in Frameworks */,
-				53D520D92CC241D4005CD999 /* MidoriUI in Frameworks */,
+				53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */,
+				53AA5E542CCD38B6005A4538 /* MidoriStorage in Frameworks */,
+				53AA5E562CCD38B6005A4538 /* MidoriUI in Frameworks */,
+				53AA5E4E2CCD38B6005A4538 /* MidoriFeatures in Frameworks */,
+				53AA5E522CCD38B6005A4538 /* MidoriServices in Frameworks */,
+				53AA5E502CCD38B6005A4538 /* MangaDexAPIClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,7 +70,6 @@
 				53D520DD2CC243CC005CD999 /* App */,
 				53D520D02CC23EF4005CD999 /* Features */,
 				53D520EF2CC27036005CD999 /* MangaDexAPIClient */,
-				534BEF922CC6C858009EA189 /* Models */,
 				53D520DA2CC2422A005CD999 /* Services */,
 				5329F1FE2CC02A5700A6BD2B /* Storage */,
 				53D520D32CC24150005CD999 /* UI */,
@@ -115,11 +115,12 @@
 			);
 			name = Midori;
 			packageProductDependencies = (
-				53D520D42CC241D4005CD999 /* MidoriFeatures */,
-				53D520D82CC241D4005CD999 /* MidoriUI */,
-				53D520DB2CC24266005CD999 /* MidoriServices */,
-				53D520DE2CC24417005CD999 /* MidoriApp */,
-				5353E89D2CCB92120092464B /* MidoriStorage */,
+				53AA5E4B2CCD388D005A4538 /* MidoriApp */,
+				53AA5E4D2CCD38B6005A4538 /* MidoriFeatures */,
+				53AA5E4F2CCD38B6005A4538 /* MangaDexAPIClient */,
+				53AA5E512CCD38B6005A4538 /* MidoriServices */,
+				53AA5E532CCD38B6005A4538 /* MidoriStorage */,
+				53AA5E552CCD38B6005A4538 /* MidoriUI */,
 			);
 			productName = Midori;
 			productReference = 5329F1EC2CC027E700A6BD2B /* Midori.app */;
@@ -389,25 +390,29 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5353E89D2CCB92120092464B /* MidoriStorage */ = {
+		53AA5E4B2CCD388D005A4538 /* MidoriApp */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MidoriStorage;
+			productName = MidoriApp;
 		};
-		53D520D42CC241D4005CD999 /* MidoriFeatures */ = {
+		53AA5E4D2CCD38B6005A4538 /* MidoriFeatures */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MidoriFeatures;
 		};
-		53D520D82CC241D4005CD999 /* MidoriUI */ = {
+		53AA5E4F2CCD38B6005A4538 /* MangaDexAPIClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MidoriUI;
+			productName = MangaDexAPIClient;
 		};
-		53D520DB2CC24266005CD999 /* MidoriServices */ = {
+		53AA5E512CCD38B6005A4538 /* MidoriServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MidoriServices;
 		};
-		53D520DE2CC24417005CD999 /* MidoriApp */ = {
+		53AA5E532CCD38B6005A4538 /* MidoriStorage */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MidoriApp;
+			productName = MidoriStorage;
+		};
+		53AA5E552CCD38B6005A4538 /* MidoriUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MidoriUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

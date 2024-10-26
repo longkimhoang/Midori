@@ -15,9 +15,9 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "Models"),
-        .package(url: "https://github.com/groue/GRDB.swift", from: "7.0.0-beta.6"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
+        .package(url: "https://github.com/pointfreeco/swift-tagged", branch: "main"),
+        .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.2"),
     ],
     targets: [
@@ -26,10 +26,10 @@ let package = Package(
         .target(
             name: "MidoriStorage",
             dependencies: [
-                .product(name: "MidoriModels", package: "Models"),
-                .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "DependenciesMacros", package: "swift-dependencies"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "NonEmpty", package: "swift-nonempty"),
             ]
         ),
         .testTarget(

@@ -13,7 +13,6 @@ let package = Package(
             name: "MidoriServices",
             targets: ["MidoriServices"]
         ),
-        .library(name: "LiveServices", targets: ["LiveServices"]),
     ],
     dependencies: [
         .package(path: "MangaDexAPIClient"),
@@ -23,10 +22,8 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "MidoriServices",
-            dependencies: ["MangaDexAPIClient"],
-            path: "Sources/Services"
+            dependencies: ["MangaDexAPIClient"]
         ),
-        .target(name: "LiveServices"),
         .testTarget(
             name: "ServicesTests",
             dependencies: ["MidoriServices"]
