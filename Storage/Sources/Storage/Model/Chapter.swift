@@ -19,11 +19,11 @@ struct Chapter: Codable, Identifiable, Sendable {
 }
 
 extension Chapter: FetchableRecord, PersistableRecord {
-    private static let manga = belongsTo(Manga.self)
+    private static let manga = belongsTo(MangaEntity.self)
     private static let scanlationGroup = belongsTo(ScanlationGroup.self)
 
     /// The chapter's manga.
-    var manga: QueryInterfaceRequest<Manga> {
+    var manga: QueryInterfaceRequest<MangaEntity> {
         request(for: Chapter.manga)
     }
 

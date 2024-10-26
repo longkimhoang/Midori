@@ -8,7 +8,7 @@
 import Dependencies
 import Foundation
 import GRDB
-@testable import Storage
+@testable import MidoriStorage
 import Testing
 
 @Suite struct ChapterTests {
@@ -24,7 +24,7 @@ import Testing
             let group = ScanlationGroup(id: scanlationGroupID, name: "group")
             try group.save(db)
 
-            let manga = Manga(id: mangaID, title: "title", createdAt: Date())
+            let manga = MangaEntity(id: mangaID, title: "title", createdAt: Date())
             try manga.save(db)
 
             let chapter = Chapter(

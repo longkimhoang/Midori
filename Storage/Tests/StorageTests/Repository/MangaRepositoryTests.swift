@@ -29,7 +29,7 @@ struct MangaRepositoryTests {
             try artist.save(db)
 
             let mangas = [
-                Manga(
+                MangaEntity(
                     id: mangaIDs[0],
                     title: "title",
                     createdAt: Date(timeIntervalSinceReferenceDate: 2000),
@@ -41,14 +41,14 @@ struct MangaRepositoryTests {
                     authorID: author.id,
                     artistID: artist.id
                 ),
-                Manga(
+                MangaEntity(
                     id: mangaIDs[1],
                     title: "title2",
                     createdAt: Date(timeIntervalSinceReferenceDate: 2000),
                     followCount: 400,
                     authorID: author.id
                 ),
-                Manga(
+                MangaEntity(
                     id: UUID(),
                     title: "title3",
                     // slightly over 1 month
@@ -67,30 +67,16 @@ struct MangaRepositoryTests {
             } operation: {
                 for try await result in repository.fetchPopularMangas().first().values {
                     let expected = [
-                        Manga(
+                        MangaOverview(
                             id: mangaIDs[0],
                             title: "title",
-                            createdAt: Date(timeIntervalSinceReferenceDate: 2000),
-                            followCount: 1000,
-                            alternateTitles: [
-                                .init(defaultVariant: .init(
-                                    languageCode: "en",
-                                    value: "alternate title"
-                                )),
-                                .init(defaultVariant: .init(
-                                    languageCode: "ja-ro",
-                                    value: "こんにちは"
-                                )),
-                            ],
-                            author: .init(id: authorID, name: "author"),
-                            artist: .init(id: artistID, name: "artist")
+                            author: "author",
+                            artist: "artist"
                         ),
-                        Manga(
+                        MangaOverview(
                             id: mangaIDs[1],
                             title: "title2",
-                            createdAt: Date(timeIntervalSinceReferenceDate: 2000),
-                            followCount: 400,
-                            author: .init(id: authorID, name: "author")
+                            author: "author"
                         ),
                     ]
 
@@ -130,26 +116,26 @@ struct MangaRepositoryTests {
                         value: "こんにちは"
                     )),
                 ],
-                author: .init(id: authorID, name: "author"),
-                artist: .init(id: artistID, name: "artist")
+                authorID: authorID,
+                artistID: artistID
             ),
             Manga(
                 id: mangaIDs[1],
                 title: "title2",
                 createdAt: Date(timeIntervalSinceReferenceDate: 2000),
                 followCount: 400,
-                author: .init(id: authorID, name: "author")
+                authorID: authorID
             ),
         ]
 
         try await repository.saveMangas(mangas: input)
 
         let mangas = try await dbWriter.read { db in
-            try Manga.fetchAll(db)
+            try MangaEntity.fetchAll(db)
         }
 
         let expected = [
-            Manga(
+            MangaEntity(
                 id: mangaIDs[0],
                 title: "title",
                 createdAt: Date(timeIntervalSinceReferenceDate: 2000),
@@ -161,7 +147,7 @@ struct MangaRepositoryTests {
                 authorID: authorID,
                 artistID: artistID
             ),
-            Manga(
+            MangaEntity(
                 id: mangaIDs[1],
                 title: "title2",
                 createdAt: Date(timeIntervalSinceReferenceDate: 2000),

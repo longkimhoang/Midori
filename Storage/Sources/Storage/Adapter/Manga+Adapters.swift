@@ -15,16 +15,16 @@ struct MangaInfo: Decodable, FetchableRecord {
         let name: String
     }
 
-    let manga: Manga
+    let manga: MangaEntity
     let author: PartialAuthor
     let artist: PartialAuthor?
 }
 
-extension Manga {
+extension MangaEntity {
     init(_ manga: MidoriModels.Manga) {
         let alternateTitles = manga.alternateTitles.map {
             let defaultVariant = $0.defaultVariant
-            return AlternateTitle(
+            return LocalizedTitle(
                 language: defaultVariant.languageCode.rawValue,
                 value: defaultVariant.value
             )
@@ -37,41 +37,31 @@ extension Manga {
             alternateTitles: alternateTitles,
             followCount: manga.followCount,
             coverID: nil,
-            authorID: manga.author.id,
-            artistID: manga.artist?.id
+            authorID: manga.authorID,
+            artistID: manga.artistID
         )
     }
 }
 
-extension MidoriModels.Manga {
+extension MidoriModels.MangaOverview {
     init(_ info: MangaInfo) {
         let manga = info.manga
         let author = info.author
         let artist = info.artist
-        let alternateTitles = manga.alternateTitles.map { LocalizedString($0) }
         let description = manga.description.flatMap(LocalizedString.init)
 
         self.init(
             id: manga.id,
             title: manga.title,
-            createdAt: manga.createdAt,
-            followCount: manga.followCount,
-            alternateTitles: alternateTitles,
             description: description,
-            author: Author(author),
-            artist: artist.map(Author.init)
+            author: author.name,
+            artist: artist?.name
         )
     }
 }
 
-private extension MidoriModels.Manga.Author {
-    init(_ author: MangaInfo.PartialAuthor) {
-        self.init(id: author.id, name: author.name)
-    }
-}
-
 private extension LocalizedString {
-    init(_ title: Manga.AlternateTitle) {
+    init(_ title: MangaEntity.LocalizedTitle) {
         self.init(defaultVariant: .init(languageCode: .init(title.language), value: title.value))
     }
 

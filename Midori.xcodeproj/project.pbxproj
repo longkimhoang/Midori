@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5353E89E2CCB92120092464B /* MidoriStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5353E89D2CCB92120092464B /* MidoriStorage */; };
 		53D520D52CC241D4005CD999 /* MidoriFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D42CC241D4005CD999 /* MidoriFeatures */; };
-		53D520D72CC241D4005CD999 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D62CC241D4005CD999 /* Storage */; };
 		53D520D92CC241D4005CD999 /* MidoriUI in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520D82CC241D4005CD999 /* MidoriUI */; };
 		53D520DC2CC24266005CD999 /* MidoriServices in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520DB2CC24266005CD999 /* MidoriServices */; };
 		53D520DF2CC24417005CD999 /* MidoriApp in Frameworks */ = {isa = PBXBuildFile; productRef = 53D520DE2CC24417005CD999 /* MidoriApp */; };
@@ -52,8 +52,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53D520D72CC241D4005CD999 /* Storage in Frameworks */,
 				53D520D52CC241D4005CD999 /* MidoriFeatures in Frameworks */,
+				5353E89E2CCB92120092464B /* MidoriStorage in Frameworks */,
 				53D520DC2CC24266005CD999 /* MidoriServices in Frameworks */,
 				53D520DF2CC24417005CD999 /* MidoriApp in Frameworks */,
 				53D520D92CC241D4005CD999 /* MidoriUI in Frameworks */,
@@ -116,10 +116,10 @@
 			name = Midori;
 			packageProductDependencies = (
 				53D520D42CC241D4005CD999 /* MidoriFeatures */,
-				53D520D62CC241D4005CD999 /* Storage */,
 				53D520D82CC241D4005CD999 /* MidoriUI */,
 				53D520DB2CC24266005CD999 /* MidoriServices */,
 				53D520DE2CC24417005CD999 /* MidoriApp */,
+				5353E89D2CCB92120092464B /* MidoriStorage */,
 			);
 			productName = Midori;
 			productReference = 5329F1EC2CC027E700A6BD2B /* Midori.app */;
@@ -389,13 +389,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5353E89D2CCB92120092464B /* MidoriStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MidoriStorage;
+		};
 		53D520D42CC241D4005CD999 /* MidoriFeatures */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MidoriFeatures;
-		};
-		53D520D62CC241D4005CD999 /* Storage */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Storage;
 		};
 		53D520D82CC241D4005CD999 /* MidoriUI */ = {
 			isa = XCSwiftPackageProductDependency;

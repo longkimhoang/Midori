@@ -14,9 +14,7 @@ import MidoriModels
 
 @DependencyClient
 public struct MangaRepository: Sendable {
-    public typealias Manga = MidoriModels.Manga
-
-    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[Manga]> = {
+    public var fetchPopularMangas: @Sendable () -> StorageValuePublisher<[MangaOverview]> = {
         EmptyStorageValuePublisher()
     }
 
@@ -24,8 +22,6 @@ public struct MangaRepository: Sendable {
 }
 
 extension MangaRepository: DependencyKey {
-    private typealias MangaEntity = Storage.Manga
-
     public static let liveValue = Self(
         fetchPopularMangas: {
             @Dependency(\.calendar) var calendar
@@ -42,16 +38,17 @@ extension MangaRepository: DependencyKey {
                 let author = MangaEntity.author.select(Column("id"), Column("name"))
                 let artist = MangaEntity.artist.select(Column("id"), Column("name"))
 
-                return try MangaEntity
-                    .filter(Column("createdAt") >= lastMonth)
-                    .order(Column("followCount").desc)
-                    .limit(10)
-                    .including(required: author)
-                    .including(optional: artist)
-                    .asRequest(of: MangaInfo.self)
-                    .fetchAll(db)
+                return
+                    try MangaEntity
+                        .filter(Column("createdAt") >= lastMonth)
+                        .order(Column("followCount").desc)
+                        .limit(10)
+                        .including(required: author)
+                        .including(optional: artist)
+                        .asRequest(of: MangaInfo.self)
+                        .fetchAll(db)
             }
-            .map { $0.map(Manga.init) }
+            .map { $0.map(MangaOverview.init) }
         },
         saveMangas: { mangas in
             @Dependency(\.persistenceContainer.dbWriter) var dbWriter

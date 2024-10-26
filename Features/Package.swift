@@ -28,7 +28,7 @@ let package = Package(
         .target(
             name: "MidoriFeatures",
             dependencies: [
-                "Storage",
+                .product(name: "MidoriStorage", package: "Storage"),
                 .product(name: "MidoriServices", package: "Services"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]

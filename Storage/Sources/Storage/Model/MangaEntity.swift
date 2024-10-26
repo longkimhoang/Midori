@@ -1,5 +1,5 @@
 //
-//  Manga.swift
+//  MangaEntity.swift
 //  Storage
 //
 //  Created by Long Kim on 17/10/24.
@@ -8,8 +8,8 @@
 import Foundation
 import GRDB
 
-struct Manga: Codable, Identifiable, Equatable, Sendable {
-    struct AlternateTitle: Codable, Equatable, Sendable {
+struct MangaEntity: Codable, Identifiable, Equatable, Sendable {
+    struct LocalizedTitle: Codable, Equatable, Sendable {
         let language: String
         let value: String
     }
@@ -18,7 +18,7 @@ struct Manga: Codable, Identifiable, Equatable, Sendable {
     let title: String
     let createdAt: Date
     // Alternate titles in other languages. Not all mangas have this.
-    let alternateTitles: [AlternateTitle]
+    let alternateTitles: [LocalizedTitle]
     let description: [String: String]?
     let followCount: Int
     let coverID: UUID?
@@ -29,7 +29,7 @@ struct Manga: Codable, Identifiable, Equatable, Sendable {
         id: UUID,
         title: String,
         createdAt: Date,
-        alternateTitles: [AlternateTitle] = [],
+        alternateTitles: [LocalizedTitle] = [],
         description: [String: String]? = nil,
         followCount: Int = 0,
         coverID: UUID? = nil,
@@ -48,10 +48,11 @@ struct Manga: Codable, Identifiable, Equatable, Sendable {
     }
 }
 
-extension Manga: FetchableRecord, PersistableRecord {
-    // Foreign keys
-    private static let authorForeignKey = ForeignKey(["authorId"])
-    private static let artistForeignKey = ForeignKey(["artistId"])
+extension MangaEntity: FetchableRecord, PersistableRecord {
+    static let databaseTableName = "manga"
+
+    static let authorForeignKey = ForeignKey(["authorId"])
+    static let artistForeignKey = ForeignKey(["artistId"])
 
     static let latestCover = hasOne(MangaCover.self, key: "coverId")
     static let covers = hasMany(MangaCover.self)
@@ -61,26 +62,26 @@ extension Manga: FetchableRecord, PersistableRecord {
 
     /// The latest cover of the manga, if available.
     var latestCover: QueryInterfaceRequest<MangaCover> {
-        request(for: Manga.latestCover)
+        request(for: MangaEntity.latestCover)
     }
 
     /// All covers of the manga.
     var covers: QueryInterfaceRequest<MangaCover> {
-        request(for: Manga.covers)
+        request(for: MangaEntity.covers)
     }
 
     /// The author of the manga.
     var author: QueryInterfaceRequest<Author> {
-        request(for: Manga.author)
+        request(for: MangaEntity.author)
     }
 
     /// The artist of the manga.
     var artist: QueryInterfaceRequest<Author> {
-        request(for: Manga.artist)
+        request(for: MangaEntity.artist)
     }
 
     /// The manga's chapters.
     var chapters: QueryInterfaceRequest<Chapter> {
-        request(for: Manga.chapters)
+        request(for: MangaEntity.chapters)
     }
 }

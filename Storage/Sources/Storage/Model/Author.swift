@@ -21,10 +21,10 @@ struct Author: Codable, Identifiable, Sendable {
 }
 
 extension Author: FetchableRecord, PersistableRecord {
-    private static let mangas = hasMany(Manga.self)
+    private static let mangas = hasMany(MangaEntity.self)
 
     /// The mangas contributed to by this author.
-    var mangas: QueryInterfaceRequest<Manga> {
+    var mangas: QueryInterfaceRequest<MangaEntity> {
         request(for: Author.mangas)
     }
 }

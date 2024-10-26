@@ -18,7 +18,7 @@ struct GRDBStorageValuePublisherTests {
     func receivesValue() async throws {
         try await withMainSerialExecutor {
             let id = UUID()
-            let record = Manga(
+            let record = MangaEntity(
                 id: id,
                 title: "title",
                 createdAt: Date()
@@ -29,7 +29,7 @@ struct GRDBStorageValuePublisherTests {
             }
 
             let publisher = GRDBStorageValuePublisher { db in
-                try Manga.fetchOne(db, id: id)
+                try MangaEntity.fetchOne(db, id: id)
             }
 
             try await confirmation("Received value") { received in
@@ -46,7 +46,7 @@ struct GRDBStorageValuePublisherTests {
     @Test("Receives value immediately on main thread")
     @MainActor func receivesValueImmediately() async throws {
         let id = UUID()
-        let record = Manga(
+        let record = MangaEntity(
             id: id,
             title: "title",
             createdAt: Date()
@@ -57,7 +57,7 @@ struct GRDBStorageValuePublisherTests {
         }
 
         let publisher = GRDBStorageValuePublisher { db in
-            try Manga.fetchOne(db, id: id)
+            try MangaEntity.fetchOne(db, id: id)
         }.receivesFirstValueImmediately()
 
         try await confirmation("Received value") { received in
@@ -74,14 +74,14 @@ struct GRDBStorageValuePublisherTests {
     func receivesUpdates() async throws {
         try await withMainSerialExecutor {
             let id = UUID()
-            let record = Manga(
+            let record = MangaEntity(
                 id: id,
                 title: "title",
                 createdAt: Date()
             )
 
             let publisher = GRDBStorageValuePublisher { db in
-                try Manga.fetchOne(db, id: id)
+                try MangaEntity.fetchOne(db, id: id)
             }
 
             let task = Task {
@@ -98,7 +98,7 @@ struct GRDBStorageValuePublisherTests {
                 }
             }
 
-            let updatedRecord = Manga(
+            let updatedRecord = MangaEntity(
                 id: id,
                 title: "updatedTitle",
                 createdAt: Date()

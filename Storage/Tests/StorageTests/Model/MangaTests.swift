@@ -17,7 +17,7 @@ import Testing
     @Test func savesSuccessfully() throws {
         let id = UUID()
         let date = Date()
-        let record = Manga(
+        let record = MangaEntity(
             id: id,
             title: "title",
             createdAt: date,
@@ -40,7 +40,7 @@ import Testing
     @Test func fetchesLatestCoverSuccessfully() throws {
         let coverID = UUID()
         let cover = try persistenceContainer.dbWriter.write { db in
-            let manga = Manga(id: UUID(), title: "title", createdAt: Date())
+            let manga = MangaEntity(id: UUID(), title: "title", createdAt: Date())
             try manga.save(db)
 
             let cover = MangaCover(
@@ -60,7 +60,7 @@ import Testing
     @Test func fetchesAllCoversSuccessfully() throws {
         let coverIDs: [UUID] = [UUID(), UUID(), UUID()]
         let covers = try persistenceContainer.dbWriter.write { db in
-            let manga = Manga(id: UUID(), title: "title", createdAt: Date())
+            let manga = MangaEntity(id: UUID(), title: "title", createdAt: Date())
             try manga.save(db)
 
             for coverID in coverIDs {
@@ -89,7 +89,12 @@ import Testing
             )
             try author.save(db)
 
-            let manga = Manga(id: UUID(), title: "title", createdAt: Date(), authorID: authorID)
+            let manga = MangaEntity(
+                id: UUID(),
+                title: "title",
+                createdAt: Date(),
+                authorID: authorID
+            )
             try manga.save(db)
 
             return try manga.author.fetchOne(db)
@@ -108,7 +113,12 @@ import Testing
             )
             try artist.save(db)
 
-            let manga = Manga(id: UUID(), title: "title", createdAt: Date(), artistID: artistID)
+            let manga = MangaEntity(
+                id: UUID(),
+                title: "title",
+                createdAt: Date(),
+                artistID: artistID
+            )
             try manga.save(db)
 
             return try manga.artist.fetchOne(db)
