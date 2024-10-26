@@ -19,9 +19,9 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:Storage",
-        "identifier" : "StorageTests",
-        "name" : "StorageTests"
+        "containerPath" : "container:Features",
+        "identifier" : "FeaturesTests",
+        "name" : "FeaturesTests"
       }
     },
     {
@@ -29,6 +29,13 @@
         "containerPath" : "container:MangaDexAPIClient",
         "identifier" : "MangaDexAPIClientTests",
         "name" : "MangaDexAPIClientTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Storage",
+        "identifier" : "StorageTests",
+        "name" : "StorageTests"
       }
     }
   ],
