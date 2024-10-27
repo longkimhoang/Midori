@@ -7,6 +7,7 @@
 
 import Dependencies
 import Foundation
+import Get
 import MangaDexAPIClient
 import MangaDexAPIStubs
 import MidoriServices
@@ -20,12 +21,20 @@ import Testing
 final class MangaServiceLiveTests {
     @Dependency(\.modelContainer) var modelContainer
 
-    let service = withDependencies {
+    let client: APIClient
+    let service: MangaService
+
+    init() {
         let configuration = URLSessionConfiguration.default
         configuration.protocolClasses = [MockingURLProtocol.self]
-        $0.mangaDexAPIClient = .mangaDex(sessionConfiguration: configuration)
-    } operation: {
-        MangaService.liveValue
+        let client = APIClient.mangaDex(sessionConfiguration: configuration)
+
+        self.client = client
+        service = withDependencies {
+            $0.mangaDexAPIClient = client
+        } operation: {
+            MangaService.liveValue
+        }
     }
 
     deinit {
@@ -35,13 +44,16 @@ final class MangaServiceLiveTests {
     @Test("Sync popular mangas")
     func syncPopularMangas() async throws {
         try await confirmation("Requested popular mangas") { requested in
-            var mock = Mock(
-                url: URL(string: "https://api.mangadex.org/manga")!,
-                ignoreQuery: true,
+            let request = MangaDexAPI.Manga.list(
+                pagination: .init(limit: 10),
+                order: [.followedCount: .descending],
+                createdAtSince: Date(timeIntervalSinceReferenceDate: -2_668_400)
+            )
+
+            var mock = try await Mock(
+                request: client.makeURLRequest(for: request),
                 statusCode: 200,
-                data: [
-                    .get: MangaDexAPIStubs.Manga.List.success,
-                ]
+                data: MangaDexAPIStubs.Manga.List.success
             )
             mock.completion = {
                 requested()
