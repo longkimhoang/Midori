@@ -16,13 +16,17 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Get", from: "2.2.1"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "MangaDexAPIClient",
-            dependencies: ["Get"]
+            dependencies: [
+                "Get",
+                .product(name: "Dependencies", package: "swift-dependencies"),
+            ]
         ),
         .testTarget(
             name: "MangaDexAPIClientTests",
