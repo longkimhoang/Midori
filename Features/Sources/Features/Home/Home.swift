@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import MidoriServices
 import MidoriStorage
 import SwiftData
 
@@ -26,13 +27,17 @@ public struct Home {
     }
 
     @Dependency(\.modelContainer) private var modelContainer
+    @Dependency(\.mangaService) private var mangaService
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .fetchHomeData:
                 loadHomeDataFromStorage(state: &state)
-                return .run { _ in }
+                return .run { [mangaService] send in
+                    try await mangaService.syncPopularMangas()
+                    await send(.loadHomeDataFromStorage)
+                }
             case .loadHomeDataFromStorage:
                 loadHomeDataFromStorage(state: &state)
                 return .none

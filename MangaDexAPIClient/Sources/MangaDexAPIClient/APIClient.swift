@@ -5,6 +5,7 @@
 //  Created by Long Kim on 21/10/24.
 //
 
+import Dependencies
 import Foundation
 import Get
 
@@ -29,5 +30,18 @@ extension MangaDexServer {
         case .production: "https://api.mangadex.org"
         case .development: "https://api.mangadex.dev"
         }
+    }
+}
+
+private enum MangaDexAPIClientDependencyKey: DependencyKey {
+    typealias Value = APIClient
+
+    static let liveValue: APIClient = .mangaDex()
+}
+
+public extension DependencyValues {
+    var mangaDexAPIClient: APIClient {
+        get { self[MangaDexAPIClientDependencyKey.self] }
+        set { self[MangaDexAPIClientDependencyKey.self] = newValue }
     }
 }

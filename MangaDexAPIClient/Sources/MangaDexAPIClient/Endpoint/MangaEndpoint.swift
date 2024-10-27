@@ -22,7 +22,7 @@ public extension MangaDexAPI {
 
 // MARK: - Get Manga List
 
-public struct GetMangaListResponse: Decodable {
+public struct GetMangaListResponse: Decodable, Sendable {
     public let limit: Int
     public let offset: Int
     public let data: [Manga]

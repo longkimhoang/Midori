@@ -6,6 +6,7 @@
 //
 
 import MidoriApp
+import MidoriServicesLive
 import UIKit
 
 @main

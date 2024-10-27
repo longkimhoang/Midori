@@ -8,11 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4B2CCD388D005A4538 /* MidoriApp */; };
-		53AA5E4E2CCD38B6005A4538 /* MidoriFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4D2CCD38B6005A4538 /* MidoriFeatures */; };
-		53AA5E502CCD38B6005A4538 /* MangaDexAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4F2CCD38B6005A4538 /* MangaDexAPIClient */; };
-		53AA5E522CCD38B6005A4538 /* MidoriServices in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E512CCD38B6005A4538 /* MidoriServices */; };
-		53AA5E542CCD38B6005A4538 /* MidoriStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E532CCD38B6005A4538 /* MidoriStorage */; };
-		53AA5E562CCD38B6005A4538 /* MidoriUI in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E552CCD38B6005A4538 /* MidoriUI */; };
+		53D6ECFD2CCE1F5E007A03AB /* MidoriServicesLive in Frameworks */ = {isa = PBXBuildFile; productRef = 53D6ECFC2CCE1F5E007A03AB /* MidoriServicesLive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,12 +48,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53D6ECFD2CCE1F5E007A03AB /* MidoriServicesLive in Frameworks */,
 				53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */,
-				53AA5E542CCD38B6005A4538 /* MidoriStorage in Frameworks */,
-				53AA5E562CCD38B6005A4538 /* MidoriUI in Frameworks */,
-				53AA5E4E2CCD38B6005A4538 /* MidoriFeatures in Frameworks */,
-				53AA5E522CCD38B6005A4538 /* MidoriServices in Frameworks */,
-				53AA5E502CCD38B6005A4538 /* MangaDexAPIClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,11 +108,7 @@
 			name = Midori;
 			packageProductDependencies = (
 				53AA5E4B2CCD388D005A4538 /* MidoriApp */,
-				53AA5E4D2CCD38B6005A4538 /* MidoriFeatures */,
-				53AA5E4F2CCD38B6005A4538 /* MangaDexAPIClient */,
-				53AA5E512CCD38B6005A4538 /* MidoriServices */,
-				53AA5E532CCD38B6005A4538 /* MidoriStorage */,
-				53AA5E552CCD38B6005A4538 /* MidoriUI */,
+				53D6ECFC2CCE1F5E007A03AB /* MidoriServicesLive */,
 			);
 			productName = Midori;
 			productReference = 5329F1EC2CC027E700A6BD2B /* Midori.app */;
@@ -394,25 +382,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MidoriApp;
 		};
-		53AA5E4D2CCD38B6005A4538 /* MidoriFeatures */ = {
+		53D6ECFC2CCE1F5E007A03AB /* MidoriServicesLive */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MidoriFeatures;
-		};
-		53AA5E4F2CCD38B6005A4538 /* MangaDexAPIClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MangaDexAPIClient;
-		};
-		53AA5E512CCD38B6005A4538 /* MidoriServices */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MidoriServices;
-		};
-		53AA5E532CCD38B6005A4538 /* MidoriStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MidoriStorage;
-		};
-		53AA5E552CCD38B6005A4538 /* MidoriUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MidoriUI;
+			productName = MidoriServicesLive;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
