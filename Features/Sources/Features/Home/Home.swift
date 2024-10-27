@@ -15,9 +15,14 @@ public struct Home {
     @ObservableState
     public struct State: Equatable {
         public var popularMangas: IdentifiedArrayOf<PopularManga>
+        public var latestChapters: IdentifiedArrayOf<Chapter>
 
-        public init(popularMangas: IdentifiedArrayOf<PopularManga> = []) {
+        public init(
+            popularMangas: IdentifiedArrayOf<PopularManga> = [],
+            latestChapters: IdentifiedArrayOf<Chapter> = []
+        ) {
             self.popularMangas = popularMangas
+            self.latestChapters = latestChapters
         }
     }
 

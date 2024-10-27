@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Features",
+    defaultLocalization: "en",
     platforms: [.iOS(.v18)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to
@@ -21,6 +22,7 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.15.1"
         ),
+        .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -31,6 +33,7 @@ let package = Package(
                 .product(name: "MidoriStorage", package: "Storage"),
                 .product(name: "MidoriServices", package: "Services"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Algorithms", package: "swift-algorithms"),
             ]
         ),
         .testTarget(
