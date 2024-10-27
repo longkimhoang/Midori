@@ -37,10 +37,10 @@ public struct LocalizedString: Decodable, Sendable {
     }
 
     /// The default value. Usually English.
-    public var defaultVariant: String {
+    public var defaultVariant: (String, String) {
         switch storage {
-        case .single(let (_, value)): value
-        case let .multiple((_, defaultVariant), _): defaultVariant
+        case let .single(value): value
+        case let .multiple(defaultVariant, _): defaultVariant
         }
     }
 

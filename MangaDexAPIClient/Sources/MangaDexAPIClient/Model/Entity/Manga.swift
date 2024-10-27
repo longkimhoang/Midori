@@ -10,6 +10,7 @@ import Foundation
 public struct Manga: Entity {
     public struct Attributes: Decodable, Sendable {
         public let title: LocalizedString
+        public let altTitles: [LocalizedString]
         @LossyDecodable public var description: LocalizedString?
         public let createdAt: Date
     }

@@ -50,10 +50,10 @@ private actor MangaAPIResponseIngestor {
         for manga in mangas {
             let mangaEntity = MangaEntity(
                 id: manga.id,
-                title: manga.title.defaultVariant,
+                title: manga.title.defaultVariant.1,
                 createdAt: manga.createdAt,
-                alternateTitles: [],
-                synopsis: nil,
+                alternateTitles: manga.altTitles.map(LocalizedString.init),
+                synopsis: manga.description.map(LocalizedString.init),
                 followCount: 0
             )
             modelContext.insert(mangaEntity)
