@@ -6,6 +6,8 @@
 //
 
 import ComposableArchitecture
+import MidoriStorage
+import SwiftData
 
 @Reducer
 public struct Home {
@@ -16,5 +18,36 @@ public struct Home {
         public init(popularMangas: IdentifiedArrayOf<PopularManga> = []) {
             self.popularMangas = popularMangas
         }
+    }
+
+    public enum Action {
+        case fetchHomeData
+        case loadHomeDataFromStorage
+    }
+
+    @Dependency(\.modelContainer) private var modelContainer
+
+    public var body: some ReducerOf<Self> {
+        Reduce { state, action in
+            switch action {
+            case .fetchHomeData:
+                loadHomeDataFromStorage(state: &state)
+                return .run { _ in }
+            case .loadHomeDataFromStorage:
+                loadHomeDataFromStorage(state: &state)
+                return .none
+            }
+        }
+    }
+
+    private func loadHomeDataFromStorage(state: inout State) {
+        let context = ModelContext(modelContainer)
+
+        do {
+            let popularMangas = try context.fetch(MangaEntity.popular())
+                .compactMap(PopularManga.init)
+
+            state.popularMangas = IdentifiedArray(uniqueElements: popularMangas)
+        } catch {}
     }
 }

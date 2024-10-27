@@ -20,7 +20,9 @@ public final class AppViewController: UITabBarController {
         title: "Home",
         image: UIImage(systemName: "house"),
         identifier: Tab.home.rawValue
-    ) { _ in UIViewController() }
+    ) { [unowned self] _ in
+        HomeViewController(store: store.scope(state: \.home, action: \.home))
+    }
 
     public init(store: StoreOf<App>) {
         self.store = store

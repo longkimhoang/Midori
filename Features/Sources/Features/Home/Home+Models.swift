@@ -9,7 +9,7 @@ import Foundation
 import MidoriStorage
 
 public extension Home {
-    struct PopularManga: Identifiable, Equatable {
+    struct PopularManga: Identifiable, Equatable, Sendable {
         public let id: UUID
         public let title: String
         public let author: String
