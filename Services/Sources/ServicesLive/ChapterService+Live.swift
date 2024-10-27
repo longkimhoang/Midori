@@ -30,26 +30,26 @@ extension ChapterService: DependencyKey {
                 )
                 let chaptersResponse = try await client.send(chaptersRequest).value
 
-                let mangaIDs = chaptersResponse.data.map(\.id)
+                let mangaIDs = chaptersResponse.data.compactMap {
+                    $0.relationship(MangaRelationship.self).map(\.id)
+                }
                 let mangasRequest = MangaDexAPI.Manga.list(
                     pagination: .init(limit: mangaIDs.count),
                     ids: mangaIDs
                 )
 
                 let mangasResponse = try await client.send(mangasRequest).value
-                let mangaPersistentIDs = try await mangaAPIResponseIngestor.ingestMangas(
+                try await mangaAPIResponseIngestor.ingestMangas(
                     mangasResponse.data
                 )
 
-                let chaptersByMangaID: [PersistentIdentifier: [Chapter]] = chaptersResponse.data
+                let chaptersByMangaID: [UUID: [Chapter]] = chaptersResponse.data
                     .reduce(into: [:]) { result, chapter in
-                        guard let manga = chapter.relationship(MangaRelationship.self),
-                              let persistentID = mangaPersistentIDs[manga.id]
-                        else {
+                        guard let manga = chapter.relationship(MangaRelationship.self) else {
                             return
                         }
 
-                        result[persistentID, default: []].append(chapter)
+                        result[manga.id, default: []].append(chapter)
                     }
 
                 try await chapterAPIResponseIngestor.importChapters(chaptersByMangaID)

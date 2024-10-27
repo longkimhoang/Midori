@@ -14,10 +14,7 @@ import SwiftData
 actor MangaAPIResponseIngestor {
     private var authorIDs: [UUID: PersistentIdentifier] = [:]
 
-    /// - Returns: A `Dictionary` mapping API entitiy identifier to storage persistent identifier.
-    @discardableResult
-    func ingestMangas(_ mangas: [Manga]) throws -> [UUID: PersistentIdentifier] {
-        var result: [UUID: PersistentIdentifier] = [:]
+    func ingestMangas(_ mangas: [Manga]) throws {
         for manga in mangas {
             let mangaEntity = MangaEntity(
                 id: manga.id,
@@ -58,11 +55,8 @@ actor MangaAPIResponseIngestor {
                     authorIDs[artist.id] = artistEntity.persistentModelID
                 }
             }
-
-            result[manga.id] = mangaEntity.persistentModelID
         }
 
         try modelContext.save()
-        return result
     }
 }
