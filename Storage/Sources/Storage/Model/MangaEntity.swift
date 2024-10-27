@@ -11,6 +11,7 @@ import SwiftData
 @Model
 public final class MangaEntity {
     #Unique<MangaEntity>([\.id])
+    #Index<MangaEntity>([\.createdAt, \.followCount])
 
     public var id: UUID
     public var title: String

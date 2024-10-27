@@ -1,5 +1,5 @@
 //
-//  AppFeatureTests.swift
+//  AppTests.swift
 //  Features
 //
 //  Created by Long Kim on 27/10/24.
