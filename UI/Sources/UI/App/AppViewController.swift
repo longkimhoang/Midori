@@ -17,7 +17,7 @@ public final class AppViewController: UITabBarController {
     private let store: StoreOf<App>
 
     private lazy var homeTab = UITab(
-        title: "Home",
+        title: String(localized: "Home", bundle: .module),
         image: UIImage(systemName: "house"),
         identifier: Tab.home.rawValue
     ) { [unowned self] _ in
