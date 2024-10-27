@@ -11,18 +11,25 @@ import ComposableArchitecture
 public struct App {
     @ObservableState
     public struct State: Equatable {
-        public enum Tab {
+        public enum Tab: String {
             case home, search
         }
 
-        public var selectedTab: Tab = .home
-        public var home = Home.State()
+        public var selectedTab: Tab
+        public var home: Home.State
+
+        public init(selectedTab: Tab = .home, home: Home.State = .init()) {
+            self.selectedTab = selectedTab
+            self.home = home
+        }
     }
 
     public enum Action {
         case tabSelected(State.Tab)
         case home(Home.Action)
     }
+
+    public init() {}
 
     public var body: some ReducerOf<Self> {
         Scope(state: \.home, action: \.home) {

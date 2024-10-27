@@ -14,11 +14,24 @@ let package = Package(
             targets: ["MidoriApp"]
         ),
     ],
+    dependencies: [
+        .package(path: "Features"),
+        .package(path: "UI"),
+        .package(
+            url: "https://github.com/pointfreeco/swift-composable-architecture",
+            from: "1.15.1"
+        ),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "MidoriApp"
+            name: "MidoriApp",
+            dependencies: [
+                .product(name: "MidoriFeatures", package: "Features"),
+                .product(name: "MidoriUI", package: "UI"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
         ),
         .testTarget(
             name: "MidoriAppTests",
