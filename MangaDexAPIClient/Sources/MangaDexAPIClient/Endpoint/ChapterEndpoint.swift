@@ -29,7 +29,7 @@ public struct GetChapterListResponse: Decodable, Sendable {
 }
 
 public extension MangaDexAPI.Chapter {
-    enum Reference: String, Sendable {
+    enum Reference: String, EndpointReference, Sendable {
         case manga
         case scanlationGroup = "scanlation_group"
         case user
@@ -47,7 +47,7 @@ public extension MangaDexAPI.Chapter {
         pagination: Pagination,
         order: [ListSortOptions: SortOrder] = [:],
         includes: [Reference] = [.scanlationGroup]
-    ) -> Request<GetMangaListResponse> {
+    ) -> Request<GetChapterListResponse> {
         var query: [URLQueryItem] = []
 
         query.append(contentsOf: pagination.queryItems)
@@ -58,19 +58,5 @@ public extension MangaDexAPI.Chapter {
             path: Self.basePath,
             query: query.map { ($0.name, $0.value) }
         )
-    }
-}
-
-// MARK: - Helpers
-
-private extension [MangaDexAPI.Chapter.ListSortOptions: SortOrder] {
-    var queryItems: [URLQueryItem] {
-        map { URLQueryItem(name: "order[\($0.rawValue)]", value: $1.rawValue) }
-    }
-}
-
-private extension [MangaDexAPI.Chapter.Reference] {
-    var queryItems: [URLQueryItem] {
-        map { URLQueryItem(name: "includes[]", value: $0.rawValue) }
     }
 }

@@ -29,7 +29,7 @@ public struct GetMangaListResponse: Decodable, Sendable {
 }
 
 public extension MangaDexAPI.Manga {
-    enum Reference: String, Sendable {
+    enum Reference: String, EndpointReference, Sendable {
         case manga
         case cover = "cover_art"
         case author
@@ -74,19 +74,5 @@ public extension MangaDexAPI.Manga {
             path: Self.basePath,
             query: query.map { ($0.name, $0.value) }
         )
-    }
-}
-
-// MARK: - Helpers
-
-private extension [MangaDexAPI.Manga.ListSortOptions: SortOrder] {
-    var queryItems: [URLQueryItem] {
-        map { URLQueryItem(name: "order[\($0.rawValue)]", value: $1.rawValue) }
-    }
-}
-
-private extension [MangaDexAPI.Manga.Reference] {
-    var queryItems: [URLQueryItem] {
-        map { URLQueryItem(name: "includes[]", value: $0.rawValue) }
     }
 }
