@@ -7,6 +7,7 @@
 
 import Foundation
 @testable import MangaDexAPIClient
+import MangaDexAPIStubs
 import Testing
 
 @Suite("Manga endpoint responses")
@@ -15,13 +16,9 @@ struct MangaResponseTests {
 
     @Test("Get manga list")
     func decodesGetMangaListResponse() throws {
-        let jsonURL = try #require(Bundle.module.url(
-            forResource: "get_manga_list",
-            withExtension: "json"
-        ))
         let response = try decoder.decode(
             GetMangaListResponse.self,
-            from: Data(contentsOf: jsonURL)
+            from: MangaDexAPIStubs.Manga.List.success
         )
 
         #expect(response.limit == 10)
@@ -33,7 +30,7 @@ struct MangaResponseTests {
         let manga = try #require(data.first)
 
         #expect(manga.id == UUID(uuidString: "b0dc2f88-4e89-4e30-8d68-20116db788ff"))
-        #expect(manga.title.defaultVariant == """
+        #expect(manga.title.defaultVariant.1 == """
         Taida na Akujoku Kizoku ni Tensei shita Ore, Scenario o Bukkowashitara Kikakugai no \
         Maryoku de Saikyou ni Natta
         """)

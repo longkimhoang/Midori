@@ -13,6 +13,7 @@ let package = Package(
             name: "MangaDexAPIClient",
             targets: ["MangaDexAPIClient"]
         ),
+        .library(name: "MangaDexAPIStubs", targets: ["MangaDexAPIStubs"]),
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Get", from: "2.2.1"),
@@ -28,10 +29,10 @@ let package = Package(
                 .product(name: "Dependencies", package: "swift-dependencies"),
             ]
         ),
+        .target(name: "MangaDexAPIStubs", resources: [.process("Resources/Responses")]),
         .testTarget(
             name: "MangaDexAPIClientTests",
-            dependencies: ["MangaDexAPIClient"],
-            resources: [.process("Resources")]
+            dependencies: ["MangaDexAPIClient", "MangaDexAPIStubs"]
         ),
     ]
 )

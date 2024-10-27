@@ -19,13 +19,6 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:Features",
-        "identifier" : "FeaturesTests",
-        "name" : "FeaturesTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:MangaDexAPIClient",
         "identifier" : "MangaDexAPIClientTests",
         "name" : "MangaDexAPIClientTests"
@@ -33,9 +26,23 @@
     },
     {
       "target" : {
+        "containerPath" : "container:Services",
+        "identifier" : "ServicesLiveTests",
+        "name" : "ServicesLiveTests"
+      }
+    },
+    {
+      "target" : {
         "containerPath" : "container:Storage",
         "identifier" : "StorageTests",
         "name" : "StorageTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Features",
+        "identifier" : "FeaturesTests",
+        "name" : "FeaturesTests"
       }
     }
   ],

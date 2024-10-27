@@ -9,22 +9,26 @@ import Dependencies
 import Foundation
 import Get
 
-enum MangaDexServer: CaseIterable, Sendable {
+public enum MangaDexServer: CaseIterable, Sendable {
     case production
     case development
 }
 
-extension Get.APIClient {
+public extension APIClient {
     /// Creates a client for MangaDex API.
-    static func mangaDex(server: MangaDexServer = .production) -> Self {
+    static func mangaDex(
+        server: MangaDexServer = .production,
+        sessionConfiguration: URLSessionConfiguration = .default
+    ) -> Self {
         Self(baseURL: URL(string: server.baseURL)) {
+            $0.sessionConfiguration = sessionConfiguration
             $0.decoder = .mangaDexAPI
             $0.delegate = MangaDexAPIClientDelegate()
         }
     }
 }
 
-private extension MangaDexServer {
+extension MangaDexServer {
     var baseURL: String {
         switch self {
         case .production: "https://api.mangadex.org"

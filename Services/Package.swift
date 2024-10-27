@@ -17,7 +17,9 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "MangaDexAPIClient"),
+        .package(path: "Storage"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
+        .package(url: "https://github.com/WeTransfer/Mocker", from: "3.0.2"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,6 +27,7 @@ let package = Package(
         .target(
             name: "MidoriServices",
             dependencies: [
+                .product(name: "MidoriStorage", package: "Storage"),
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "DependenciesMacros", package: "swift-dependencies"),
             ],
@@ -42,6 +45,14 @@ let package = Package(
         .testTarget(
             name: "ServicesTests",
             dependencies: ["MidoriServices"]
+        ),
+        .testTarget(
+            name: "ServicesLiveTests",
+            dependencies: [
+                "MidoriServicesLive",
+                "Mocker",
+                .product(name: "MangaDexAPIStubs", package: "MangaDexAPIClient"),
+            ]
         ),
     ]
 )

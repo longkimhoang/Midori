@@ -1,5 +1,5 @@
 {
-  "originHash" : "4c68293a538cc442b43634a850b13f82104fb772528f8690d68717414620b0ca",
+  "originHash" : "38fa006549e9f012e8536d9db0ea6ee29970716281537ed1260203c6a2b434a1",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
         "version" : "2.2.1"
+      }
+    },
+    {
+      "identity" : "mocker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WeTransfer/Mocker",
+      "state" : {
+        "revision" : "95fa785c751f6bc40c49e112d433c3acf8417a97",
+        "version" : "3.0.2"
       }
     },
     {
