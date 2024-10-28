@@ -14,7 +14,8 @@ import SwiftData
 actor MangaAPIResponseIngestor {
     private var authorIDs: [UUID: PersistentIdentifier] = [:]
 
-    func importMangas(_ mangas: [Manga]) throws {
+    @discardableResult
+    func importMangas(_ mangas: [Manga]) throws -> [UUID: PersistentIdentifier] {
         for manga in mangas {
             let mangaEntity = MangaEntity(
                 id: manga.id,
@@ -58,5 +59,21 @@ actor MangaAPIResponseIngestor {
         }
 
         try modelContext.save()
+
+        let persistentIdentifiers = try persistentIdentifiers(for: mangas)
+        return persistentIdentifiers.reduce(into: [:]) { result, identifier in
+            guard let manga = self[identifier, as: MangaEntity.self] else { return }
+            result[manga.id] = identifier
+        }
+    }
+
+    private func persistentIdentifiers(for mangas: [Manga]) throws -> [PersistentIdentifier] {
+        let mangaIDs = Set(mangas.map(\.id))
+        var descriptor = FetchDescriptor<MangaEntity>()
+        descriptor.predicate = #Predicate {
+            mangaIDs.contains($0.id)
+        }
+
+        return try modelContext.fetchIdentifiers(descriptor)
     }
 }

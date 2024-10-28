@@ -39,17 +39,19 @@ extension ChapterService: DependencyKey {
                 )
 
                 let mangasResponse = try await client.send(mangasRequest).value
-                try await mangaAPIResponseIngestor.importMangas(
+                let mangaPersistentIDs = try await mangaAPIResponseIngestor.importMangas(
                     mangasResponse.data
                 )
 
-                let chaptersByMangaID: [UUID: [Chapter]] = chaptersResponse.data
+                let chaptersByMangaID: [PersistentIdentifier: [Chapter]] = chaptersResponse.data
                     .reduce(into: [:]) { result, chapter in
-                        guard let manga = chapter.relationship(MangaRelationship.self) else {
+                        guard let manga = chapter.relationship(MangaRelationship.self),
+                              let mangaPersistentID = mangaPersistentIDs[manga.id]
+                        else {
                             return
                         }
 
-                        result[manga.id, default: []].append(chapter)
+                        result[mangaPersistentID, default: []].append(chapter)
                     }
 
                 try await chapterAPIResponseIngestor.importChapters(chaptersByMangaID)

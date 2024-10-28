@@ -15,15 +15,9 @@ import SwiftData
 actor ChapterAPIResponseIngestor {
     private var scanlationGroupIDs: [UUID: PersistentIdentifier] = [:]
 
-    func importChapters(_ chaptersByManga: [UUID: [Chapter]]) throws {
-        let mangaIDs = Set(chaptersByManga.keys)
-        let mangasByID = FetchDescriptor(
-            predicate: #Predicate<MangaEntity> { mangaIDs.contains($0.id) }
-        )
-        let mangas = try IdentifiedArray(uniqueElements: modelContext.fetch(mangasByID))
-
+    func importChapters(_ chaptersByManga: [PersistentIdentifier: [Chapter]]) throws {
         for (mangaID, chapters) in chaptersByManga {
-            let mangaEntity = mangas[id: mangaID]
+            let mangaEntity = self[mangaID, as: MangaEntity.self]
 
             for chapter in chapters {
                 let chapterEntity = ChapterEntity(
