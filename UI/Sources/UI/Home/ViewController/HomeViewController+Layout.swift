@@ -8,10 +8,6 @@
 import UIKit
 
 extension HomeViewController {
-    enum SectionLayoutKind: Int {
-        case popularMangas
-    }
-
     enum SupplementaryElementKind {
         static let sectionHeaderLabel = "section-header-label"
         static let sectionHeaderButton = "section-header-button"
@@ -19,7 +15,7 @@ extension HomeViewController {
 
     func makeCollectionViewLayout() -> UICollectionViewLayout {
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { [unowned self] sectionIndex, _ in
-            guard let section = SectionLayoutKind(rawValue: sectionIndex) else {
+            guard let section = dataSource.sectionIdentifier(for: sectionIndex) else {
                 return nil
             }
 

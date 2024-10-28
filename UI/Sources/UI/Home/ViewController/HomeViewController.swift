@@ -11,10 +11,22 @@ import UIKit
 
 @ViewAction(for: Home.self)
 final class HomeViewController: UIViewController {
+    enum SectionIdentifier: Int {
+        case popularMangas
+    }
+
+    enum ItemIdentifier: Hashable {
+        case popularManga(UUID)
+        case latestChapter(UUID)
+        case recentlyAddedManga(UUID)
+    }
+
     private var dataFetchingTask: Task<Void, Never>?
-    @ViewLoading private var collectionView: UICollectionView
 
     let store: StoreOf<Home>
+
+    var collectionView: UICollectionView!
+    var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
 
     init(store: StoreOf<Home>) {
         self.store = store
@@ -41,6 +53,12 @@ final class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        configureDataSource()
+
+        observe { [unowned self] in
+            updateDataSource(popularMangas: store.popularMangas)
+        }
 
         dataFetchingTask = Task {
             await send(.fetchHomeData).finish()
