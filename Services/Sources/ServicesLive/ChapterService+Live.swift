@@ -39,7 +39,7 @@ extension ChapterService: DependencyKey {
                 )
 
                 let mangasResponse = try await client.send(mangasRequest).value
-                try await mangaAPIResponseIngestor.ingestMangas(
+                try await mangaAPIResponseIngestor.importMangas(
                     mangasResponse.data
                 )
 

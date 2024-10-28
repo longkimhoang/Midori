@@ -35,7 +35,7 @@ extension MangaService: DependencyKey {
                     createdAtSince: lastMonth
                 )
                 let response = try await client.send(request).value
-                try await ingestor.ingestMangas(response.data)
+                try await ingestor.importMangas(response.data)
             }
         )
     }

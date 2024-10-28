@@ -14,7 +14,7 @@ import SwiftData
 actor MangaAPIResponseIngestor {
     private var authorIDs: [UUID: PersistentIdentifier] = [:]
 
-    func ingestMangas(_ mangas: [Manga]) throws {
+    func importMangas(_ mangas: [Manga]) throws {
         for manga in mangas {
             let mangaEntity = MangaEntity(
                 id: manga.id,
