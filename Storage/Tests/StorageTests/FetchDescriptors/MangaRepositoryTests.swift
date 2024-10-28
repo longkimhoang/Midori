@@ -60,6 +60,10 @@ struct MangaFetchDescriptorsTests {
                 manga.author = author
                 manga.artist = artist
             }
+
+            let chapter = ChapterEntity(id: UUID(), readableAt: Date())
+            manga.chapters.append(chapter)
+
             context.insert(manga)
         }
 
