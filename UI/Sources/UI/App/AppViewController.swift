@@ -21,7 +21,7 @@ public final class AppViewController: UITabBarController {
         image: UIImage(systemName: "house"),
         identifier: Tab.home.rawValue
     ) { [unowned self] _ in
-        HomeViewController(store: store.scope(state: \.home, action: \.home))
+        HomeNavigationViewController(store: store.scope(state: \.home, action: \.home))
     }
 
     public init(store: StoreOf<App>) {

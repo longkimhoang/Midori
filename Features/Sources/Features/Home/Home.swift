@@ -18,6 +18,7 @@ public struct Home {
         public var popularMangas: IdentifiedArrayOf<Manga>
         public var latestChapters: IdentifiedArrayOf<Chapter>
         public var recentlyAddedMangas: IdentifiedArrayOf<Manga>
+        public var path = StackState<Path.State>()
 
         public init(
             popularMangas: IdentifiedArrayOf<Manga> = [],
@@ -32,12 +33,16 @@ public struct Home {
 
     public enum Action: ViewAction {
         case loadHomeDataFromStorage
+        case path(StackActionOf<Path>)
         case view(View)
 
         public enum View {
             case fetchHomeData
         }
     }
+
+    @Reducer(state: .equatable)
+    public enum Path {}
 
     @Dependency(\.modelContainer) private var modelContainer
     @Dependency(\.mangaService) private var mangaService
@@ -58,6 +63,8 @@ public struct Home {
                 }
             case .loadHomeDataFromStorage:
                 loadHomeDataFromStorage(state: &state)
+                return .none
+            case .path:
                 return .none
             }
         }
