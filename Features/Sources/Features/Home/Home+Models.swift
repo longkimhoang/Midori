@@ -10,11 +10,10 @@ import Foundation
 import MidoriStorage
 
 public extension Home {
-    struct PopularManga: Identifiable, Equatable, Sendable {
+    struct Manga: Identifiable, Equatable, Sendable {
         public let id: UUID
         public let title: String
-        public let author: String
-        public let artist: String?
+        public let subtitle: String?
     }
 
     struct Chapter: Identifiable, Equatable, Sendable {
@@ -24,17 +23,12 @@ public extension Home {
     }
 }
 
-extension Home.PopularManga {
-    init?(_ entity: MangaEntity) {
-        guard let author = entity.author else {
-            return nil
-        }
-
+extension Home.Manga {
+    init(_ entity: MangaEntity) {
         self.init(
             id: entity.id,
             title: entity.title,
-            author: author.name,
-            artist: entity.artist?.name
+            subtitle: entity.subtitle
         )
     }
 }
@@ -46,6 +40,13 @@ extension Home.Chapter {
             title: entity.chapterName,
             group: entity.scanlationGroup?.name
         )
+    }
+}
+
+private extension MangaEntity {
+    var subtitle: String? {
+        guard let author else { return nil }
+        return [author.name, artist?.name].compacted().formatted(.list(type: .and, width: .narrow))
     }
 }
 

@@ -14,11 +14,11 @@ import SwiftData
 public struct Home {
     @ObservableState
     public struct State: Equatable {
-        public var popularMangas: IdentifiedArrayOf<PopularManga>
+        public var popularMangas: IdentifiedArrayOf<Manga>
         public var latestChapters: IdentifiedArrayOf<Chapter>
 
         public init(
-            popularMangas: IdentifiedArrayOf<PopularManga> = [],
+            popularMangas: IdentifiedArrayOf<Manga> = [],
             latestChapters: IdentifiedArrayOf<Chapter> = []
         ) {
             self.popularMangas = popularMangas
@@ -58,10 +58,11 @@ public struct Home {
         let context = ModelContext(modelContainer)
 
         do {
-            let popularMangas = try context.fetch(MangaEntity.popular())
-                .compactMap(PopularManga.init)
+            let popularMangas = try context.fetch(MangaEntity.popular()).map(Manga.init)
+            let latestChapters = try context.fetch(ChapterEntity.latest(limit: 64)).map(Chapter.init)
 
             state.popularMangas = IdentifiedArray(uniqueElements: popularMangas)
+            state.latestChapters = IdentifiedArray(uniqueElements: latestChapters)
         } catch {}
     }
 }
