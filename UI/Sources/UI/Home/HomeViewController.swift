@@ -11,6 +11,7 @@ import UIKit
 
 @ViewAction(for: Home.self)
 final class HomeViewController: UIViewController {
+    private var dataFetchingTask: Task<Void, Never>?
     @ViewLoading private var collectionView: UICollectionView
 
     let store: StoreOf<Home>
@@ -27,8 +28,12 @@ final class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        dataFetchingTask?.cancel()
+    }
+
     override func loadView() {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
         view = collectionView
 
         self.collectionView = collectionView
@@ -37,7 +42,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Task {
+        dataFetchingTask = Task {
             await send(.fetchHomeData).finish()
         }
     }
