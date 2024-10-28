@@ -30,9 +30,13 @@ public struct Home {
         }
     }
 
-    public enum Action {
-        case fetchHomeData
+    public enum Action: ViewAction {
         case loadHomeDataFromStorage
+        case view(View)
+
+        public enum View {
+            case fetchHomeData
+        }
     }
 
     @Dependency(\.modelContainer) private var modelContainer
@@ -42,7 +46,7 @@ public struct Home {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .fetchHomeData:
+            case .view(.fetchHomeData):
                 loadHomeDataFromStorage(state: &state)
                 return .run { [mangaService, chapterService] send in
                     try await withThrowingDiscardingTaskGroup { group in

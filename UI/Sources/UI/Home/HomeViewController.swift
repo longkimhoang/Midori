@@ -9,8 +9,9 @@ import ComposableArchitecture
 import MidoriFeatures
 import UIKit
 
+@ViewAction(for: Home.self)
 final class HomeViewController: UIViewController {
-    private let store: StoreOf<Home>
+    let store: StoreOf<Home>
 
     init(store: StoreOf<Home>) {
         self.store = store
@@ -26,7 +27,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         Task {
-            await store.send(.fetchHomeData).finish()
+            await send(.fetchHomeData).finish()
         }
     }
 }
