@@ -33,14 +33,18 @@ public struct Home {
 
     @Dependency(\.modelContainer) private var modelContainer
     @Dependency(\.mangaService) private var mangaService
+    @Dependency(\.chapterService) private var chapterService
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .fetchHomeData:
                 loadHomeDataFromStorage(state: &state)
-                return .run { [mangaService] send in
-                    try await mangaService.syncPopularMangas()
+                return .run { [mangaService, chapterService] send in
+                    try await withThrowingDiscardingTaskGroup { group in
+                        group.addTask { try await mangaService.syncPopularMangas() }
+                        group.addTask { try await chapterService.syncLatestChapters() }
+                    }
                     await send(.loadHomeDataFromStorage)
                 }
             case .loadHomeDataFromStorage:
