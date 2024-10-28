@@ -35,4 +35,16 @@ public extension MangaEntity {
 
         return descriptor
     }
+
+    static func recentlyAdded(limit: Int = 100, offset: Int = 0) -> FetchDescriptor<MangaEntity> {
+        var descriptor = FetchDescriptor<MangaEntity>()
+        descriptor.predicate = #Predicate {
+            $0.author != nil && $0.chapters.count > 0
+        }
+        descriptor.sortBy = [.init(\.createdAt, order: .reverse)]
+        descriptor.fetchLimit = limit
+        descriptor.fetchOffset = offset
+
+        return descriptor
+    }
 }

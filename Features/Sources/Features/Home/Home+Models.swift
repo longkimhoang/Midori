@@ -46,7 +46,7 @@ extension Home.Chapter {
 private extension MangaEntity {
     var subtitle: String? {
         guard let author else { return nil }
-        return [author.name, artist?.name].compacted().formatted(.list(type: .and, width: .narrow))
+        return [author.name, artist?.name].compacted().uniqued().formatted(.list(type: .and, width: .narrow))
     }
 }
 

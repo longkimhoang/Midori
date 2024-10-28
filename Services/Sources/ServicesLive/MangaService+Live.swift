@@ -36,6 +36,15 @@ extension MangaService: DependencyKey {
                 )
                 let response = try await client.send(request).value
                 try await ingestor.importMangas(response.data)
+            },
+            syncRecentlyAddedMangas: { limit, offset in
+                let ingestor = MangaAPIResponseIngestor(modelContainer: modelContainer)
+                let request = MangaDexAPI.Manga.list(
+                    pagination: .init(limit: limit, offset: offset),
+                    order: [.createdAt: .descending]
+                )
+                let response = try await client.send(request).value
+                try await ingestor.importMangas(response.data)
             }
         )
     }

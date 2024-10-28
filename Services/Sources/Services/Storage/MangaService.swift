@@ -11,6 +11,7 @@ import DependenciesMacros
 @DependencyClient
 public struct MangaService: Sendable {
     public var syncPopularMangas: @Sendable () async throws -> Void
+    public var syncRecentlyAddedMangas: @Sendable (_ limit: Int, _ offset: Int) async throws -> Void
 }
 
 extension MangaService: TestDependencyKey {
