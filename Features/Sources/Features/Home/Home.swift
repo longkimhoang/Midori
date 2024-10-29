@@ -31,14 +31,10 @@ public struct Home {
         }
     }
 
-    public enum Action: ViewAction {
+    public enum Action {
+        case fetchHomeData
         case loadHomeDataFromStorage
         case path(StackActionOf<Path>)
-        case view(View)
-
-        public enum View {
-            case fetchHomeData
-        }
     }
 
     @Reducer(state: .equatable)
@@ -51,8 +47,7 @@ public struct Home {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .view(.fetchHomeData):
-                loadHomeDataFromStorage(state: &state)
+            case .fetchHomeData:
                 return .run { [mangaService, chapterService] send in
                     try await withThrowingDiscardingTaskGroup { group in
                         group.addTask { try await mangaService.syncPopularMangas() }
@@ -68,7 +63,6 @@ public struct Home {
                 return .none
             }
         }
-        ._printChanges()
     }
 
     private func loadHomeDataFromStorage(state: inout State) {

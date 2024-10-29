@@ -47,10 +47,7 @@ extension HomeViewController {
         }
     }
 
-    func updateDataSource(
-        popularMangas _: IdentifiedArrayOf<Manga>,
-        animated: Bool = true
-    ) {
+    func updateDataSource(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
 
         snapshot.appendSections([.popularMangas])

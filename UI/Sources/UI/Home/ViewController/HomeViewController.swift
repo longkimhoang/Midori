@@ -9,9 +9,8 @@ import ComposableArchitecture
 import MidoriFeatures
 import UIKit
 
-@ViewAction(for: Home.self)
 final class HomeViewController: UIViewController {
-    enum SectionIdentifier: Int {
+    enum SectionIdentifier {
         case popularMangas
     }
 
@@ -56,12 +55,13 @@ final class HomeViewController: UIViewController {
 
         configureDataSource()
 
+        store.send(.loadHomeDataFromStorage)
         observe { [unowned self] in
-            updateDataSource(popularMangas: store.popularMangas)
+            updateDataSource()
         }
 
         dataFetchingTask = Task {
-            await send(.fetchHomeData).finish()
+            await store.send(.fetchHomeData).finish()
         }
     }
 }
