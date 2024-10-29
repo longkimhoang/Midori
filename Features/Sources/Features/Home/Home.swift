@@ -31,13 +31,14 @@ public struct Home {
         }
     }
 
-    public enum Action {
+    public enum Action: Equatable {
         case fetchHomeData
         case loadHomeDataFromStorage
+        case latestUpdatesButtonTapped
         case path(StackActionOf<Path>)
     }
 
-    @Reducer(state: .equatable)
+    @Reducer(state: .equatable, action: .equatable)
     public enum Path {}
 
     @Dependency(\.modelContainer) private var modelContainer
@@ -58,6 +59,8 @@ public struct Home {
                 }
             case .loadHomeDataFromStorage:
                 loadHomeDataFromStorage(state: &state)
+                return .none
+            case .latestUpdatesButtonTapped:
                 return .none
             case .path:
                 return .none

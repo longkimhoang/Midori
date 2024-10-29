@@ -18,6 +18,8 @@ struct PopularMangaView: View {
                     .font(.title2)
 
                 authorsText
+
+                Spacer()
             }
             .lineLimit(2)
 

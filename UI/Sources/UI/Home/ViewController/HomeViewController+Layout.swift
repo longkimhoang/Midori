@@ -22,16 +22,37 @@ extension HomeViewController {
             switch section {
             case .popularMangas:
                 return makePopularMangasSection()
+            case .latestChapters:
+                return makeLatestChaptersSection()
             }
         }
 
         let configuration = UICollectionViewCompositionalLayoutConfiguration()
         configuration.contentInsetsReference = .layoutMargins
+        configuration.interSectionSpacing = 16
 
         return UICollectionViewCompositionalLayout(sectionProvider: sectionProvider, configuration: configuration)
     }
 
     private func makePopularMangasSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(180))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+        section.interGroupSpacing = 32
+        section.boundarySupplementaryItems = [makeSectionHeaderLabel()]
+
+        return section
+    }
+
+    private func makeLatestChaptersSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension: .estimated(200)
@@ -44,7 +65,7 @@ extension HomeViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
         section.interGroupSpacing = 32
-        section.boundarySupplementaryItems = [makeSectionHeaderLabel()]
+        section.boundarySupplementaryItems = [makeSectionHeaderButton()]
 
         return section
     }
@@ -54,6 +75,15 @@ extension HomeViewController {
         return NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: itemSize,
             elementKind: SupplementaryElementKind.sectionHeaderLabel,
+            alignment: .topLeading
+        )
+    }
+
+    private func makeSectionHeaderButton() -> NSCollectionLayoutBoundarySupplementaryItem {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(44))
+        return NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: itemSize,
+            elementKind: SupplementaryElementKind.sectionHeaderButton,
             alignment: .topLeading
         )
     }

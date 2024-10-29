@@ -12,6 +12,7 @@ import UIKit
 final class HomeViewController: UIViewController {
     enum SectionIdentifier {
         case popularMangas
+        case latestChapters
     }
 
     enum ItemIdentifier: Hashable {

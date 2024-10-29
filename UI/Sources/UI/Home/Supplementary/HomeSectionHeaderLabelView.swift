@@ -29,7 +29,7 @@ final class HomeSectionHeaderLabelView: UICollectionReusableView {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
             label.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
-            label.topAnchor.constraint(equalTo: topAnchor),
+            label.topAnchor.constraint(equalToSystemSpacingBelow: topAnchor, multiplier: 1),
             bottomAnchor.constraint(equalToSystemSpacingBelow: label.bottomAnchor, multiplier: 1),
         ])
     }

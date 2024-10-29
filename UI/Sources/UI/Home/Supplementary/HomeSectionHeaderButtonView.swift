@@ -5,6 +5,7 @@
 //  Created by Long Kim on 29/10/24.
 //
 
+import SwiftNavigation
 import UIKit
 
 final class HomeSectionHeaderButtonView: UICollectionReusableView {
@@ -14,11 +15,11 @@ final class HomeSectionHeaderButtonView: UICollectionReusableView {
         }
     }
 
-    var actionHandler: (() -> Void)?
+    var handler: (() -> Void)?
 
     private lazy var button = UIButton(
         primaryAction: UIAction { [unowned self] _ in
-            actionHandler?()
+            handler?()
         }
     )
 
@@ -28,11 +29,12 @@ final class HomeSectionHeaderButtonView: UICollectionReusableView {
         addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        button.contentHorizontalAlignment = .leading
         NSLayoutConstraint.activate([
             button.leadingAnchor.constraint(equalTo: leadingAnchor),
             button.trailingAnchor.constraint(equalTo: trailingAnchor),
-            button.topAnchor.constraint(equalTo: topAnchor),
-            button.bottomAnchor.constraint(equalTo: bottomAnchor),
+            button.topAnchor.constraint(equalToSystemSpacingBelow: topAnchor, multiplier: 1),
+            bottomAnchor.constraint(equalToSystemSpacingBelow: button.bottomAnchor, multiplier: 1),
         ])
 
         button.configurationUpdateHandler = { button in
@@ -65,16 +67,20 @@ private extension UIButton.Configuration {
         configuration.imagePadding = 8
         configuration.preferredSymbolConfigurationForImage = symbolConfiguration
         configuration.image = UIImage(systemName: "chevron.right")
-        configuration.titleAlignment = .leading
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
 
         return configuration
     }
 }
 
+private extension UIAction.Identifier {
+    static let headerButtonPrimaryAction = UIAction.Identifier("headerButtonPrimaryAction")
+}
+
 #Preview {
     let view = HomeSectionHeaderButtonView()
     view.label = "A button"
-    view.actionHandler = {
+    view.handler = {
         print("Button pressed")
     }
 
