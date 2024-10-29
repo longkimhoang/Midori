@@ -8,24 +8,44 @@
 import ComposableArchitecture
 import MidoriFeatures
 import UIKit
+import SwiftUI
 
 extension HomeViewController {
     typealias Manga = Home.Manga
     typealias Chapter = Home.Chapter
 
     func configureDataSource() {
-        let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Int> {
-            _, _, _ in
+        let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
+            cell, _, item in
+
+            cell.contentConfiguration = UIHostingConfiguration {
+                PopularMangaView(
+                    title: item.title,
+                    authors: item.subtitle
+                )
+            }
+            .margins(.all, 16)
+            .background {
+                RoundedRectangle(cornerRadius: 16).fill(.gray.gradient)
+            }
         }
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
-            [unowned self] collectionView, indexPath, _ in
+            [unowned self] collectionView, indexPath, itemIdentifier in
 
-            return collectionView.dequeueConfiguredReusableCell(
-                using: popularMangaCellRegistration,
-                for: indexPath,
-                item: 1
-            )
+            switch itemIdentifier {
+            case .popularManga(let id):
+                let manga = store.popularMangas[id: id]
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: popularMangaCellRegistration,
+                    for: indexPath,
+                    item: manga
+                )
+            case .latestChapter:
+                return nil
+            case .recentlyAddedManga:
+                return nil
+            }
         }
 
         let sectionHeaderLabelRegistration = UICollectionView.SupplementaryRegistration<HomeSectionHeaderLabelView>(
