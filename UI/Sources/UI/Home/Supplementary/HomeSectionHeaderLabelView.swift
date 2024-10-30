@@ -17,6 +17,7 @@ final class HomeSectionHeaderLabelView: UICollectionReusableView {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .title1)
+        label.adjustsFontForContentSizeCategory = true
 
         return label
     }()
