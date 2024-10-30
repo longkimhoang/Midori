@@ -56,6 +56,19 @@ actor MangaAPIResponseIngestor {
                     authorIDs[artist.id] = artistEntity.persistentModelID
                 }
             }
+
+            if let cover = manga.relationship(CoverRelationship.self).flatMap(\.referenced) {
+                let imageURLs = Manga.ImageSize.allCases.map { size in
+                    (MangaCoverEntity.ImageSize(size), manga.coverImageURL(with: cover.fileName, size: size))
+                }
+
+                let coverEntitiy = MangaCoverEntity(
+                    imageURLs: Dictionary(uniqueKeysWithValues: imageURLs),
+                    volume: cover.volume
+                )
+                mangaEntity.currentCover = coverEntitiy
+                modelContext.insert(coverEntitiy)
+            }
         }
 
         try modelContext.save()

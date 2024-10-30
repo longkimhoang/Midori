@@ -112,3 +112,7 @@ extension HomeViewController {
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
 }
+
+// MARK: - Cover image fetching
+
+extension HomeViewController {}

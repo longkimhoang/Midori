@@ -66,6 +66,7 @@ public struct Home {
                 return .none
             }
         }
+        ._printChanges()
     }
 
     private func loadHomeDataFromStorage(state: inout State) {

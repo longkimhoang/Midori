@@ -25,3 +25,26 @@ public struct Manga: Entity {
         relationships = RelationshipContainer()
     }
 }
+
+// MARK: - Retrieving cover image URL
+
+public extension Manga {
+    enum ImageSize: CaseIterable {
+        case original, small, medium
+    }
+
+    func coverImageURL(with fileName: String, size: ImageSize) -> URL {
+        let baseURL = URL(string: "https://uploads.mangadex.org/covers")!.appending(path: id.uuidString.lowercased())
+
+        let fileName = switch size {
+        case .original:
+            fileName
+        case .small:
+            "\(fileName).256.jpg"
+        case .medium:
+            "\(fileName).512.jpg"
+        }
+
+        return baseURL.appending(component: fileName)
+    }
+}

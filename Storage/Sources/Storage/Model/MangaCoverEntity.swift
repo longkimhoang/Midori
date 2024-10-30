@@ -10,17 +10,19 @@ import SwiftData
 
 @Model
 public final class MangaCoverEntity {
-    #Unique<MangaCoverEntity>([\.id])
+    public enum ImageSize: Int, Codable {
+        case original
+        case smallThumbnail
+        case mediumThumbnail
+    }
 
-    public var id: UUID
-    public var fileName: String
+    public var imageURLs: [ImageSize: URL]
     public var volume: String?
 
-    public init(id: UUID, fileName: String, volume: String? = nil) {
-        self.id = id
-        self.fileName = fileName
+    public init(imageURLs: [ImageSize: URL] = [:], volume: String? = nil) {
+        self.imageURLs = imageURLs
         self.volume = volume
     }
 
-    @Relationship var manga: MangaEntity?
+    @Relationship public var manga: MangaEntity?
 }

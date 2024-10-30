@@ -14,6 +14,7 @@ public extension Home {
         public let id: UUID
         public let title: String
         public let subtitle: String?
+        public let coverImageURL: URL?
     }
 
     struct Chapter: Identifiable, Equatable, Sendable {
@@ -28,7 +29,8 @@ extension Home.Manga {
         self.init(
             id: entity.id,
             title: entity.title,
-            subtitle: entity.subtitle
+            subtitle: entity.subtitle,
+            coverImageURL: entity.currentCover?.imageURLs[.smallThumbnail]
         )
     }
 }
