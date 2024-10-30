@@ -50,7 +50,8 @@ final class PopularMangaContentView: UIView, UIContentView {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .title2)
+        let headlineMetrics = UIFontMetrics(forTextStyle: .headline)
+        label.font = .preferredFont(forTextStyle: .headline)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 2
         return label
@@ -58,7 +59,7 @@ final class PopularMangaContentView: UIView, UIContentView {
 
     private lazy var authorsLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .title3)
+        label.font = .preferredFont(forTextStyle: .subheadline)
         label.adjustsFontForContentSizeCategory = true
         label.textColor = .secondaryLabel
         return label
@@ -139,10 +140,12 @@ final class PopularMangaContentView: UIView, UIContentView {
             Taida na Akujoku Kizoku ni Tensei shita Ore, Scenario o \
             Bukkowashitara Kikakugai no Maryoku de Saikyou ni Natta
             """,
-            authors: "Kikuchi Kousei, Odadouma"
+            authors: "Kikuchi Kousei, Odadouma",
+            coverImage: UIImage(named: "MangaCoverPreview", in: .module, with: nil)
         )
 
         return PopularMangaContentView(configuration: configuration)
     }
-    .frame(width: .infinity, height: 200)
+    .padding()
+    .frame(width: .infinity, height: 180)
 }
