@@ -16,18 +16,21 @@ extension HomeViewController {
 
     func configureDataSource() {
         let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-            cell, _, item in
+            cell, _, manga in
 
-            cell.contentConfiguration = UIHostingConfiguration {
-                PopularMangaView(
-                    title: item.title,
-                    authors: item.subtitle
-                )
-            }
-            .margins(.all, 16)
-            .background {
-                RoundedRectangle(cornerRadius: 16).fill(.gray.gradient)
-            }
+            cell.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+
+            let configuration = PopularMangaConfiguration(
+                title: manga.title,
+                authors: manga.subtitle
+            )
+            cell.contentConfiguration = configuration
+
+            var backgroundConfiguration = UIBackgroundConfiguration.clear()
+            backgroundConfiguration.cornerRadius = 16
+            backgroundConfiguration.backgroundColor = .tertiarySystemFill
+
+            cell.backgroundConfiguration = backgroundConfiguration
         }
 
         let latestChapterCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Chapter> {
