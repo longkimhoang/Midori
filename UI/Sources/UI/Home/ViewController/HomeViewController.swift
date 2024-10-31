@@ -56,6 +56,8 @@ final class HomeViewController: UIViewController {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
         collectionView.prefetchDataSource = self
         collectionView.delegate = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
 
         view = collectionView
 
@@ -74,6 +76,14 @@ final class HomeViewController: UIViewController {
 
         dataFetchingTask = Task {
             await store.send(.fetchHomeData).finish()
+        }
+    }
+
+    @objc private func refresh(_ sender: UIRefreshControl) {
+        dataFetchingTask?.cancel()
+        dataFetchingTask = Task {
+            await store.send(.fetchHomeData).finish()
+            sender.endRefreshing()
         }
     }
 }
