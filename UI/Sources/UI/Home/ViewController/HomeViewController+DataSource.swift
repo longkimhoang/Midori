@@ -25,8 +25,6 @@ extension HomeViewController {
                 return
             }
 
-            cell.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-
             let image = cachedCoverImage(for: itemIdentifier)
 
             cell.configurationUpdateHandler = { cell, state in
@@ -51,6 +49,11 @@ extension HomeViewController {
                         )
                 }
             }
+
+            cell.isAccessibilityElement = true
+
+            let authorsFallback = String(localized: "authors unavailable", bundle: .module)
+            cell.accessibilityLabel = "\(manga.title), \(manga.subtitle ?? authorsFallback)"
 
             switch (image, coverImageDominantColors[itemIdentifier]) {
             case (.none, _):

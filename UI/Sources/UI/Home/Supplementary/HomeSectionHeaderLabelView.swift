@@ -18,6 +18,7 @@ final class HomeSectionHeaderLabelView: UICollectionReusableView {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .title1)
         label.adjustsFontForContentSizeCategory = true
+        label.accessibilityTraits.insert(.header)
 
         return label
     }()
