@@ -22,8 +22,13 @@ final class MangaDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+    var collectionView: UICollectionView!
+
+    override func loadView() {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+
+        view = collectionView
+
+        self.collectionView = collectionView
     }
 }
