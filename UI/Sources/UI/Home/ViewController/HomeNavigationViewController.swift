@@ -16,11 +16,13 @@ final class HomeNavigationViewController: NavigationStackController {
     convenience init(store: StoreOf<Home>) {
         @UIBindable var store = store
 
-//        self.store = store
         self.init(path: $store.scope(state: \.path, action: \.path)) {
             HomeViewController(store: store)
-        } destination: { _ in
-            fatalError()
+        } destination: { store in
+            switch store.case {
+            case let .mangaDetail(store):
+                MangaDetailViewController(store: store)
+            }
         }
 
         self.store = store

@@ -7,6 +7,7 @@
 
 import Algorithms
 import ComposableArchitecture
+import Foundation
 import MidoriServices
 import MidoriStorage
 import SwiftData
@@ -36,11 +37,14 @@ public struct Home {
         case loadHomeDataFromStorage
         case latestUpdatesButtonTapped
         case recentlyAddedButtonTapped
+        case mangaSelected(UUID)
         case path(StackActionOf<Path>)
     }
 
     @Reducer(state: .equatable, action: .equatable)
-    public enum Path {}
+    public enum Path {
+        case mangaDetail(MangaDetail)
+    }
 
     @Dependency(\.modelContainer) private var modelContainer
     @Dependency(\.mangaService) private var mangaService
@@ -65,10 +69,16 @@ public struct Home {
                 return .none
             case .recentlyAddedButtonTapped:
                 return .none
+            case let .mangaSelected(mangaID):
+                print(mangaID)
+                let mangaDetail = MangaDetail.State()
+                state.path.append(.mangaDetail(mangaDetail))
+                return .none
             case .path:
                 return .none
             }
         }
+        .forEach(\.path, action: \.path)
         ._printChanges()
     }
 
