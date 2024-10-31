@@ -53,7 +53,7 @@ final class HomeViewController: UIViewController {
 
     override func loadView() {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
         collectionView.prefetchDataSource = self
 
         view = collectionView
