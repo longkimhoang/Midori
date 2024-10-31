@@ -70,8 +70,7 @@ public struct Home {
             case .recentlyAddedButtonTapped:
                 return .none
             case let .mangaSelected(mangaID):
-                print(mangaID)
-                let mangaDetail = MangaDetail.State()
+                let mangaDetail = MangaDetail.State(mangaID: mangaID)
                 state.path.append(.mangaDetail(mangaDetail))
                 return .none
             case .path:

@@ -31,4 +31,10 @@ final class MangaDetailViewController: UIViewController {
 
         self.collectionView = collectionView
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        store.send(.loadMangaFromStorage)
+    }
 }
