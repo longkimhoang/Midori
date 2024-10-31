@@ -1,5 +1,5 @@
 {
-  "originHash" : "461c47bc076e855c569e38d53c2d53fee4415aafe5be5a8a71b6cf7f2c2c649f",
+  "originHash" : "4efbff104c38082b7bb35719e0a0cba7b30698e808729230efacb4e4746eb7af",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "9fa31f4403da54855f1e2aeaeff478f4f0e40b13",
         "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "flex",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/FLEXTool/FLEX",
-      "state" : {
-        "revision" : "e0acf59d06d498041f65bbea1e5914b6e4b39733",
-        "version" : "5.22.10"
       }
     },
     {

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		537D3F942CCF618B00BF285D /* FLEX in Frameworks */ = {isa = PBXBuildFile; productRef = 537D3F932CCF618B00BF285D /* FLEX */; };
 		53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */ = {isa = PBXBuildFile; productRef = 53AA5E4B2CCD388D005A4538 /* MidoriApp */; };
 		53D6ECFD2CCE1F5E007A03AB /* MidoriServicesLive in Frameworks */ = {isa = PBXBuildFile; productRef = 53D6ECFC2CCE1F5E007A03AB /* MidoriServicesLive */; };
 /* End PBXBuildFile section */
@@ -51,7 +50,6 @@
 			files = (
 				53D6ECFD2CCE1F5E007A03AB /* MidoriServicesLive in Frameworks */,
 				53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */,
-				537D3F942CCF618B00BF285D /* FLEX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +109,6 @@
 			packageProductDependencies = (
 				53AA5E4B2CCD388D005A4538 /* MidoriApp */,
 				53D6ECFC2CCE1F5E007A03AB /* MidoriServicesLive */,
-				537D3F932CCF618B00BF285D /* FLEX */,
 			);
 			productName = Midori;
 			productReference = 5329F1EC2CC027E700A6BD2B /* Midori.app */;
@@ -143,7 +140,6 @@
 			mainGroup = 5329F1E32CC027E700A6BD2B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				537D3F922CCF618B00BF285D /* XCRemoteSwiftPackageReference "FLEX" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5329F1ED2CC027E700A6BD2B /* Products */;
@@ -384,23 +380,7 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		537D3F922CCF618B00BF285D /* XCRemoteSwiftPackageReference "FLEX" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/FLEXTool/FLEX";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.22.10;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		537D3F932CCF618B00BF285D /* FLEX */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 537D3F922CCF618B00BF285D /* XCRemoteSwiftPackageReference "FLEX" */;
-			productName = FLEX;
-		};
 		53AA5E4B2CCD388D005A4538 /* MidoriApp */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MidoriApp;
