@@ -32,8 +32,7 @@ struct LatestChapterView: View {
                 Text(chapter)
                     .font(.subheadline)
 
-                Text(group)
-                    .font(.subheadline)
+                ScanlationGroupLabel(group: group)
                     .foregroundStyle(.secondary)
 
                 Spacer(minLength: 0)
