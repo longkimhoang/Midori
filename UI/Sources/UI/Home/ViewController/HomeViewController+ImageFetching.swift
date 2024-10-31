@@ -70,8 +70,9 @@ extension HomeViewController {
         case let .latestChapter(id):
             let chapter = store.latestChapters[id: id]
             return ImageRequest(url: chapter?.coverImageURL, processors: [.resize(width: 60)])
-        case .recentlyAddedManga:
-            return nil
+        case let .recentlyAddedManga(id):
+            let manga = store.recentlyAddedMangas[id: id]
+            return ImageRequest(url: manga?.coverImageURL, processors: [.resize(height: 128)])
         }
     }
 }

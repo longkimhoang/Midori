@@ -35,6 +35,7 @@ public struct Home {
         case fetchHomeData
         case loadHomeDataFromStorage
         case latestUpdatesButtonTapped
+        case recentlyAddedButtonTapped
         case path(StackActionOf<Path>)
     }
 
@@ -61,6 +62,8 @@ public struct Home {
                 loadHomeDataFromStorage(state: &state)
                 return .none
             case .latestUpdatesButtonTapped:
+                return .none
+            case .recentlyAddedButtonTapped:
                 return .none
             case .path:
                 return .none

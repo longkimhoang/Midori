@@ -58,7 +58,7 @@ struct LatestChapterView: View {
         }
     }
 
-    struct SeparatorLeadingPreferenceKey: PreferenceKey {
+    private struct SeparatorLeadingPreferenceKey: PreferenceKey {
         static let defaultValue: Anchor<CGPoint>? = nil
 
         static func reduce(value: inout Anchor<CGPoint>?, nextValue: () -> Anchor<CGPoint>?) {

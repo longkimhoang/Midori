@@ -16,6 +16,7 @@ final class HomeViewController: UIViewController {
     enum SectionIdentifier {
         case popularMangas
         case latestChapters
+        case recentyAddedMangas
     }
 
     enum ItemIdentifier: Hashable {
@@ -52,6 +53,7 @@ final class HomeViewController: UIViewController {
 
     override func loadView() {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         collectionView.prefetchDataSource = self
 
         view = collectionView

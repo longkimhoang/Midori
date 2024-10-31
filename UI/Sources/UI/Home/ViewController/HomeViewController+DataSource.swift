@@ -92,6 +92,25 @@ extension HomeViewController {
             }
         }
 
+        let recentlyAddedMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
+            [unowned self] cell, indexPath, manga in
+
+            guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+                return
+            }
+
+            let image = cachedCoverImage(for: itemIdentifier)
+
+            cell.contentConfiguration = UIHostingConfiguration {
+                RecentlyAddedMangaView(title: manga.title, coverImage: image.map(Image.init))
+            }
+            .margins(.all, 0)
+
+            if image == nil {
+                fetchCoverImage(for: itemIdentifier)
+            }
+        }
+
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
             [unowned self] collectionView, indexPath, itemIdentifier in
 
@@ -114,7 +133,11 @@ extension HomeViewController {
                     item: chapter
                 )
             case .recentlyAddedManga:
-                cell = nil
+                cell = collectionView.dequeueConfiguredReusableCell(
+                    using: recentlyAddedMangaCellRegistration,
+                    for: indexPath,
+                    item: store.recentlyAddedMangas[indexPath.item]
+                )
             }
 
             return cell
@@ -137,9 +160,14 @@ extension HomeViewController {
             case .popularMangas:
                 break
             case .latestChapters:
-                button.label = String(localized: "Latest Updates", bundle: .module)
+                button.label = String(localized: "Latest updates", bundle: .module)
                 button.handler = { [unowned self] in
                     store.send(.latestUpdatesButtonTapped)
+                }
+            case .recentyAddedMangas:
+                button.label = String(localized: "Recently added", bundle: .module)
+                button.handler = { [unowned self] in
+                    store.send(.recentlyAddedButtonTapped)
                 }
             }
         }
@@ -165,9 +193,13 @@ extension HomeViewController {
     func updateDataSource(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
 
-        snapshot.appendSections([.popularMangas, .latestChapters])
+        snapshot.appendSections([.popularMangas, .latestChapters, .recentyAddedMangas])
         snapshot.appendItems(store.popularMangas.ids.map(ItemIdentifier.popularManga), toSection: .popularMangas)
         snapshot.appendItems(store.latestChapters.ids.map(ItemIdentifier.latestChapter), toSection: .latestChapters)
+        snapshot.appendItems(
+            store.recentlyAddedMangas.ids.map(ItemIdentifier.recentlyAddedManga),
+            toSection: .recentyAddedMangas
+        )
 
         dataSource.apply(snapshot, animatingDifferences: animated)
     }

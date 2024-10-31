@@ -26,6 +26,8 @@ extension HomeViewController {
                 return makePopularMangasSection()
             case .latestChapters:
                 return makeLatestChaptersSection(layoutEnvironment: layoutEnvironment)
+            case .recentyAddedMangas:
+                return makeRecentlyAddedMangasSection()
             }
         }
 
@@ -48,7 +50,7 @@ extension HomeViewController {
 
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
-        section.interGroupSpacing = 32
+        section.interGroupSpacing = 8
         section.boundarySupplementaryItems = [makeSectionHeaderLabel()]
 
         return section
@@ -80,7 +82,28 @@ extension HomeViewController {
 
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
-        section.interGroupSpacing = 16
+        section.interGroupSpacing = 8
+        section.boundarySupplementaryItems = [makeSectionHeaderButton()]
+
+        return section
+    }
+
+    private func makeRecentlyAddedMangasSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .uniformAcrossSiblings(estimate: 140)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .absolute(128),
+            heightDimension: .estimated(180)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+        section.interGroupSpacing = 8
         section.boundarySupplementaryItems = [makeSectionHeaderButton()]
 
         return section
