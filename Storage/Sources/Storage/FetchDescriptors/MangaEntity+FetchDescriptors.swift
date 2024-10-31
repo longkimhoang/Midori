@@ -41,10 +41,21 @@ public extension MangaEntity {
         return descriptor
     }
 
+    static func withID(_ id: UUID) -> FetchDescriptor<MangaEntity> {
+        var descriptor = FetchDescriptor<MangaEntity>()
+        descriptor.predicate = #Predicate {
+            isValidManga.evaluate($0) && $0.id == id
+        }
+        descriptor.fetchLimit = 1
+        descriptor.relationshipKeyPathsForPrefetching = [\.author, \.artist, \.currentCover]
+
+        return descriptor
+    }
+
     private static func overview() -> FetchDescriptor<MangaEntity> {
         var descriptor = FetchDescriptor<MangaEntity>()
         descriptor.propertiesToFetch = [\.id, \.title, \.synopsis]
-        descriptor.relationshipKeyPathsForPrefetching = [\.author, \.artist]
+        descriptor.relationshipKeyPathsForPrefetching = [\.author, \.artist, \.currentCover]
         return descriptor
     }
 
