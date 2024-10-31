@@ -86,6 +86,10 @@ extension HomeViewController {
                 )
             }
             .margins(.all, 0)
+
+            if image == nil {
+                fetchCoverImage(for: itemIdentifier)
+            }
         }
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {

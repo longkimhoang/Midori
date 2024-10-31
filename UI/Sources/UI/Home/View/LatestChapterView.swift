@@ -17,6 +17,13 @@ struct LatestChapterView: View {
 
     var body: some View {
         HStack {
+            CoverImageView(image: coverImage)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .strokeBorder(.separator, lineWidth: 1 / displayScale)
+                }
+                .frame(width: 60)
+
             VStack(alignment: .leading) {
                 Text(manga)
                     .font(.headline)
@@ -28,6 +35,8 @@ struct LatestChapterView: View {
                 Text(group)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+
+                Spacer(minLength: 0)
             }
             .lineLimit(1)
 

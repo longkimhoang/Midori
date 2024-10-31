@@ -22,21 +22,11 @@ struct PopularMangaView: View {
 
     var body: some View {
         HStack {
-            ZStack {
-                Rectangle()
-                    .overlay {
-                        if let coverImage {
-                            coverImage
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        }
-                    }
-                    .clipShape(.rect(cornerRadius: 8))
-
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.fill.secondary.shadow(.drop(radius: 8, y: 12)))
-            }
-            .aspectRatio(0.7, contentMode: .fit)
+            CoverImageView(image: coverImage)
+                .background(
+                    .shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
+                    in: .rect(cornerRadius: 8)
+                )
 
             VStack(alignment: .leading) {
                 Text(title)
@@ -54,7 +44,6 @@ struct PopularMangaView: View {
 
             Spacer(minLength: 0)
         }
-        .opacity(isHighlighted ? 0.5 : 1)
     }
 }
 
