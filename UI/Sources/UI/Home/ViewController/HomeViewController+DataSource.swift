@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import MidoriFeatures
+import Nuke
 import SwiftUI
 import UIKit
 
@@ -15,22 +16,53 @@ extension HomeViewController {
     typealias Chapter = Home.Chapter
 
     func configureDataSource() {
-        let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
-            cell, _, manga in
+        let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, (Manga, UIColor?)> {
+            [unowned self] cell, indexPath, item in
+
+            let (manga, dominantColor) = item
+
+            guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+                return
+            }
 
             cell.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
-            let configuration = PopularMangaConfiguration(
-                title: manga.title,
-                authors: manga.subtitle
-            )
-            cell.contentConfiguration = configuration
+            let image = cachedCoverImage(for: itemIdentifier)
 
-            var backgroundConfiguration = UIBackgroundConfiguration.clear()
-            backgroundConfiguration.cornerRadius = 16
-            backgroundConfiguration.backgroundColor = .tertiarySystemFill
+            cell.configurationUpdateHandler = { cell, state in
+                cell.contentConfiguration = UIHostingConfiguration {
+                    PopularMangaView(
+                        title: manga.title,
+                        authors: manga.subtitle,
+                        isHighlighted: state.isHighlighted,
+                        coverImage: image.map(Image.init)
+                    )
+                }
+                .margins(.all, 16)
+                .background {
+                    let color = dominantColor.map(Color.init)
+                    let shapeStyle = color.map { AnyShapeStyle($0.gradient) } ?? AnyShapeStyle(.fill.tertiary)
 
-            cell.backgroundConfiguration = backgroundConfiguration
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(shapeStyle)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(.regularMaterial)
+                        )
+                }
+            }
+
+            switch (image, coverImageDominantColors[itemIdentifier]) {
+            case (.none, _):
+                fetchCoverImage(for: itemIdentifier)
+            case let (.some(image), .none):
+                Task {
+                    coverImageDominantColors[itemIdentifier] = await computeDominantColor(for: image, context: context)
+                    reconfigureItems(with: [itemIdentifier])
+                }
+            case (.some, .some):
+                break
+            }
         }
 
         let latestChapterCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Chapter> {
@@ -40,24 +72,29 @@ extension HomeViewController {
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
             [unowned self] collectionView, indexPath, itemIdentifier in
 
+            let cell: UICollectionViewCell?
+            let dominantColor = coverImageDominantColors[itemIdentifier]
+
             switch itemIdentifier {
             case let .popularManga(id):
-                let manga = store.popularMangas[id: id]
-                return collectionView.dequeueConfiguredReusableCell(
+                let item = store.popularMangas[id: id].map { ($0, dominantColor) }
+                cell = collectionView.dequeueConfiguredReusableCell(
                     using: popularMangaCellRegistration,
                     for: indexPath,
-                    item: manga
+                    item: item
                 )
             case let .latestChapter(id):
                 let chapter = store.latestChapters[id: id]
-                return collectionView.dequeueConfiguredReusableCell(
+                cell = collectionView.dequeueConfiguredReusableCell(
                     using: latestChapterCellRegistration,
                     for: indexPath,
                     item: chapter
                 )
             case .recentlyAddedManga:
-                return nil
+                cell = nil
             }
+
+            return cell
         }
 
         let sectionHeaderLabelRegistration = UICollectionView.SupplementaryRegistration<HomeSectionHeaderLabelView>(
@@ -111,8 +148,10 @@ extension HomeViewController {
 
         dataSource.apply(snapshot, animatingDifferences: animated)
     }
+
+    func reconfigureItems(with identifiers: [ItemIdentifier]) {
+        var snapshot = dataSource.snapshot()
+        snapshot.reconfigureItems(identifiers)
+        dataSource.apply(snapshot)
+    }
 }
-
-// MARK: - Cover image fetching
-
-extension HomeViewController {}

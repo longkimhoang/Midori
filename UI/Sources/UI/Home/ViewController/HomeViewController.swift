@@ -6,7 +6,10 @@
 //
 
 import ComposableArchitecture
+import ConcurrencyExtras
+import CoreImage
 import MidoriFeatures
+import Nuke
 import UIKit
 
 final class HomeViewController: UIViewController {
@@ -24,9 +27,12 @@ final class HomeViewController: UIViewController {
     private var dataFetchingTask: Task<Void, Never>?
 
     let store: StoreOf<Home>
+    let imagePrefetcher = ImagePrefetcher(pipeline: .midoriApp)
+    nonisolated(unsafe) let context = CIContext() // CIContext is thread-safe
 
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
+    var coverImageDominantColors: [ItemIdentifier: UIColor] = [:]
 
     init(store: StoreOf<Home>) {
         self.store = store
@@ -46,6 +52,8 @@ final class HomeViewController: UIViewController {
 
     override func loadView() {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
+        collectionView.prefetchDataSource = self
+
         view = collectionView
 
         self.collectionView = collectionView

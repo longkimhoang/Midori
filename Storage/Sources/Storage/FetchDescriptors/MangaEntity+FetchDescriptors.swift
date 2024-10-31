@@ -49,7 +49,7 @@ public extension MangaEntity {
     }
 
     private static var isValidManga: Expression<MangaEntity, Bool> {
-        #Expression { $0.author != nil && $0.chapters.count > 0 }
+        #Expression { $0.author != nil }
     }
 }
 
