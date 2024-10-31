@@ -19,8 +19,10 @@ public extension Home {
 
     struct Chapter: Identifiable, Equatable, Sendable {
         public let id: UUID
-        public let title: String
-        public let group: String?
+        public let manga: String
+        public let chapter: String
+        public let group: String
+        public let coverImageURL: URL?
     }
 }
 
@@ -36,11 +38,15 @@ extension Home.Manga {
 }
 
 extension Home.Chapter {
-    init(_ entity: ChapterEntity) {
+    init?(_ entity: ChapterEntity) {
+        guard let manga = entity.manga else { return nil }
+
         self.init(
             id: entity.id,
-            title: entity.chapterName,
-            group: entity.scanlationGroup?.name
+            manga: manga.title,
+            chapter: entity.chapterName,
+            group: entity.scanlationGroup?.name ?? String(localized: "No group", bundle: .module),
+            coverImageURL: entity.manga?.currentCover?.imageURLs[.smallThumbnail]
         )
     }
 }

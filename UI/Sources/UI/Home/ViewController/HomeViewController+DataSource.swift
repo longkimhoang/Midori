@@ -69,7 +69,23 @@ extension HomeViewController {
         }
 
         let latestChapterCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Chapter> {
-            _, _, _ in
+            [unowned self] cell, indexPath, chapter in
+
+            guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+                return
+            }
+
+            let image = cachedCoverImage(for: itemIdentifier)
+
+            cell.contentConfiguration = UIHostingConfiguration {
+                LatestChapterView(
+                    manga: chapter.manga,
+                    chapter: chapter.chapter,
+                    group: chapter.group,
+                    coverImage: image.map(Image.init)
+                )
+            }
+            .margins(.all, 0)
         }
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {

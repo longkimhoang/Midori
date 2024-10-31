@@ -7,7 +7,6 @@
 
 import CoreImage
 import CoreImage.CIFilterBuiltins
-import Metal
 import Nuke
 import UIKit
 

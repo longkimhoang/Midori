@@ -75,7 +75,7 @@ public struct Home {
         do {
             let popularMangas = try context.fetch(MangaEntity.popular()).map(Manga.init)
             let latestChapters = try context.fetch(ChapterEntity.latest(limit: 64))
-                .uniqued(on: \.manga?.id).map(Chapter.init)
+                .uniqued(on: \.manga?.id).compactMap(Chapter.init)
             let recentlyAddedMangas = try context.fetch(MangaEntity.recentlyAdded(limit: 15)).map(Manga.init)
 
             state.popularMangas = IdentifiedArray(uniqueElements: popularMangas)

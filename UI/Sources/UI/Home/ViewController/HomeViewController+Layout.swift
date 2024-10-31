@@ -14,7 +14,9 @@ extension HomeViewController {
     }
 
     func makeCollectionViewLayout() -> UICollectionViewLayout {
-        let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { [unowned self] sectionIndex, _ in
+        let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
+            [unowned self] sectionIndex, layoutEnvironment in
+
             guard let section = dataSource.sectionIdentifier(for: sectionIndex) else {
                 return nil
             }
@@ -23,7 +25,7 @@ extension HomeViewController {
             case .popularMangas:
                 return makePopularMangasSection()
             case .latestChapters:
-                return makeLatestChaptersSection()
+                return makeLatestChaptersSection(layoutEnvironment: layoutEnvironment)
             }
         }
 
@@ -52,19 +54,33 @@ extension HomeViewController {
         return section
     }
 
-    private func makeLatestChaptersSection() -> NSCollectionLayoutSection {
+    private func makeLatestChaptersSection(
+        layoutEnvironment: NSCollectionLayoutEnvironment
+    ) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(200)
+            heightDimension: .estimated(60)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(200))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let contentWidth = layoutEnvironment.container.effectiveContentSize.width
+        let estimatedItemWidth: CGFloat = 360
+        let itemCount = max(1, (contentWidth / estimatedItemWidth).rounded(.towardZero))
+
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1 / itemCount),
+            heightDimension: .estimated(180)
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: groupSize,
+            repeatingSubitem: item,
+            count: 3
+        )
 
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
-        section.interGroupSpacing = 32
+        section.interGroupSpacing = 16
         section.boundarySupplementaryItems = [makeSectionHeaderButton()]
 
         return section
