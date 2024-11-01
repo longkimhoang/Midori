@@ -21,6 +21,8 @@ struct RecentlyAddedMangaConfiguration: UIContentConfiguration {
 }
 
 final class RecentlyAddedMangaContentView: UIView, UIContentView {
+    private static let contentViewNib = UINib(nibName: "RecentlyAddedMangaContentView", bundle: .module)
+
     @IBOutlet var containerView: UIView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var coverImageView: UIImageView!
@@ -39,7 +41,7 @@ final class RecentlyAddedMangaContentView: UIView, UIContentView {
         self.configuration = configuration
         super.init(frame: .zero)
 
-        UINib(nibName: "RecentlyAddedMangaContentView", bundle: .module).instantiate(withOwner: self)
+        Self.contentViewNib.instantiate(withOwner: self)
 
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
