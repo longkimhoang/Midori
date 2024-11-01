@@ -101,10 +101,14 @@ extension HomeViewController {
 
             let image = cachedCoverImage(for: itemIdentifier)
 
-            cell.contentConfiguration = UIHostingConfiguration {
-                RecentlyAddedMangaView(title: manga.title, coverImage: image.map(Image.init))
-            }
-            .margins(.all, 0)
+//            cell.contentConfiguration = UIHostingConfiguration {
+//                RecentlyAddedMangaView(title: manga.title, coverImage: image.map(Image.init))
+//            }
+//            .margins(.all, 0)
+            cell.contentConfiguration = RecentlyAddedMangaConfiguration(
+                title: manga.title,
+                coverImage: image
+            )
 
             if image == nil {
                 fetchCoverImage(for: itemIdentifier)
