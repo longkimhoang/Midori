@@ -35,6 +35,8 @@ final class HomeViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
     var coverImageDominantColors: [ItemIdentifier: UIColor] = [:]
 
+    weak var transitionSourceView: UIView?
+
     init(store: StoreOf<Home>) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
