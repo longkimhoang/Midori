@@ -5,63 +5,81 @@
 //  Created by Long Kim on 31/10/24.
 //
 
-import SwiftUI
+import UIKit
 
-struct LatestChapterView: View {
-    @Environment(\.displayScale) private var displayScale
-
+struct LatestChapterConfiguration: UIContentConfiguration {
     let manga: String
     let chapter: String
     let group: String
-    let coverImage: Image?
+    let coverImage: UIImage?
 
-    var body: some View {
-        HStack {
-            CoverImageView(image: coverImage)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .strokeBorder(.separator, lineWidth: 1 / displayScale)
-                }
-                .frame(width: 60)
+    func makeContentView() -> any UIView & UIContentView {
+        LatestChapterContentView(configuration: self)
+    }
 
-            VStack(alignment: .leading) {
-                Text(manga)
-                    .font(.headline)
-                    .anchorPreference(key: SeparatorLeadingPreferenceKey.self, value: .leading) { $0 }
+    func updated(for _: any UIConfigurationState) -> LatestChapterConfiguration {
+        self
+    }
+}
 
-                Text(chapter)
-                    .font(.subheadline)
+final class LatestChapterContentView: UIView, UIContentView {
+    private static let contentViewNib = UINib(nibName: "LatestChapterContentView", bundle: .module)
 
-                ScanlationGroupLabel(group: group)
-                    .foregroundStyle(.secondary)
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var mangaLabel: UILabel!
+    @IBOutlet private var chapterLabel: UILabel!
+    @IBOutlet private var groupLabel: UILabel!
+    @IBOutlet private var coverImageView: UIImageView!
 
-                Spacer(minLength: 0)
+    var configuration: any UIContentConfiguration {
+        didSet {
+            guard let configuration = configuration as? LatestChapterConfiguration else {
+                return
             }
-            .lineLimit(1)
 
-            Spacer()
-        }
-        .padding(.vertical, 8)
-        .overlayPreferenceValue(SeparatorLeadingPreferenceKey.self) { value in
-            if let value {
-                GeometryReader { geometry in
-                    VStack {
-                        Spacer()
-                        Rectangle()
-                            .fill(.separator)
-                            .frame(height: 1 / displayScale)
-                            .padding(.leading, geometry[value].x)
-                    }
-                }
-            }
+            configure(with: configuration)
         }
     }
 
-    private struct SeparatorLeadingPreferenceKey: PreferenceKey {
-        static let defaultValue: Anchor<CGPoint>? = nil
+    init(configuration: LatestChapterConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
 
-        static func reduce(value: inout Anchor<CGPoint>?, nextValue: () -> Anchor<CGPoint>?) {
-            value = nextValue()
-        }
+        Self.contentViewNib.instantiate(withOwner: self)
+
+        addSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+
+        coverImageView.layer.cornerRadius = 8
+        coverImageView.layer.masksToBounds = true
+        coverImageView.layer.borderColor = UIColor.separator.cgColor
+
+        NSLayoutConstraint.activate([
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: topAnchor),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+
+        configure(with: configuration)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let displayScale = max(1, traitCollection.displayScale)
+        coverImageView.layer.borderWidth = 1 / displayScale
+    }
+
+    func configure(with configuration: LatestChapterConfiguration) {
+        mangaLabel.text = configuration.manga
+        chapterLabel.text = configuration.chapter
+        groupLabel.text = configuration.group
+        coverImageView.image = configuration.coverImage
     }
 }
