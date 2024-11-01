@@ -27,28 +27,29 @@ extension HomeViewController {
 
             let image = cachedCoverImage(for: itemIdentifier)
 
-            cell.configurationUpdateHandler = { cell, state in
-                cell.contentConfiguration = UIHostingConfiguration {
-                    PopularMangaView(
-                        title: manga.title,
-                        authors: manga.subtitle,
-                        isHighlighted: state.isHighlighted,
-                        coverImage: image.map(Image.init)
-                    )
-                }
-                .margins(.all, 16)
-                .background {
-                    let color = dominantColor.map(Color.init)
-                    let shapeStyle = color.map { AnyShapeStyle($0.gradient) } ?? AnyShapeStyle(.fill.tertiary)
+            cell.contentConfiguration = PopularMangaConfiguration(
+                title: manga.title,
+                authors: manga.subtitle,
+                coverImage: image
+            )
 
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(shapeStyle)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(.regularMaterial)
-                        )
-                }
+            let color = dominantColor.map(Color.init)
+            let shapeStyle = color.map { AnyShapeStyle($0.gradient) } ?? AnyShapeStyle(.fill.tertiary)
+            let backgroundHostingConfiguration = UIHostingConfiguration {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(shapeStyle)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.regularMaterial)
+                    )
             }
+            .margins(.all, 0)
+
+            let backgroundView = backgroundHostingConfiguration.makeContentView()
+            var backgroundConfiguration = UIBackgroundConfiguration.clear()
+            backgroundConfiguration.customView = backgroundView
+
+            cell.backgroundConfiguration = backgroundConfiguration
 
             cell.isAccessibilityElement = true
 

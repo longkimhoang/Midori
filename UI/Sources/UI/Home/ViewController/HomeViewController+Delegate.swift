@@ -17,6 +17,9 @@ extension HomeViewController: UICollectionViewDelegate {
 
         switch itemIdentifier {
         case let .popularManga(mangaID):
+            if let contentView = cell.contentView as? PopularMangaContentView {
+                transitionSourceView = contentView.imageContainerView
+            }
             store.send(.mangaSelected(mangaID))
         case .latestChapter:
             break

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopularMangaContentView" customModule="MidoriUI">
+            <connections>
+                <outlet property="authorsLabel" destination="LT6-SS-Xya" id="8wG-pl-Bt4"/>
+                <outlet property="containerView" destination="iN0-l3-epB" id="EUc-Pg-1sX"/>
+                <outlet property="coverImageView" destination="dwg-gb-PPN" id="Qda-cj-Rmm"/>
+                <outlet property="imageContainerView" destination="t0w-zw-dFx" id="mtX-BU-5z2"/>
+                <outlet property="titleLabel" destination="aZc-9N-oTB" id="Rj0-Q8-FoV"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="200"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t0w-zw-dFx" userLabel="ImageContainerView" customClass="UITableViewHeaderFooterView">
+                    <rect key="frame" x="16.000000000000007" y="16" width="117.66666666666669" height="168"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MangaCoverPreview" translatesAutoresizingMaskIntoConstraints="NO" id="dwg-gb-PPN">
+                            <rect key="frame" x="0.0" y="0.0" width="117.66666666666667" height="168"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="dwg-gb-PPN" secondAttribute="height" multiplier="0.7" id="urF-9S-NlY"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="dwg-gb-PPN" firstAttribute="top" secondItem="t0w-zw-dFx" secondAttribute="top" id="6E8-Ai-uja"/>
+                        <constraint firstItem="dwg-gb-PPN" firstAttribute="leading" secondItem="t0w-zw-dFx" secondAttribute="leading" id="BGV-i1-qB6"/>
+                        <constraint firstAttribute="trailing" secondItem="dwg-gb-PPN" secondAttribute="trailing" id="UzI-7L-3Oe"/>
+                        <constraint firstAttribute="bottom" secondItem="dwg-gb-PPN" secondAttribute="bottom" id="uIm-U9-Kub"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Taida na Akujoku Kizoku ni Tensei shita Ore, Scenario o Bukkowashitara Kikakugai no Maryoku de Saikyou ni Natta" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aZc-9N-oTB">
+                    <rect key="frame" x="141.66666666666663" y="16.000000000000004" width="235.33333333333337" height="46.333333333333343"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kikuchi Kousei, Odadouma" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LT6-SS-Xya">
+                    <rect key="frame" x="141.66666666666663" y="62.666666666666657" width="235.33333333333337" height="20"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <color key="textColor" systemColor="secondaryLabelColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <constraints>
+                <constraint firstItem="t0w-zw-dFx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="8Ho-OO-AxR"/>
+                <constraint firstAttribute="bottom" secondItem="t0w-zw-dFx" secondAttribute="bottom" constant="16" id="AU9-YY-kdC"/>
+                <constraint firstItem="aZc-9N-oTB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="Teg-tk-hIx"/>
+                <constraint firstItem="t0w-zw-dFx" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="axi-qy-S3E"/>
+                <constraint firstItem="LT6-SS-Xya" firstAttribute="leading" secondItem="t0w-zw-dFx" secondAttribute="trailing" constant="8" symbolic="YES" id="f5F-vr-SNA"/>
+                <constraint firstAttribute="trailing" secondItem="LT6-SS-Xya" secondAttribute="trailing" constant="16" id="mdp-Af-Sne"/>
+                <constraint firstItem="LT6-SS-Xya" firstAttribute="firstBaseline" secondItem="aZc-9N-oTB" secondAttribute="baseline" constant="20.666666666666668" symbolType="layoutAnchor" id="w9S-c2-gQi"/>
+                <constraint firstAttribute="trailing" secondItem="aZc-9N-oTB" secondAttribute="trailing" constant="16" id="wDs-iG-9je"/>
+                <constraint firstItem="aZc-9N-oTB" firstAttribute="leading" secondItem="t0w-zw-dFx" secondAttribute="trailing" constant="8" symbolic="YES" id="xax-qV-qQn"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="138" y="21"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="MangaCoverPreview" width="256" height="363"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
