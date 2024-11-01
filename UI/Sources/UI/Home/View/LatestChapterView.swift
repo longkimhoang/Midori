@@ -30,6 +30,7 @@ final class LatestChapterContentView: UIView, UIContentView {
     @IBOutlet private var chapterLabel: UILabel!
     @IBOutlet private var groupLabel: UILabel!
     @IBOutlet private var coverImageView: UIImageView!
+    @IBOutlet private var separatorHeightConstraint: NSLayoutConstraint!
 
     var configuration: any UIContentConfiguration {
         didSet {
@@ -74,6 +75,7 @@ final class LatestChapterContentView: UIView, UIContentView {
 
         let displayScale = max(1, traitCollection.displayScale)
         coverImageView.layer.borderWidth = 1 / displayScale
+        separatorHeightConstraint.constant = 1 / displayScale
     }
 
     func configure(with configuration: LatestChapterConfiguration) {
