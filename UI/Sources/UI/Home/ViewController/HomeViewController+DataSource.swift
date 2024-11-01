@@ -33,21 +33,9 @@ extension HomeViewController {
                 coverImage: image
             )
 
-            let color = dominantColor.map(Color.init)
-            let shapeStyle = color.map { AnyShapeStyle($0.gradient) } ?? AnyShapeStyle(.fill.tertiary)
-            let backgroundHostingConfiguration = UIHostingConfiguration {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(shapeStyle)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(.regularMaterial)
-                    )
-            }
-            .margins(.all, 0)
-
-            let backgroundView = backgroundHostingConfiguration.makeContentView()
             var backgroundConfiguration = UIBackgroundConfiguration.clear()
-            backgroundConfiguration.customView = backgroundView
+            backgroundConfiguration.cornerRadius = 16
+            backgroundConfiguration.backgroundColor = dominantColor ?? .tertiarySystemFill
 
             cell.backgroundConfiguration = backgroundConfiguration
 
