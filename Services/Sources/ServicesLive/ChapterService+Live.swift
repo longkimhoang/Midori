@@ -19,7 +19,7 @@ extension ChapterService: DependencyKey {
         @Dependency(\.modelContainer) var modelContainer
         @Dependency(\.mangaDexAPIClient) var client
 
-        return Self(
+        return ChapterService(
             syncLatestChapters: {
                 let mangaAPIResponseIngestor =
                     MangaAPIResponseIngestor(modelContainer: modelContainer)

@@ -10,13 +10,14 @@ import Foundation
 import MangaDexAPIClient
 import MidoriServices
 import MidoriStorage
+import SwiftData
 
 extension MangaService: DependencyKey {
     public static var liveValue: Self {
         @Dependency(\.mangaDexAPIClient) var client
         @Dependency(\.modelContainer) var modelContainer
 
-        return Self(
+        return MangaService(
             syncPopularMangas: {
                 @Dependency(\.calendar) var calendar
                 @Dependency(\.date.now) var now
@@ -63,6 +64,18 @@ extension MangaService: DependencyKey {
                 } catch let error as MangaDexAPIError where error.status == 404 {
                     throw MangaServiceError.mangaNotFound
                 }
+            },
+            syncMangaFeed: { mangaID, limit, offset in
+                let context = ModelContext(modelContainer)
+                guard let mangaPersistentID = try context.fetchIdentifiers(MangaEntity.withID(mangaID)).first else {
+                    throw MangaServiceError.mangaNotFound
+                }
+
+                let ingestor = ChapterAPIResponseIngestor(modelContainer: modelContainer)
+                let request = MangaDexAPI.Manga(id: mangaID).feed(pagination: .init(limit: limit, offset: offset))
+                let chapters = try await client.send(request).value.data
+
+                try await ingestor.importChapters([mangaPersistentID: chapters])
             }
         )
     }
