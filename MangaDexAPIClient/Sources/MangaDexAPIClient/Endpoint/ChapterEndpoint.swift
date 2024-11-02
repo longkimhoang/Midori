@@ -20,6 +20,16 @@ public extension MangaDexAPI {
     }
 }
 
+// MARK: - Chapter Reference
+
+public extension MangaDexAPI.Chapter {
+    enum Reference: String, EndpointReference, Sendable {
+        case manga
+        case scanlationGroup = "scanlation_group"
+        case user
+    }
+}
+
 // MARK: - Get Chapter List
 
 public struct GetChapterListResponse: Decodable, Sendable {
@@ -29,12 +39,6 @@ public struct GetChapterListResponse: Decodable, Sendable {
 }
 
 public extension MangaDexAPI.Chapter {
-    enum Reference: String, EndpointReference, Sendable {
-        case manga
-        case scanlationGroup = "scanlation_group"
-        case user
-    }
-
     enum ListSortOptions: String, Sendable {
         case createdAt
         case updatedAt

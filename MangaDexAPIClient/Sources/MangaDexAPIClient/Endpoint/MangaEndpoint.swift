@@ -96,3 +96,25 @@ public extension MangaDexAPI.Manga {
         return Request(path: path, query: query.map { ($0.name, $0.value) })
     }
 }
+
+// MARK: - Get Manga feed
+
+public struct GetMangaFeedResponse: Decodable, Sendable {
+    public let limit: Int
+    public let offset: Int
+    public let data: [Chapter]
+}
+
+public extension MangaDexAPI.Manga {
+    /// Get manga feed
+    func feed(
+        pagination: Pagination,
+        includes: [MangaDexAPI.Chapter.Reference] = [.scanlationGroup]
+    ) -> Request<GetMangaFeedResponse> {
+        var query: [URLQueryItem] = []
+        query.append(contentsOf: pagination.queryItems)
+        query.append(contentsOf: includes.queryItems)
+
+        return Request(path: "\(path)/feed", query: query.map { ($0.name, $0.value) })
+    }
+}
