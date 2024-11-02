@@ -7,14 +7,17 @@
 
 import ComposableArchitecture
 import Foundation
+import MidoriStorage
+import SwiftData
 
 @Reducer
 public struct MangaDetail {
     @ObservableState
     public struct State: Equatable, Sendable {
         public let mangaID: UUID
+        public var manga: Manga?
 
-        public init(mangaID: UUID) {
+        public init(mangaID: UUID, manga _: Manga? = nil) {
             self.mangaID = mangaID
         }
     }
@@ -24,14 +27,34 @@ public struct MangaDetail {
         case loadMangaFromStorage
     }
 
+    private let context: ModelContext
+
+    public init() {
+        @Dependency(\.modelContainer) var modelContainer
+        context = ModelContext(modelContainer)
+    }
+
     public var body: some ReducerOf<Self> {
-        Reduce { _, action in
+        Reduce { state, action in
             switch action {
             case .fetchManga:
-                .none
+                return .run { _ in
+                } catch: { _, _ in
+                }
             case .loadMangaFromStorage:
-                .none
+                loadMangaDetailFromStorage(state: &state)
+                return .none
             }
         }
+    }
+
+    private func loadMangaDetailFromStorage(state: inout State) {
+        do {
+            guard let mangaEntity = try context.fetch(MangaEntity.withID(state.mangaID)).first else {
+                return
+            }
+
+            state.manga = Manga(mangaEntity)
+        } catch {}
     }
 }
