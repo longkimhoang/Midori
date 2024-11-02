@@ -10,6 +10,15 @@ import MidoriFeatures
 import UIKit
 
 final class MangaDetailViewController: UIViewController {
+    enum SectionIdentifier: Int {
+        case chapters
+    }
+
+    enum ItemIdentifier: Hashable {
+        case volume(String)
+        case chapter(UUID)
+    }
+
     private var fetchMangaDetailTask: Task<Void, Never>?
 
     let store: StoreOf<MangaDetail>
@@ -31,7 +40,7 @@ final class MangaDetailViewController: UIViewController {
     var collectionView: UICollectionView!
 
     override func loadView() {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
 
         view = collectionView
 
