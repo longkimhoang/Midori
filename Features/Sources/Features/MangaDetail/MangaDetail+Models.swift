@@ -24,6 +24,15 @@ public extension MangaDetail {
     enum Volume: Hashable, Sendable {
         case none
         case volume(String)
+
+        public var localizedDescription: String {
+            switch self {
+            case .none:
+                String(localized: "No volume", bundle: .module)
+            case let .volume(volume):
+                String(localized: "Volume \(volume)", bundle: .module)
+            }
+        }
     }
 }
 

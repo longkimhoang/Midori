@@ -7,11 +7,17 @@
     "No group" : {
 
     },
+    "No volume" : {
+
+    },
     "Oneshot" : {
 
     },
     "Vol. %@" : {
       "comment" : "Shortform for volume"
+    },
+    "Volume %@" : {
+
     }
   },
   "version" : "1.0"
