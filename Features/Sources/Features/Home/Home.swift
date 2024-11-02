@@ -46,9 +46,15 @@ public struct Home {
         case mangaDetail(MangaDetail)
     }
 
-    @Dependency(\.modelContainer) private var modelContainer
     @Dependency(\.mangaService) private var mangaService
     @Dependency(\.chapterService) private var chapterService
+
+    private let context: ModelContext
+
+    public init() {
+        @Dependency(\.modelContainer) var modelContainer
+        context = ModelContext(modelContainer)
+    }
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -82,8 +88,6 @@ public struct Home {
     }
 
     private func loadHomeDataFromStorage(state: inout State) {
-        let context = ModelContext(modelContainer)
-
         do {
             let popularMangas = try context.fetch(MangaEntity.popular()).map(Manga.init)
             let latestChapters = try context.fetch(ChapterEntity.latest(limit: 64))
