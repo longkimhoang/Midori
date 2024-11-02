@@ -10,6 +10,8 @@ import MidoriFeatures
 import UIKit
 
 final class MangaDetailViewController: UIViewController {
+    private var fetchMangaDetailTask: Task<Void, Never>?
+
     let store: StoreOf<MangaDetail>
 
     init(store: StoreOf<MangaDetail>) {
@@ -20,6 +22,10 @@ final class MangaDetailViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        fetchMangaDetailTask?.cancel()
     }
 
     var collectionView: UICollectionView!
@@ -36,5 +42,9 @@ final class MangaDetailViewController: UIViewController {
         super.viewDidLoad()
 
         store.send(.loadMangaFromStorage)
+
+        fetchMangaDetailTask = Task {
+            await store.send(.fetchMangaDetail).finish()
+        }
     }
 }

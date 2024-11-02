@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import MidoriServices
 import MidoriStorage
 import SwiftData
 
@@ -23,23 +24,28 @@ public struct MangaDetail {
     }
 
     public enum Action: Equatable, Sendable {
-        case fetchManga
+        case fetchMangaDetail
         case loadMangaFromStorage
     }
 
-    private let context: ModelContext
-
-    public init() {
-        @Dependency(\.modelContainer) var modelContainer
-        context = ModelContext(modelContainer)
-    }
+    @Dependency(\.modelContainer) private var modelContainer
+    @Dependency(\.mangaService) private var mangaService
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .fetchManga:
-                return .run { _ in
-                } catch: { _, _ in
+            case .fetchMangaDetail:
+                return .run { [mangaID = state.mangaID, mangaService] send in
+                    try await mangaService.syncManga(id: mangaID)
+                    await send(.loadMangaFromStorage)
+                } catch: { [hasMangaLocally = state.manga != nil] error, _ in
+                    switch error {
+                    case MangaServiceError.mangaNotFound where !hasMangaLocally:
+                        // TODO: Show error
+                        break
+                    default:
+                        break
+                    }
                 }
             case .loadMangaFromStorage:
                 loadMangaDetailFromStorage(state: &state)
@@ -49,6 +55,7 @@ public struct MangaDetail {
     }
 
     private func loadMangaDetailFromStorage(state: inout State) {
+        let context = ModelContext(modelContainer)
         do {
             guard let mangaEntity = try context.fetch(MangaEntity.withID(state.mangaID)).first else {
                 return

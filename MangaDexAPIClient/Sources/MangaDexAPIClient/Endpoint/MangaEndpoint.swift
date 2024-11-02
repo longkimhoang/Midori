@@ -20,13 +20,7 @@ public extension MangaDexAPI {
     }
 }
 
-// MARK: - Get Manga List
-
-public struct GetMangaListResponse: Decodable, Sendable {
-    public let limit: Int
-    public let offset: Int
-    public let data: [Manga]
-}
+// MARK: - Manga Reference
 
 public extension MangaDexAPI.Manga {
     enum Reference: String, EndpointReference, Sendable {
@@ -37,7 +31,17 @@ public extension MangaDexAPI.Manga {
         case tag
         case creator
     }
+}
 
+// MARK: - Get Manga List
+
+public struct GetMangaListResponse: Decodable, Sendable {
+    public let limit: Int
+    public let offset: Int
+    public let data: [Manga]
+}
+
+public extension MangaDexAPI.Manga {
     enum ListSortOptions: String, Sendable {
         case latestUploadChapter
         case followedCount
@@ -74,5 +78,21 @@ public extension MangaDexAPI.Manga {
             path: Self.basePath,
             query: query.map { ($0.name, $0.value) }
         )
+    }
+}
+
+// MARK: - Get Manga
+
+public struct GetMangaResponse: Decodable, Sendable {
+    public let data: Manga
+}
+
+public extension MangaDexAPI.Manga {
+    /// Get manga
+    func get(includes: [Reference] = [.artist, .author, .cover]) -> Request<GetMangaResponse> {
+        var query: [URLQueryItem] = []
+        query.append(contentsOf: includes.queryItems)
+
+        return Request(path: path, query: query.map { ($0.name, $0.value) })
     }
 }

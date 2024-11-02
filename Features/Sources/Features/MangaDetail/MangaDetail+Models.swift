@@ -5,12 +5,14 @@
 //  Created by Long Kim on 1/11/24.
 //
 
+import Foundation
 import MidoriStorage
 
 public extension MangaDetail {
     struct Manga: Equatable, Sendable {
         let title: String
         let alternateTitle: String?
+        let coverImageURL: URL?
     }
 }
 
@@ -20,7 +22,8 @@ extension MangaDetail.Manga {
 
         self.init(
             title: entity.title,
-            alternateTitle: alternateTitle
+            alternateTitle: alternateTitle,
+            coverImageURL: entity.currentCover?.imageURLs[.mediumThumbnail]
         )
     }
 }

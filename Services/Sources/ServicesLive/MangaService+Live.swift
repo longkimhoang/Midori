@@ -35,7 +35,7 @@ extension MangaService: DependencyKey {
                     createdAtSince: lastMonth
                 )
                 let response = try await client.send(request).value
-                let statistics = try await requestStatistics(from: response)
+                let statistics = try await requestStatistics(for: response.data)
 
                 try await ingestor.importMangas(response.data, statistics: statistics)
             },
@@ -46,16 +46,30 @@ extension MangaService: DependencyKey {
                     order: [.createdAt: .descending]
                 )
                 let response = try await client.send(request).value
-                let statistics = try await requestStatistics(from: response)
+                let statistics = try await requestStatistics(for: response.data)
 
                 try await ingestor.importMangas(response.data, statistics: statistics)
+            },
+            syncMangaWithID: { mangaID in
+                let ingestor = MangaAPIResponseIngestor(modelContainer: modelContainer)
+                let request = MangaDexAPI.Manga(id: mangaID).get()
+
+                do {
+                    let response = try await client.send(request).value
+                    // We don't request statistics in parallel because manga might request might return 404
+                    let statistics = try await requestStatistics(for: [response.data])
+
+                    try await ingestor.importMangas([response.data], statistics: statistics)
+                } catch let error as MangaDexAPIError where error.status == 404 {
+                    throw MangaServiceError.mangaNotFound
+                }
             }
         )
     }
 
-    private static func requestStatistics(from response: GetMangaListResponse) async throws -> [UUID: MangaStatistics] {
+    private static func requestStatistics(for mangas: [Manga]) async throws -> [UUID: MangaStatistics] {
         @Dependency(\.mangaDexAPIClient) var client
-        let request = MangaDexAPI.Statistics.Manga.list(ids: response.data.map(\.id))
+        let request = MangaDexAPI.Statistics.Manga.list(ids: mangas.map(\.id))
         return try await client.send(request).value.statistics
     }
 }
