@@ -17,9 +17,12 @@ public struct MangaDetail {
     public struct State: Equatable, Sendable {
         public let mangaID: UUID
         public var manga: Manga?
+        public var chapters: IdentifiedArrayOf<Chapter> = []
 
-        public init(mangaID: UUID, manga _: Manga? = nil) {
+        public init(mangaID: UUID, manga: Manga? = nil, chapters: IdentifiedArrayOf<Chapter> = []) {
             self.mangaID = mangaID
+            self.manga = manga
+            self.chapters = chapters
         }
     }
 
@@ -62,6 +65,9 @@ public struct MangaDetail {
             }
 
             state.manga = Manga(mangaEntity)
+
+            let chapters = try context.fetch(ChapterEntity.feed(for: state.mangaID))
+            state.chapters = IdentifiedArrayOf(uniqueElements: chapters.map(Chapter.init))
         } catch {}
     }
 }

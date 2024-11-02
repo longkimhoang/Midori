@@ -11,7 +11,7 @@ import SwiftData
 @Model
 public final class ChapterEntity {
     #Unique<ChapterEntity>([\.id])
-    #Index<ChapterEntity>([\.readableAt])
+    #Index<ChapterEntity>([\.readableAt], [\.volume, \.chapter, \.readableAt])
 
     public var id: UUID
     public var volume: String?

@@ -10,9 +10,15 @@ import MidoriStorage
 
 public extension MangaDetail {
     struct Manga: Equatable, Sendable {
-        let title: String
-        let alternateTitle: String?
-        let coverImageURL: URL?
+        public let title: String
+        public let alternateTitle: String?
+        public let coverImageURL: URL?
+    }
+
+    struct Chapter: Identifiable, Equatable, Sendable {
+        public let id: UUID
+        public let title: String
+        public let group: String
     }
 }
 
@@ -24,6 +30,16 @@ extension MangaDetail.Manga {
             title: entity.title,
             alternateTitle: alternateTitle,
             coverImageURL: entity.currentCover?.imageURLs[.mediumThumbnail]
+        )
+    }
+}
+
+extension MangaDetail.Chapter {
+    init(_ entity: ChapterEntity) {
+        self.init(
+            id: entity.id,
+            title: entity.combinedTitle,
+            group: entity.groupName
         )
     }
 }

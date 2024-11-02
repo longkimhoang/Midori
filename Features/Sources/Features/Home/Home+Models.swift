@@ -44,8 +44,8 @@ extension Home.Chapter {
         self.init(
             id: entity.id,
             manga: manga.title,
-            chapter: entity.chapterName,
-            group: entity.scanlationGroup?.name ?? String(localized: "No group", bundle: .module),
+            chapter: entity.combinedTitle,
+            group: entity.groupName,
             coverImageURL: entity.manga?.currentCover?.imageURLs[.smallThumbnail]
         )
     }
@@ -55,22 +55,5 @@ private extension MangaEntity {
     var subtitle: String? {
         guard let author else { return nil }
         return [author.name, artist?.name].compacted().uniqued().formatted(.list(type: .and, width: .narrow))
-    }
-}
-
-private extension ChapterEntity {
-    var chapterName: String {
-        let localizedChapter = chapter.map {
-            String(localized: "Ch. \($0)", bundle: .module, comment: "Shortform for chapter")
-        }
-
-        let localizedVolume = volume.map {
-            String(localized: "Vol. \($0)", bundle: .module, comment: "Shortform for volume")
-        }
-
-        let name = [localizedVolume, localizedChapter, title].compacted()
-            .joined(separator: " - ")
-
-        return name.isEmpty ? String(localized: "Oneshot", bundle: .module) : name
     }
 }
