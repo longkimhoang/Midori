@@ -19,6 +19,7 @@ public struct MangaService: Sendable {
     public var syncRecentlyAddedMangas: @Sendable (_ limit: Int, _ offset: Int) async throws -> Void
     @DependencyEndpoint(method: "syncManga")
     public var syncMangaWithID: @Sendable (_ id: UUID) async throws -> Void
+    public var syncMangaFeed: @Sendable (_ id: UUID, _ limit: Int, _ offset: Int) async throws -> Void
 }
 
 extension MangaService: TestDependencyKey {

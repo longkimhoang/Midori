@@ -20,6 +20,27 @@ public extension MangaDetail {
         public let title: String
         public let group: String
     }
+
+    enum Volume: Hashable, Sendable {
+        case none
+        case volume(String)
+    }
+}
+
+extension MangaDetail.Volume: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        /// In the context of a manga, `none` means an unreleased volume, thus has the highest order.
+        switch (lhs, rhs) {
+        case (.none, .none):
+            false
+        case (.volume, .none):
+            true
+        case (.none, .volume):
+            false
+        case let (.volume(lhs), .volume(rhs)):
+            lhs < rhs
+        }
+    }
 }
 
 extension MangaDetail.Manga {

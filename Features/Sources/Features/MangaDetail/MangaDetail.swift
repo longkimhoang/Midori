@@ -9,20 +9,25 @@ import ComposableArchitecture
 import Foundation
 import MidoriServices
 import MidoriStorage
+import OrderedCollections
 import SwiftData
 
 @Reducer
 public struct MangaDetail {
     @ObservableState
     public struct State: Equatable, Sendable {
+        public typealias ChaptersByVolume = OrderedDictionary<Volume, IdentifiedArrayOf<Chapter>>
+
         public let mangaID: UUID
         public var manga: Manga?
-        public var chapters: IdentifiedArrayOf<Chapter> = []
+        public var chaptersByVolume: ChaptersByVolume
 
-        public init(mangaID: UUID, manga: Manga? = nil, chapters: IdentifiedArrayOf<Chapter> = []) {
+        @ObservationStateIgnored fileprivate var offset: Int = 0
+
+        public init(mangaID: UUID, manga: Manga? = nil, chaptersByVolume: ChaptersByVolume = [:]) {
             self.mangaID = mangaID
             self.manga = manga
-            self.chapters = chapters
+            self.chaptersByVolume = chaptersByVolume
         }
     }
 
@@ -40,6 +45,7 @@ public struct MangaDetail {
             case .fetchMangaDetail:
                 return .run { [mangaID = state.mangaID, mangaService] send in
                     try await mangaService.syncManga(id: mangaID)
+                    try await mangaService.syncMangaFeed(id: mangaID, limit: 100, offset: 0)
                     await send(.loadMangaFromStorage)
                 } catch: { [hasMangaLocally = state.manga != nil] error, _ in
                     switch error {
@@ -66,8 +72,16 @@ public struct MangaDetail {
 
             state.manga = Manga(mangaEntity)
 
-            let chapters = try context.fetch(ChapterEntity.feed(for: state.mangaID))
-            state.chapters = IdentifiedArrayOf(uniqueElements: chapters.map(Chapter.init))
+            let chapterEntities = try context.fetch(ChapterEntity.feed(for: state.mangaID))
+            state.offset = chapterEntities.count
+
+            for chapterEntity in chapterEntities {
+                let chapter = Chapter(chapterEntity)
+                let volume = chapterEntity.volume.map(Volume.volume) ?? .none
+                state.chaptersByVolume[volume, default: []].append(chapter)
+            }
+
+            state.chaptersByVolume.sort()
         } catch {}
     }
 }
