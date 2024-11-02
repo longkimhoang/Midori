@@ -35,7 +35,9 @@ extension MangaService: DependencyKey {
                     createdAtSince: lastMonth
                 )
                 let response = try await client.send(request).value
-                try await ingestor.importMangas(response.data)
+                let statistics = try await requestStatistics(from: response)
+
+                try await ingestor.importMangas(response.data, statistics: statistics)
             },
             syncRecentlyAddedMangas: { limit, offset in
                 let ingestor = MangaAPIResponseIngestor(modelContainer: modelContainer)
@@ -44,8 +46,16 @@ extension MangaService: DependencyKey {
                     order: [.createdAt: .descending]
                 )
                 let response = try await client.send(request).value
-                try await ingestor.importMangas(response.data)
+                let statistics = try await requestStatistics(from: response)
+
+                try await ingestor.importMangas(response.data, statistics: statistics)
             }
         )
+    }
+
+    private static func requestStatistics(from response: GetMangaListResponse) async throws -> [UUID: MangaStatistics] {
+        @Dependency(\.mangaDexAPIClient) var client
+        let request = MangaDexAPI.Statistics.Manga.list(ids: response.data.map(\.id))
+        return try await client.send(request).value.statistics
     }
 }

@@ -5,8 +5,10 @@
 //  Created by Long Kim on 27/10/24.
 //
 
+import AsyncAlgorithms
 import Dependencies
 import Foundation
+import Get
 import MangaDexAPIClient
 import MidoriServices
 import MidoriStorage
@@ -37,9 +39,24 @@ extension ChapterService: DependencyKey {
                     pagination: .init(limit: mangaIDs.count),
                     ids: mangaIDs
                 )
+                let mangaStatisticsRequest = MangaDexAPI.Statistics.Manga.list(ids: mangaIDs)
 
-                let mangasResponse = try await client.send(mangasRequest).value
-                let mangaPersistentIDs = try await mangaAPIResponseIngestor.importMangas(mangasResponse.data)
+                // Convert to streams to use combineLatest
+                let mangasResponse = AsyncThrowingStream {
+                    try await client.send(mangasRequest).value.data
+                }.prefix(1)
+
+                let mangaStatisticsResponse = AsyncThrowingStream {
+                    try await client.send(mangaStatisticsRequest).value.statistics
+                }.prefix(1)
+
+                guard let (mangas, statistics) = try await combineLatest(
+                    mangasResponse, mangaStatisticsResponse
+                ).first(where: { _ in true }) else {
+                    return
+                }
+
+                let mangaPersistentIDs = try await mangaAPIResponseIngestor.importMangas(mangas, statistics: statistics)
 
                 let chaptersByMangaID: [PersistentIdentifier: [Chapter]] = chaptersResponse.data
                     .reduce(into: [:]) { result, chapter in

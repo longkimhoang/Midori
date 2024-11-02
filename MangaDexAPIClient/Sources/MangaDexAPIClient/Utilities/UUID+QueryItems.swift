@@ -8,7 +8,7 @@
 import Foundation
 
 extension Collection<UUID> {
-    var queryItems: [URLQueryItem] {
-        map { URLQueryItem(name: "ids[]", value: $0.uuidString.lowercased()) }
+    func queryItems(name: String = "ids[]") -> [URLQueryItem] {
+        map { URLQueryItem(name: name, value: $0.uuidString.lowercased()) }
     }
 }

@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
         .package(url: "https://github.com/WeTransfer/Mocker", from: "3.0.2"),
         .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.0"),
+        .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.2"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -41,6 +42,7 @@ let package = Package(
                 "MangaDexAPIClient",
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
             ],
             path: "Sources/ServicesLive"
         ),

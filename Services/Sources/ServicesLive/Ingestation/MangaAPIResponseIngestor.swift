@@ -15,16 +15,23 @@ actor MangaAPIResponseIngestor {
     private var authorIDs: [UUID: PersistentIdentifier] = [:]
 
     @discardableResult
-    func importMangas(_ mangas: [Manga]) throws -> [UUID: PersistentIdentifier] {
+    func importMangas(
+        _ mangas: [Manga],
+        statistics: [UUID: MangaStatistics] = [:]
+    ) throws -> [UUID: PersistentIdentifier] {
         for manga in mangas {
             let mangaEntity = MangaEntity(
                 id: manga.id,
                 title: manga.title.defaultVariant.1,
                 createdAt: manga.createdAt,
                 alternateTitles: manga.altTitles.map(LocalizedString.init),
-                synopsis: manga.description.map(LocalizedString.init),
-                followCount: 0
+                synopsis: manga.description.map(LocalizedString.init)
             )
+
+            if let statistics = statistics[manga.id] {
+                mangaEntity.followCount = statistics.follows
+            }
+
             modelContext.insert(mangaEntity)
 
             if let author = manga.relationship(AuthorRelationship.self).flatMap(\.referenced) {

@@ -7,7 +7,7 @@
 
 public struct MangaStatistics: Decodable, Sendable {
     public struct Comments: Decodable, Sendable {
-        public let threadId: String
+        public let threadId: Int
         public let repliesCount: Int
     }
 
