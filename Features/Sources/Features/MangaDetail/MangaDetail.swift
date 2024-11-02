@@ -81,7 +81,7 @@ public struct MangaDetail {
                 state.chaptersByVolume[volume, default: []].append(chapter)
             }
 
-            state.chaptersByVolume.sort()
+            state.chaptersByVolume.sort { $0.key > $1.key }
         } catch {}
     }
 }
