@@ -15,6 +15,7 @@ extension MangaDetailViewController {
 
             var contentConfiguration = UIListContentConfiguration.header()
             contentConfiguration.text = title
+            contentConfiguration.axesPreservingSuperviewLayoutMargins = .horizontal
             contentConfiguration.directionalLayoutMargins = NSDirectionalEdgeInsets(
                 top: 8,
                 leading: 0,
@@ -32,6 +33,7 @@ extension MangaDetailViewController {
             var contentConfiguration = UIListContentConfiguration.cell()
             contentConfiguration.text = chapter.title
             cell.contentConfiguration = contentConfiguration
+            cell.indentationWidth = 0
             cell.accessories = [.disclosureIndicator()]
         }
 
@@ -69,10 +71,9 @@ extension MangaDetailViewController {
             chaptersSectionSnapshot.append(chapterItemIdentifiers, to: volumeItemIdentifier)
         }
 
-        if chaptersSectionSnapshot.contains(.volume(.none)) {
-            chaptersSectionSnapshot.expand([.volume(.none)])
+        if let item = chaptersSectionSnapshot.items.first {
+            chaptersSectionSnapshot.expand([item])
         }
-
-        dataSource.apply(chaptersSectionSnapshot, to: .chapters, animatingDifferences: false)
+        dataSource.apply(chaptersSectionSnapshot, to: .chapters, animatingDifferences: animated)
     }
 }
