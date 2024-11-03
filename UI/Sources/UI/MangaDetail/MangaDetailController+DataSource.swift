@@ -6,6 +6,7 @@
 //
 
 import MidoriFeatures
+import SwiftUI
 import UIKit
 
 extension MangaDetailViewController {
@@ -30,9 +31,12 @@ extension MangaDetailViewController {
         let chapterCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Chapter> {
             cell, _, chapter in
 
-            var contentConfiguration = UIListContentConfiguration.cell()
-            contentConfiguration.text = chapter.title
-            cell.contentConfiguration = contentConfiguration
+            cell.contentConfiguration = UIHostingConfiguration {
+                MangaDetailChapterView(
+                    title: chapter.title,
+                    group: chapter.group
+                )
+            }
             cell.indentationWidth = 0
             cell.accessories = [.disclosureIndicator()]
         }
