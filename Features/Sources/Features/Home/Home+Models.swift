@@ -6,6 +6,7 @@
 //
 
 import Algorithms
+import Dependencies
 import Foundation
 import MidoriStorage
 
@@ -54,6 +55,8 @@ extension Home.Chapter {
 private extension MangaEntity {
     var subtitle: String? {
         guard let author else { return nil }
-        return [author.name, artist?.name].compacted().uniqued().formatted(.list(type: .and, width: .narrow))
+        @Dependency(\.locale) var locale
+        return [author.name, artist?.name].compacted().uniqued()
+            .formatted(.list(type: .and, width: .narrow).locale(locale))
     }
 }
