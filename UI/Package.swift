@@ -26,7 +26,7 @@ let package = Package(
             name: "MidoriUI",
             dependencies: [
                 .product(name: "MidoriFeatures", package: "Features"),
-                "Nuke",
+                .product(name: "Nuke", package: "Nuke"),
             ]
         ),
         .testTarget(
