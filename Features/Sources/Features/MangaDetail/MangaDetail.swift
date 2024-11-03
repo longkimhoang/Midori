@@ -45,7 +45,7 @@ public struct MangaDetail {
             case .fetchMangaDetail:
                 return .run { [mangaID = state.mangaID, mangaService] send in
                     try await mangaService.syncManga(id: mangaID)
-                    try await mangaService.syncMangaFeed(id: mangaID, limit: 100, offset: 0)
+                    try await mangaService.syncMangaFeed(id: mangaID, limit: 50, offset: 0)
                     await send(.loadMangaFromStorage)
                 } catch: { [hasMangaLocally = state.manga != nil] error, _ in
                     switch error {
@@ -75,13 +75,16 @@ public struct MangaDetail {
             let chapterEntities = try context.fetch(ChapterEntity.feed(for: state.mangaID))
             state.offset = chapterEntities.count
 
+            var chaptersByVolume = State.ChaptersByVolume()
+
             for chapterEntity in chapterEntities {
                 let chapter = Chapter(chapterEntity)
                 let volume = chapterEntity.volume.map(Volume.volume) ?? .none
-                state.chaptersByVolume[volume, default: []].append(chapter)
+                chaptersByVolume[volume, default: []].append(chapter)
             }
 
-            state.chaptersByVolume.sort { $0.key > $1.key }
+            chaptersByVolume.sort { $0.key > $1.key }
+            state.chaptersByVolume = chaptersByVolume
         } catch {}
     }
 }
