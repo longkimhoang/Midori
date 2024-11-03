@@ -34,11 +34,11 @@ extension MangaDetailViewController {
             cell.contentConfiguration = UIHostingConfiguration {
                 MangaDetailChapterView(
                     title: chapter.title,
-                    group: chapter.group
+                    group: chapter.group,
+                    readableAt: chapter.readableAt
                 )
             }
             cell.indentationWidth = 0
-            cell.accessories = [.disclosureIndicator()]
         }
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {

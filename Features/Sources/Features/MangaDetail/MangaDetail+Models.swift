@@ -5,6 +5,7 @@
 //  Created by Long Kim on 1/11/24.
 //
 
+import Dependencies
 import Foundation
 import MidoriStorage
 
@@ -19,6 +20,7 @@ public extension MangaDetail {
         public let id: UUID
         public let title: String
         public let group: String
+        public let readableAt: Date
     }
 
     enum Volume: Hashable, Sendable {
@@ -69,7 +71,8 @@ extension MangaDetail.Chapter {
         self.init(
             id: entity.id,
             title: entity.combinedTitle(includingVolume: false),
-            group: entity.groupName
+            group: entity.groupName,
+            readableAt: entity.readableAt
         )
     }
 }
