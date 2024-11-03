@@ -68,7 +68,7 @@ extension MangaDetail.Chapter {
     init(_ entity: ChapterEntity) {
         self.init(
             id: entity.id,
-            title: entity.combinedTitle,
+            title: entity.combinedTitle(includingVolume: false),
             group: entity.groupName
         )
     }

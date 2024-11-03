@@ -44,7 +44,7 @@ extension Home.Chapter {
         self.init(
             id: entity.id,
             manga: manga.title,
-            chapter: entity.combinedTitle,
+            chapter: entity.combinedTitle(),
             group: entity.groupName,
             coverImageURL: entity.manga?.currentCover?.imageURLs[.smallThumbnail]
         )

@@ -9,18 +9,28 @@ import MidoriStorage
 
 extension ChapterEntity {
     /// A title combining volume, chapter number, and chapter title.
-    var combinedTitle: String {
-        let localizedChapter = chapter.map {
-            String(localized: "Ch. \($0)", bundle: .module, comment: "Shortform for chapter")
+    func combinedTitle(includingVolume isVolumeIncluded: Bool = true) -> String {
+        var components: [String] = []
+
+        if let volume, isVolumeIncluded {
+            let localizedVolume = String(localized: "Vol. \(volume)", bundle: .module, comment: "Shortform for volume")
+            components.append(localizedVolume)
         }
 
-        let localizedVolume = volume.map {
-            String(localized: "Vol. \($0)", bundle: .module, comment: "Shortform for volume")
+        if let chapter {
+            let localizedChapter = String(
+                localized: "Ch. \(chapter)",
+                bundle: .module,
+                comment: "Shortform for chapter"
+            )
+            components.append(localizedChapter)
         }
 
-        let name = [localizedVolume, localizedChapter, title].compacted()
-            .joined(separator: " - ")
+        if let title {
+            components.append(title)
+        }
 
+        let name = components.joined(separator: " - ")
         return name.isEmpty ? String(localized: "Oneshot", bundle: .module) : name
     }
 
