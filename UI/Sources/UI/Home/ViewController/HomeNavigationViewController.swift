@@ -21,16 +21,7 @@ final class HomeNavigationViewController: NavigationStackController {
         } destination: { store in
             switch store.case {
             case let .mangaDetail(store):
-                let viewController = MangaDetailViewController(store: store)
-                viewController.preferredTransition = .zoom { context in
-                    if let source = context.sourceViewController as? HomeViewController {
-                        return source.transitionSourceView
-                    }
-
-                    return nil
-                }
-
-                return viewController
+                MangaDetailViewController(store: store)
             }
         }
 
