@@ -17,6 +17,7 @@ struct MangaDetailChapterView: View {
             HStack(alignment: .lastTextBaseline) {
                 Text(title)
                     .font(.headline)
+                    .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
 
                 Spacer()
 
