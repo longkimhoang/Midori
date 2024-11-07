@@ -10,7 +10,7 @@ import SwiftUI
 struct MangaDetailChapterView: View {
     let title: String
     let group: String
-    let readableAt: Date
+    let readableAt: String
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,7 +21,7 @@ struct MangaDetailChapterView: View {
 
                 Spacer()
 
-                Text(readableAt, format: .relative(presentation: .numeric))
+                Text(readableAt)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -31,13 +31,4 @@ struct MangaDetailChapterView: View {
         }
         .lineLimit(1)
     }
-}
-
-#Preview(traits: .sizeThatFitsLayout) {
-    MangaDetailChapterView(
-        title: "Ch. 5 - A New Beginning",
-        group: "A random group",
-        readableAt: try! Date("2/11/24", strategy: .dateTime.day().month().year())
-    )
-    .padding()
 }

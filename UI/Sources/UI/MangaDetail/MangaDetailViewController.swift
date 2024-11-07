@@ -5,11 +5,13 @@
 //  Created by Long Kim on 31/10/24.
 //
 
+import Combine
 import ComposableArchitecture
 import MidoriFeatures
 import UIKit
 
 final class MangaDetailViewController: UIViewController {
+    typealias Manga = MangaDetail.Manga
     typealias Chapter = MangaDetail.Chapter
     typealias Volume = MangaDetail.Volume
 
@@ -18,12 +20,14 @@ final class MangaDetailViewController: UIViewController {
     }
 
     enum ItemIdentifier: Hashable {
+        case mangaDetailHeader
         case volume(Volume)
         case chapter(Volume, UUID)
     }
 
     private var fetchMangaDetailTask: Task<Void, Never>?
 
+    var cancellables: Set<AnyCancellable> = []
     let store: StoreOf<MangaDetail>
 
     init(store: StoreOf<MangaDetail>) {
@@ -57,9 +61,13 @@ final class MangaDetailViewController: UIViewController {
         configureDataSource()
 
         store.send(.loadMangaFromStorage)
-        observe { [unowned self] in
-            updateDataSource()
-        }
+        store.publisher
+            .filter { $0.manga != nil }
+            .removeDuplicates()
+            .sink { [unowned self] state in
+                updateDataSource(using: state)
+            }
+            .store(in: &cancellables)
 
         fetchMangaDetailTask = Task {
             await store.send(.fetchMangaDetail).finish()

@@ -30,6 +30,7 @@ actor MangaAPIResponseIngestor {
 
             if let statistics = statistics[manga.id] {
                 mangaEntity.followCount = statistics.follows
+                mangaEntity.rating = statistics.rating.bayesian
             }
 
             modelContext.insert(mangaEntity)

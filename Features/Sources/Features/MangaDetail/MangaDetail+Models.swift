@@ -13,14 +13,16 @@ public extension MangaDetail {
     struct Manga: Equatable, Sendable {
         public let title: String
         public let alternateTitle: String?
+        public let subtitle: AttributedString?
         public let coverImageURL: URL?
+        public let rating: Double
     }
 
     struct Chapter: Identifiable, Equatable, Sendable {
         public let id: UUID
         public let title: String
         public let group: String
-        public let readableAt: Date
+        public let readableAt: String
     }
 
     enum Volume: Hashable, Sendable {
@@ -57,22 +59,32 @@ extension MangaDetail.Volume: Comparable {
 extension MangaDetail.Manga {
     init(_ entity: MangaEntity) {
         let alternateTitle = entity.alternateTitles.lazy.compactMap { $0.localizedVariants["en"] }.first
+        let subtitle = entity.combinedAuthors.map { AttributedString($0) }
 
         self.init(
             title: entity.title,
             alternateTitle: alternateTitle,
-            coverImageURL: entity.currentCover?.imageURLs[.mediumThumbnail]
+            subtitle: subtitle,
+            coverImageURL: entity.currentCover?.imageURLs[.mediumThumbnail],
+            rating: entity.rating
         )
     }
 }
 
 extension MangaDetail.Chapter {
     init(_ entity: ChapterEntity) {
+        @Dependency(\.date.now) var now
+        let readableAtFormat = Date.AnchoredRelativeFormatStyle(
+            anchor: entity.readableAt,
+            presentation: .numeric,
+            capitalizationContext: .standalone
+        )
+
         self.init(
             id: entity.id,
             title: entity.combinedTitle(includingVolume: false),
             group: entity.groupName,
-            readableAt: entity.readableAt
+            readableAt: readableAtFormat.format(now)
         )
     }
 }

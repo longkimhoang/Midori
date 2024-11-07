@@ -6,6 +6,7 @@
 //
 
 import MidoriFeatures
+import Nuke
 import SwiftUI
 import UIKit
 
@@ -41,10 +42,43 @@ extension MangaDetailViewController {
             cell.indentationWidth = 0
         }
 
+        let mangaDetailHeaderRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Manga> {
+            [unowned self] headerView, _, manga in
+
+            let imageRequest = ImageRequest(url: manga.coverImageURL)
+            let image = ImagePipeline.midoriApp.cache.cachedImage(for: imageRequest).map { Image(uiImage: $0.image) }
+            headerView.contentConfiguration = UIHostingConfiguration {
+                MangaDetailHeaderView(
+                    title: manga.title,
+                    alternateTitle: manga.alternateTitle,
+                    subtitle: manga.subtitle,
+                    coverImage: image,
+                    description: "",
+                    rating: manga.rating
+                )
+            }
+            .margins(.all, 16)
+
+            if image == nil {
+                Task {
+                    _ = try await ImagePipeline.midoriApp.image(for: imageRequest)
+                    var snapshot = dataSource.snapshot()
+                    snapshot.reconfigureItems([.mangaDetailHeader])
+                    await dataSource.apply(snapshot)
+                }
+            }
+        }
+
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
             [unowned self] collectionView, indexPath, itemIdentifier in
 
             switch itemIdentifier {
+            case .mangaDetailHeader:
+                return collectionView.dequeueConfiguredReusableCell(
+                    using: mangaDetailHeaderRegistration,
+                    for: indexPath,
+                    item: store.manga
+                )
             case let .volume(volume):
                 return collectionView.dequeueConfiguredReusableCell(
                     using: volumeCellRegistration,
@@ -62,22 +96,27 @@ extension MangaDetailViewController {
         }
     }
 
-    func updateDataSource(animated: Bool = true) {
+    func updateDataSource(using state: MangaDetail.State, animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
         snapshot.appendSections([.chapters])
         dataSource.apply(snapshot, animatingDifferences: animated)
 
         var chaptersSectionSnapshot = NSDiffableDataSourceSectionSnapshot<ItemIdentifier>()
-        for (volume, chapters) in store.chaptersByVolume {
+        chaptersSectionSnapshot.append([.mangaDetailHeader])
+
+        var hasExpandedSection = false
+        for (volume, chapters) in state.chaptersByVolume {
             let volumeItemIdentifier = ItemIdentifier.volume(volume)
             chaptersSectionSnapshot.append([volumeItemIdentifier])
             let chapterItemIdentifiers = chapters.map { ItemIdentifier.chapter(volume, $0.id) }
             chaptersSectionSnapshot.append(chapterItemIdentifiers, to: volumeItemIdentifier)
+
+            if !hasExpandedSection {
+                chaptersSectionSnapshot.expand([volumeItemIdentifier])
+                hasExpandedSection = true
+            }
         }
 
-        if let item = chaptersSectionSnapshot.items.first {
-            chaptersSectionSnapshot.expand([item])
-        }
         dataSource.apply(chaptersSectionSnapshot, to: .chapters, animatingDifferences: animated)
     }
 }

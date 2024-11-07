@@ -19,6 +19,7 @@ public final class MangaEntity {
     public var alternateTitles: [LocalizedString]
     public var synopsis: LocalizedString?
     public var followCount: Int
+    public var rating: Double
 
     public init(
         id: UUID,
@@ -26,7 +27,8 @@ public final class MangaEntity {
         createdAt: Date,
         alternateTitles: [LocalizedString] = [],
         synopsis: LocalizedString? = nil,
-        followCount: Int = 0
+        followCount: Int = 0,
+        rating: Double = 0
     ) {
         self.id = id
         self.title = title
@@ -34,6 +36,7 @@ public final class MangaEntity {
         self.alternateTitles = alternateTitles
         self.synopsis = synopsis
         self.followCount = followCount
+        self.rating = rating
     }
 
     @Relationship public var author: AuthorEntity?

@@ -32,7 +32,7 @@ extension Home.Manga {
         self.init(
             id: entity.id,
             title: entity.title,
-            subtitle: entity.subtitle,
+            subtitle: entity.combinedAuthors,
             coverImageURL: entity.currentCover?.imageURLs[.smallThumbnail]
         )
     }
@@ -49,14 +49,5 @@ extension Home.Chapter {
             group: entity.groupName,
             coverImageURL: entity.manga?.currentCover?.imageURLs[.smallThumbnail]
         )
-    }
-}
-
-private extension MangaEntity {
-    var subtitle: String? {
-        guard let author else { return nil }
-        @Dependency(\.locale) var locale
-        return [author.name, artist?.name].compacted().uniqued()
-            .formatted(.list(type: .and, width: .narrow).locale(locale))
     }
 }

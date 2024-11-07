@@ -8,6 +8,10 @@
 import UIKit
 
 extension MangaDetailViewController {
+    enum SupplementaryElementKind {
+        static let mangaDetailHeader = "manga-detail-header"
+    }
+
     func makeCollectionViewLayout() -> UICollectionViewLayout {
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
             [unowned self] sectionIndex, layoutEnvironment in
@@ -29,8 +33,12 @@ extension MangaDetailViewController {
     }
 
     private func makeChaptersSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        let listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
+        var listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
+        listConfiguration.headerMode = .firstItemInSection
+        listConfiguration.headerTopPadding = 0
 
-        return NSCollectionLayoutSection.list(using: listConfiguration, layoutEnvironment: layoutEnvironment)
+        let section = NSCollectionLayoutSection.list(using: listConfiguration, layoutEnvironment: layoutEnvironment)
+
+        return section
     }
 }
