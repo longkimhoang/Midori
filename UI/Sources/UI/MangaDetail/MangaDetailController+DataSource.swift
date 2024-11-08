@@ -57,7 +57,7 @@ extension MangaDetailViewController {
                     rating: manga.rating
                 )
             }
-            .margins(.all, 16)
+            .margins(.all, 0)
 
             if image == nil {
                 Task {
@@ -98,25 +98,27 @@ extension MangaDetailViewController {
 
     func updateDataSource(using state: MangaDetail.State, animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
-        snapshot.appendSections([.chapters])
+        snapshot.appendSections([.mangaDetailHeader])
+        snapshot.appendItems([.mangaDetailHeader], toSection: .mangaDetailHeader)
         dataSource.apply(snapshot, animatingDifferences: animated)
-
-        var chaptersSectionSnapshot = NSDiffableDataSourceSectionSnapshot<ItemIdentifier>()
-        chaptersSectionSnapshot.append([.mangaDetailHeader])
 
         var hasExpandedSection = false
         for (volume, chapters) in state.chaptersByVolume {
+            let sectionIdentifier = SectionIdentifier.volume(volume)
+            var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<ItemIdentifier>()
+
             let volumeItemIdentifier = ItemIdentifier.volume(volume)
-            chaptersSectionSnapshot.append([volumeItemIdentifier])
-            let chapterItemIdentifiers = chapters.map { ItemIdentifier.chapter(volume, $0.id) }
-            chaptersSectionSnapshot.append(chapterItemIdentifiers, to: volumeItemIdentifier)
+            sectionSnapshot.append([volumeItemIdentifier])
+
+            let chapterItemIdentifiers = chapters.map(\.id).map { ItemIdentifier.chapter(volume, $0) }
+            sectionSnapshot.append(chapterItemIdentifiers, to: volumeItemIdentifier)
 
             if !hasExpandedSection {
-                chaptersSectionSnapshot.expand([volumeItemIdentifier])
+                sectionSnapshot.expand([volumeItemIdentifier])
                 hasExpandedSection = true
             }
-        }
 
-        dataSource.apply(chaptersSectionSnapshot, to: .chapters, animatingDifferences: animated)
+            dataSource.apply(sectionSnapshot, to: sectionIdentifier, animatingDifferences: animated)
+        }
     }
 }

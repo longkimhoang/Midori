@@ -21,6 +21,10 @@ struct MangaDetailHeaderView: View {
     var body: some View {
         layout {
             CoverImageView(image: coverImage)
+                .background(
+                    .background.shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
+                    in: .rect(cornerRadius: 8)
+                )
                 .containerRelativeFrame(.horizontal, count: 3, span: 1, spacing: 0)
 
             Group {

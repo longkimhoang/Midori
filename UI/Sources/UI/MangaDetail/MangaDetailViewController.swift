@@ -15,8 +15,9 @@ final class MangaDetailViewController: UIViewController {
     typealias Chapter = MangaDetail.Chapter
     typealias Volume = MangaDetail.Volume
 
-    enum SectionIdentifier: Int {
-        case chapters
+    enum SectionIdentifier: Hashable {
+        case mangaDetailHeader
+        case volume(Volume)
     }
 
     enum ItemIdentifier: Hashable {

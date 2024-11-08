@@ -8,21 +8,19 @@
 import UIKit
 
 extension MangaDetailViewController {
-    enum SupplementaryElementKind {
-        static let mangaDetailHeader = "manga-detail-header"
-    }
-
     func makeCollectionViewLayout() -> UICollectionViewLayout {
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
             [unowned self] sectionIndex, layoutEnvironment in
 
-            guard let sectionIdentifier = SectionIdentifier(rawValue: sectionIndex) else {
+            guard let sectionIdentifier = dataSource.sectionIdentifier(for: sectionIndex) else {
                 return nil
             }
 
             switch sectionIdentifier {
-            case .chapters:
-                return makeChaptersSection(layoutEnvironment: layoutEnvironment)
+            case .mangaDetailHeader:
+                return makeMangaDetailHeaderSection()
+            case .volume:
+                return makeVolumeSection(layoutEnvironment: layoutEnvironment)
             }
         }
 
@@ -32,10 +30,26 @@ extension MangaDetailViewController {
         return UICollectionViewCompositionalLayout(sectionProvider: sectionProvider, configuration: configuration)
     }
 
-    private func makeChaptersSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+    private func makeMangaDetailHeaderSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(400)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(400)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+        return NSCollectionLayoutSection(group: group)
+    }
+
+    private func makeVolumeSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
         listConfiguration.headerMode = .firstItemInSection
-        listConfiguration.headerTopPadding = 0
+        listConfiguration.headerTopPadding = 8
 
         let section = NSCollectionLayoutSection.list(using: listConfiguration, layoutEnvironment: layoutEnvironment)
 
