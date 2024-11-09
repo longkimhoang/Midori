@@ -18,31 +18,33 @@ struct MangaDetailDescriptionView: View {
         Button {
             expandMangaDescription()
         } label: {
-            Text(attributedContent)
-                .overlay(alignment: .trailingLastTextBaseline) {
-                    ViewThatFits {
-                        Text(attributedContent)
-                            .lineLimit(nil)
-                            .hidden()
-                            .onAppear {
-                                isTruncated = false
-                            }
+            HStack {
+                Text(attributedContent)
+                Spacer(minLength: 0)
+            }
+            .overlay(alignment: .trailingLastTextBaseline) {
+                ViewThatFits {
+                    Text(attributedContent)
+                        .lineLimit(nil)
+                        .hidden()
+                        .onAppear {
+                            isTruncated = false
+                        }
 
-                        Text("More", bundle: .module)
-                            .font(.subheadline.weight(.medium).smallCaps())
-                            .padding(.leading, 16)
-                            .background {
-                                GeometryReader { geometry in
-                                    Rectangle()
-                                        .fill(moreLabelShapeStyle(width: geometry.size.width))
-                                }
+                    Text("More", bundle: .module)
+                        .font(.subheadline.weight(.medium).smallCaps())
+                        .padding(.leading, 16)
+                        .background {
+                            GeometryReader { geometry in
+                                Rectangle()
+                                    .fill(moreLabelShapeStyle(width: geometry.size.width))
                             }
-                            .onAppear {
-                                isTruncated = true
-                            }
-                    }
+                        }
+                        .onAppear {
+                            isTruncated = true
+                        }
                 }
-                .containerRelativeFrame(.horizontal)
+            }
         }
         .buttonStyle(DescriptionExpansionButtonStyle())
         .disabled(!isTruncated)
@@ -50,9 +52,23 @@ struct MangaDetailDescriptionView: View {
     }
 
     private var attributedContent: AttributedString {
-        AttributedString(content, attributes: AttributeContainer()
+        let attributes = AttributeContainer()
             .font(UIFont.preferredFont(forTextStyle: .subheadline))
-            .foregroundColor(UIColor.secondaryLabel))
+            .foregroundColor(UIColor.secondaryLabel)
+
+        let processedContent = content.split(separator: "\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .joined(by: " ")
+
+        guard
+            let attributedContent = try? AttributedString(
+                markdown: String(processedContent)
+            )
+        else {
+            return AttributedString(content).mergingAttributes(attributes)
+        }
+
+        return attributedContent.mergingAttributes(attributes)
     }
 
     private func moreLabelShapeStyle(width: CGFloat) -> some ShapeStyle {
@@ -89,23 +105,27 @@ private struct DescriptionExpansionButtonStyle: ButtonStyle {
 }
 
 #Preview("Truncated", traits: .sizeThatFitsLayout) {
-    MangaDetailDescriptionView(content: """
-    "Hey, boyfriend, how you doing?"
+    MangaDetailDescriptionView(
+        content: """
+        "Hey, boyfriend, how you doing?"
 
-    Souta Sakuhara is a first-year high school boy. His first ever girlfriend has just been stolen away from him by a "girlfriend." That girlfriend is Shizuno Mizushima, a tomboy who's also the tallest girl he's ever met, who's now his hated rival in love, taunting him with it. But then…
+        Souta Sakuhara is a first-year high school boy. His first ever girlfriend has just been stolen away from him by a "girlfriend." That girlfriend is Shizuno Mizushima, a tomboy who's also the tallest girl he's ever met, who's now his hated rival in love, taunting him with it. But then…
 
-    "Since nobody else wants to be your girlfriend, how about you go out with me?"
+        "Since nobody else wants to be your girlfriend, how about you go out with me?"
 
-    She suddenly pins him against the wall! She also started saying, "Give me a month, and I'll make you fall in love with me…… I'm not going to let you go so easily!"
+        She suddenly pins him against the wall! She also started saying, "Give me a month, and I'll make you fall in love with me…… I'm not going to let you go so easily!"
 
-    A one-way romantic comedy in which a handsome and beautiful girl will tempt you every day!
-    """)
+        A one-way romantic comedy in which a handsome and beautiful girl will tempt you every day!
+        """
+    )
     .lineLimit(4)
 }
 
 #Preview("Normal", traits: .sizeThatFitsLayout) {
-    MangaDetailDescriptionView(content: """
-    "Hey, boyfriend, how you doing?"
-    """)
+    MangaDetailDescriptionView(
+        content: """
+        "Hey, boyfriend, how you doing?"
+        """
+    )
     .lineLimit(4)
 }

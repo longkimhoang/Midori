@@ -50,7 +50,10 @@ final class MangaDetailDescriptionViewController: UIViewController {
     }
 
     func setContent(_ content: String) {
-        guard var attributedContent = try? AttributedString(markdown: content) else {
+        guard var attributedContent = try? AttributedString(
+            markdown: content,
+            options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+        ) else {
             return
         }
 
