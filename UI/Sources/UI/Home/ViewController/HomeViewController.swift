@@ -76,6 +76,14 @@ final class HomeViewController: UIViewController {
             updateDataSource()
         }
 
+        observe { [unowned self] in
+            if store.isEmpty, store.isLoading {
+                contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
+            } else {
+                contentUnavailableConfiguration = nil
+            }
+        }
+
         dataFetchingTask = Task {
             await store.send(.fetchHomeData).finish()
         }

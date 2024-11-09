@@ -19,6 +19,7 @@ public struct Home {
         public var popularMangas: IdentifiedArrayOf<Manga>
         public var latestChapters: IdentifiedArrayOf<Chapter>
         public var recentlyAddedMangas: IdentifiedArrayOf<Manga>
+        public var isLoading: Bool = false
         public var path = StackState<Path.State>()
 
         public init(
@@ -29,6 +30,10 @@ public struct Home {
             self.popularMangas = popularMangas
             self.latestChapters = latestChapters
             self.recentlyAddedMangas = recentlyAddedMangas
+        }
+
+        public var isEmpty: Bool {
+            popularMangas.isEmpty && latestChapters.isEmpty && recentlyAddedMangas.isEmpty
         }
     }
 
@@ -54,6 +59,7 @@ public struct Home {
         Reduce { state, action in
             switch action {
             case .fetchHomeData:
+                state.isLoading = true
                 return .run { [mangaService, chapterService] send in
                     try await withThrowingDiscardingTaskGroup { group in
                         group.addTask { try await mangaService.syncPopularMangas() }
@@ -64,6 +70,7 @@ public struct Home {
                 }
             case .loadHomeDataFromStorage:
                 loadHomeDataFromStorage(state: &state)
+                state.isLoading = false
                 return .none
             case .latestUpdatesButtonTapped:
                 return .none

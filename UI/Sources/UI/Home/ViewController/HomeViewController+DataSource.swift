@@ -176,6 +176,10 @@ extension HomeViewController {
     }
 
     func updateDataSource(animated: Bool = true) {
+        guard !store.isEmpty else {
+            return
+        }
+
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
 
         snapshot.appendSections([.popularMangas, .latestChapters, .recentyAddedMangas])
