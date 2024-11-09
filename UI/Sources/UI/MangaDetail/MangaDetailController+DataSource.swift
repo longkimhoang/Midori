@@ -53,9 +53,12 @@ extension MangaDetailViewController {
                     alternateTitle: manga.alternateTitle,
                     subtitle: manga.subtitle,
                     coverImage: image,
-                    description: "",
+                    description: manga.synopsis,
                     rating: manga.rating
                 )
+                .environment(\.expandMangaDescription, .init { [unowned self] in
+                    store.send(.mangaDescriptionExpanded(true))
+                })
             }
             .margins(.all, 0)
 

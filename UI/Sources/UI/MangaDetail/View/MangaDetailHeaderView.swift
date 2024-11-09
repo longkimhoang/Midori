@@ -15,7 +15,7 @@ struct MangaDetailHeaderView: View {
     let alternateTitle: String?
     let subtitle: AttributedString?
     let coverImage: Image?
-    let description: String
+    let description: String?
     let rating: Double
 
     var body: some View {
@@ -44,8 +44,13 @@ struct MangaDetailHeaderView: View {
                 authorsLabel
                 ratingLabel
             }
-            .labelStyle(InfoLabelStyle())
             .padding(.top, 2)
+
+            if let description {
+                MangaDetailDescriptionView(content: description)
+                    .lineLimit(2)
+                    .padding(.top, 8)
+            }
         }
     }
 
@@ -96,24 +101,25 @@ private struct MangaInfoLayout<Content: View>: View {
             Group(subviews: content()) { subviews in
                 ForEach(subviews: subviews.dropLast()) { subview in
                     subview
-                    Text(verbatim: " • ")
+                    Text(verbatim: "•")
                 }
 
                 subviews.last
             }
             .foregroundStyle(.secondary)
             .font(.subheadline)
+            .labelStyle(InfoLabelStyle())
         }
     }
-}
 
-private struct InfoLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(alignment: .lastTextBaseline, spacing: 4) {
-            configuration.icon
-            configuration.title
+    struct InfoLabelStyle: LabelStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            HStack(alignment: .lastTextBaseline, spacing: 4) {
+                configuration.icon
+                configuration.title
+            }
+            .foregroundStyle(.secondary)
+            .font(.subheadline)
         }
-        .foregroundStyle(.secondary)
-        .font(.subheadline)
     }
 }

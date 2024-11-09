@@ -29,7 +29,7 @@ final class MangaDetailViewController: UIViewController {
     private var fetchMangaDetailTask: Task<Void, Never>?
 
     var cancellables: Set<AnyCancellable> = []
-    let store: StoreOf<MangaDetail>
+    @UIBindable var store: StoreOf<MangaDetail>
 
     init(store: StoreOf<MangaDetail>) {
         self.store = store
@@ -69,6 +69,10 @@ final class MangaDetailViewController: UIViewController {
                 updateDataSource(using: state)
             }
             .store(in: &cancellables)
+
+        present(isPresented: $store.isMangaDescriptionExpanded.sending(\.mangaDescriptionExpanded)) {
+            UIViewController()
+        }
 
         fetchMangaDetailTask = Task {
             await store.send(.fetchMangaDetail).finish()

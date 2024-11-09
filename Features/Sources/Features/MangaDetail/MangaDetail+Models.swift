@@ -14,6 +14,7 @@ public extension MangaDetail {
         public let title: String
         public let alternateTitle: String?
         public let subtitle: AttributedString?
+        public let synopsis: String?
         public let coverImageURL: URL?
         public let rating: Double
     }
@@ -65,6 +66,7 @@ extension MangaDetail.Manga {
             title: entity.title,
             alternateTitle: alternateTitle,
             subtitle: subtitle,
+            synopsis: entity.synopsis.map { $0["en"] },
             coverImageURL: entity.currentCover?.imageURLs[.mediumThumbnail],
             rating: entity.rating
         )
