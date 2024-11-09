@@ -57,7 +57,7 @@ extension MangaDetailViewController {
                     rating: manga.rating
                 )
                 .environment(\.expandMangaDescription, .init { [unowned self] in
-                    store.send(.mangaDescriptionExpanded(true))
+                    store.send(.expandDescription(true))
                 })
             }
             .margins(.all, 0)

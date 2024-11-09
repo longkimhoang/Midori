@@ -27,24 +27,35 @@ final class MangaDetailDescriptionViewController: UIViewController {
     }
 
     override func loadView() {
+        let view = UIView()
+
         let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = false
         textView.textColor = .label
         textView.font = .preferredFont(forTextStyle: .body)
         textView.adjustsFontForContentSizeCategory = true
         textView.textContainer.lineFragmentPadding = 0
 
-        view = textView
+        view.addSubview(textView)
+        self.view = view
         self.textView = textView
+
+        NSLayoutConstraint.activate([
+            textView.frameLayoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
+            textView.frameLayoutGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            textView.frameLayoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            textView.frameLayoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    override func viewLayoutMarginsDidChange() {
+        super.viewLayoutMarginsDidChange()
 
-        textView.textContainerInset = .init(
-            top: 0,
+        textView.contentInset = .init(
+            top: 8,
             left: view.layoutMargins.left,
-            bottom: 0,
+            bottom: 8,
             right: view.layoutMargins.right
         )
     }

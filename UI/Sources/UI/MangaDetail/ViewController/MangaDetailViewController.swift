@@ -70,7 +70,7 @@ final class MangaDetailViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        present(isPresented: $store.isMangaDescriptionExpanded.sending(\.mangaDescriptionExpanded)) { [unowned self] in
+        present(isPresented: $store.isDescriptionExpanded.sending(\.expandDescription)) { [unowned self] in
             let viewController = MangaDetailDescriptionViewController()
             viewController.navigationItem.title = store.manga?.title
 

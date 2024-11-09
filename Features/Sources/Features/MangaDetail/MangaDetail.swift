@@ -21,7 +21,7 @@ public struct MangaDetail {
         public let mangaID: UUID
         public var manga: Manga?
         public var chaptersByVolume: ChaptersByVolume
-        public var isMangaDescriptionExpanded: Bool = false
+        public var isDescriptionExpanded: Bool = false
 
         @ObservationStateIgnored fileprivate var offset: Int = 0
 
@@ -35,7 +35,7 @@ public struct MangaDetail {
     public enum Action: Equatable, Sendable {
         case fetchMangaDetail
         case loadMangaFromStorage
-        case mangaDescriptionExpanded(Bool)
+        case expandDescription(_ isExpanded: Bool)
     }
 
     @Dependency(\.modelContainer) private var modelContainer
@@ -61,8 +61,8 @@ public struct MangaDetail {
             case .loadMangaFromStorage:
                 loadMangaDetailFromStorage(state: &state)
                 return .none
-            case let .mangaDescriptionExpanded(isExpanded):
-                state.isMangaDescriptionExpanded = isExpanded
+            case let .expandDescription(isExpanded):
+                state.isDescriptionExpanded = isExpanded
                 return .none
             }
         }

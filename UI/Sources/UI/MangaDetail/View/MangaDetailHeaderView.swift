@@ -21,42 +21,21 @@ struct MangaDetailHeaderView: View {
     var body: some View {
         layout {
             CoverImageView(image: coverImage)
-                .background(
-                    .background.shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
-                    in: .rect(cornerRadius: 8)
-                )
-                .containerRelativeFrame(.horizontal, count: 3, span: 1, spacing: 0)
+                .modifier(MangaCoverModifier())
 
-            Group {
-                Text(title)
-                    .font(.title.weight(.medium))
-
-                if let alternateTitle {
-                    Text(alternateTitle)
-                        .font(.subheadline)
+            if horizontalSizeClass == .regular {
+                VStack(alignment: .leading) {
+                    content
                 }
-            }
-            .multilineTextAlignment(titleTextAlignment)
-            .lineLimit(4)
-            .truncationMode(.middle)
-
-            MangaInfoLayout {
-                authorsLabel
-                ratingLabel
-            }
-            .padding(.top, 2)
-
-            if let description {
-                MangaDetailDescriptionView(content: description)
-                    .lineLimit(2)
-                    .padding(.top, 8)
+            } else {
+                content
             }
         }
     }
 
     private var layout: AnyLayout {
         if horizontalSizeClass == .regular {
-            AnyLayout(HStackLayout(alignment: .bottom))
+            AnyLayout(HStackLayout(alignment: .bottom, spacing: 16))
         } else {
             AnyLayout(VStackLayout(alignment: .center))
         }
@@ -67,6 +46,33 @@ struct MangaDetailHeaderView: View {
             .leading
         } else {
             .center
+        }
+    }
+
+    @ViewBuilder private var content: some View {
+        Group {
+            Text(title)
+                .font(.title.weight(.medium))
+
+            if let alternateTitle {
+                Text(alternateTitle)
+                    .font(.subheadline)
+            }
+        }
+        .multilineTextAlignment(titleTextAlignment)
+        .lineLimit(4)
+        .truncationMode(.middle)
+
+        MangaInfoLayout {
+            authorsLabel
+            ratingLabel
+        }
+        .padding(.top, 2)
+
+        if let description {
+            MangaDetailDescriptionView(content: description)
+                .lineLimit(2)
+                .padding(.top, 8)
         }
     }
 
@@ -121,5 +127,23 @@ private struct MangaInfoLayout<Content: View>: View {
             .foregroundStyle(.secondary)
             .font(.subheadline)
         }
+    }
+}
+
+private struct MangaCoverModifier: ViewModifier {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                .background.shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
+                in: .rect(cornerRadius: 8)
+            )
+            .containerRelativeFrame(
+                .horizontal,
+                count: horizontalSizeClass == .regular ? 4 : 3,
+                span: 1,
+                spacing: 0
+            )
     }
 }
