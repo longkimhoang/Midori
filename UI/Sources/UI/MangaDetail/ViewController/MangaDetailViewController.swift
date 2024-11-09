@@ -64,14 +64,21 @@ final class MangaDetailViewController: UIViewController {
         store.send(.loadMangaFromStorage)
         store.publisher
             .filter { $0.manga != nil }
-            .removeDuplicates()
+            .removeDuplicates { $0.manga == $1.manga && $0.chaptersByVolume == $1.chaptersByVolume }
             .sink { [unowned self] state in
                 updateDataSource(using: state)
             }
             .store(in: &cancellables)
 
-        present(isPresented: $store.isMangaDescriptionExpanded.sending(\.mangaDescriptionExpanded)) {
-            UIViewController()
+        present(isPresented: $store.isMangaDescriptionExpanded.sending(\.mangaDescriptionExpanded)) { [unowned self] in
+            let viewController = MangaDetailDescriptionViewController()
+            viewController.navigationItem.title = store.manga?.title
+
+            if let synopsis = store.manga?.synopsis {
+                viewController.setContent(synopsis)
+            }
+
+            return UINavigationController(rootViewController: viewController)
         }
 
         fetchMangaDetailTask = Task {
