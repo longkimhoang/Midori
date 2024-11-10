@@ -5,83 +5,79 @@
 //  Created by Long Kim on 31/10/24.
 //
 
-import UIKit
+import SwiftUI
 
-struct LatestChapterConfiguration: UIContentConfiguration {
+struct LatestChapterView: View {
+    @Environment(\.displayScale) private var displayScale
+
     let manga: String
     let chapter: String
     let group: String
-    let coverImage: UIImage?
+    let coverImage: Image?
 
-    func makeContentView() -> any UIView & UIContentView {
-        LatestChapterContentView(configuration: self)
-    }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
+                CoverImageView(image: coverImage)
+                    .frame(width: 60)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .strokeBorder(.separator, lineWidth: 1 / displayScale)
+                    }
 
-    func updated(for _: any UIConfigurationState) -> LatestChapterConfiguration {
-        self
-    }
-}
+                VStack(alignment: .leading) {
+                    Text(manga)
+                        .font(.headline)
 
-final class LatestChapterContentView: UIView, UIContentView {
-    private static let contentViewNib = UINib(nibName: "LatestChapterContentView", bundle: .module)
+                    Group {
+                        Text(chapter)
+                        ScanlationGroupLabel(group: group)
+                            .foregroundStyle(.secondary)
+                    }
+                    .font(.subheadline)
+                }
+                .lineLimit(1)
+                .anchorPreference(key: SeparatorLeadingAnchor.self, value: .leading) { $0 }
 
-    @IBOutlet private var containerView: UIView!
-    @IBOutlet private var mangaLabel: UILabel!
-    @IBOutlet private var chapterLabel: UILabel!
-    @IBOutlet private var groupLabel: UILabel!
-    @IBOutlet private var coverImageView: UIImageView!
-    @IBOutlet private var separatorHeightConstraint: NSLayoutConstraint!
-
-    var configuration: any UIContentConfiguration {
-        didSet {
-            guard let configuration = configuration as? LatestChapterConfiguration else {
-                return
+                Spacer(minLength: 0)
             }
+            .padding(.vertical, 8)
+            .padding(.trailing, 8)
 
-            configure(with: configuration)
+            Rectangle()
+                .fill(.clear)
+                .frame(height: 1 / displayScale)
+        }
+        .overlayPreferenceValue(SeparatorLeadingAnchor.self) { value in
+            if let value {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer(minLength: 0)
+
+                        Rectangle()
+                            .fill(.separator)
+                            .frame(height: 1 / displayScale)
+                            .padding(.leading, geometry[value].x)
+                    }
+                }
+            }
         }
     }
 
-    init(configuration: LatestChapterConfiguration) {
-        self.configuration = configuration
-        super.init(frame: .zero)
+    private struct SeparatorLeadingAnchor: PreferenceKey {
+        static let defaultValue: Anchor<CGPoint>? = nil
 
-        Self.contentViewNib.instantiate(withOwner: self)
-
-        addSubview(containerView)
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-
-        coverImageView.layer.cornerRadius = 8
-        coverImageView.layer.masksToBounds = true
-        coverImageView.layer.borderColor = UIColor.separator.cgColor
-
-        NSLayoutConstraint.activate([
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-
-        configure(with: configuration)
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value = nextValue()
+        }
     }
+}
 
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        let displayScale = max(1, traitCollection.displayScale)
-        coverImageView.layer.borderWidth = 1 / displayScale
-        separatorHeightConstraint.constant = 1 / displayScale
-    }
-
-    func configure(with configuration: LatestChapterConfiguration) {
-        mangaLabel.text = configuration.manga
-        chapterLabel.text = configuration.chapter
-        groupLabel.text = configuration.group
-        coverImageView.image = configuration.coverImage
-    }
+#Preview(traits: .sizeThatFitsLayout) {
+    LatestChapterView(
+        manga: "Mieruko-chan",
+        chapter: "Vol. 11 - Ch. 60",
+        group: "Pixel Horror",
+        coverImage: Image(.mangaCoverPreview)
+    )
 }
