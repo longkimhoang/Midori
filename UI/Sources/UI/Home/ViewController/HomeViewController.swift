@@ -73,8 +73,10 @@ final class HomeViewController: UIViewController {
         configureDataSource()
 
         try? viewModel.loadHomeDataFromStorage()
+        updateDataSource(data: viewModel.data)
 
         viewModel.$data
+            .dropFirst()
             .receive(on: RunLoop.main)
             .sink { [weak self] data in
                 self?.updateDataSource(data: data)
