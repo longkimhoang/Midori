@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import SafariServices
 import SnapKit
 import SwiftUI
 import UIKit
 
 final class MangaDetailDescriptionViewController: UIViewController {
     private lazy var hostingController = UIHostingController<MangaSynopsisContentView?>(rootView: nil)
+    private lazy var coordinator = MangaSynopsisContentView.Coordinator()
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -33,52 +35,60 @@ final class MangaDetailDescriptionViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .systemBackground
 
-        let scrollView = UIScrollView()
-        view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
-        let contentView = UIView()
-        scrollView.addSubview(contentView)
-        contentView.snp.makeConstraints { make in
-            make.verticalEdges.equalTo(scrollView.contentLayoutGuide)
-            make.horizontalEdges.equalTo(view.layoutMarginsGuide)
-            make.width.equalTo(scrollView.contentLayoutGuide)
-            make.height.equalTo(scrollView.frameLayoutGuide).priority(.low)
-        }
-
         hostingController.sizingOptions = [.preferredContentSize, .intrinsicContentSize]
         addChild(hostingController)
         hostingController.didMove(toParent: self)
-        contentView.addSubview(hostingController.view)
+        view.addSubview(hostingController.view)
         hostingController.view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(scrollView.contentLayoutGuide)
         }
 
         self.view = view
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        coordinator.openURL = { [weak self] url in
+            let safariViewController = SFSafariViewController(url: url)
+            self?.present(safariViewController, animated: true)
+        }
+    }
+
+    override func viewLayoutMarginsDidChange() {
+        super.viewLayoutMarginsDidChange()
+
+        coordinator.layoutMargins.leading = view.directionalLayoutMargins.leading
+        coordinator.layoutMargins.trailing = view.directionalLayoutMargins.trailing
+    }
+
     func setContent(_ content: String) {
-        let contentView = MangaSynopsisContentView(content: content)
+        let contentView = MangaSynopsisContentView(content: content, coordinator: coordinator)
         hostingController.rootView = contentView
     }
 }
 
 private struct MangaSynopsisContentView: View {
     let content: String
+    let coordinator: Coordinator
 
     var body: some View {
-        Text(attributedContent)
-            .multilineTextAlignment(.leading)
-            .textSelection(.enabled)
+        ScrollView {
+            Text(attributedContent)
+                .multilineTextAlignment(.leading)
+                .textSelection(.enabled)
+                .padding(coordinator.layoutMargins)
+                .containerRelativeFrame(.horizontal, alignment: .leading)
+        }
+        .environment(\.openURL, OpenURLAction {
+            coordinator.openURL($0)
+            return .handled
+        })
     }
 
     var attributedContent: AttributedString {
         let attributes = AttributeContainer()
             .font(.body)
-            .foregroundColor(.primary)
 
         guard let attributedContent = try? AttributedString(
             markdown: content,
@@ -88,6 +98,12 @@ private struct MangaSynopsisContentView: View {
         }
 
         return attributedContent.mergingAttributes(attributes)
+    }
+
+    @Observable
+    final class Coordinator {
+        var layoutMargins = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        var openURL: (URL) -> Void = { _ in }
     }
 }
 
@@ -104,6 +120,13 @@ private struct MangaSynopsisContentView: View {
 
     A one-way romantic comedy in which a handsome and beautiful girl will tempt you every day!
     """)
+
+    return UINavigationController(rootViewController: viewController)
+}
+
+#Preview("Short text") {
+    let viewController = MangaDetailDescriptionViewController()
+    viewController.setContent("Short text")
 
     return UINavigationController(rootViewController: viewController)
 }
