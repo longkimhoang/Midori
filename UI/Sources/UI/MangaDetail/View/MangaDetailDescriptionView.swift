@@ -60,12 +60,16 @@ struct MangaDetailDescriptionView: View {
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .joined(by: " ")
 
-        guard
-            let attributedContent = try? AttributedString(
-                markdown: String(processedContent)
-            )
+        guard var attributedContent = try? AttributedString(
+            markdown: String(processedContent)
+        )
         else {
             return AttributedString(content).mergingAttributes(attributes)
+        }
+
+        // remove links so that the whole button can be tapped
+        for run in attributedContent.runs where run.link != nil {
+            attributedContent[run.range].link = nil
         }
 
         return attributedContent.mergingAttributes(attributes)
