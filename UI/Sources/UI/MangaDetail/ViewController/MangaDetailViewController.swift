@@ -6,14 +6,13 @@
 //
 
 import Combine
-import ComposableArchitecture
-import MidoriFeatures
+import MidoriViewModels
 import UIKit
 
 final class MangaDetailViewController: UIViewController {
-    typealias Manga = MangaDetail.Manga
-    typealias Chapter = MangaDetail.Chapter
-    typealias Volume = MangaDetail.Volume
+    typealias Manga = MangaDetailViewModel.Manga
+    typealias Chapter = MangaDetailViewModel.Chapter
+    typealias Volume = MangaDetailViewModel.Volume
 
     enum SectionIdentifier: Hashable {
         case mangaDetailHeader
@@ -26,13 +25,13 @@ final class MangaDetailViewController: UIViewController {
         case chapter(Volume, UUID)
     }
 
-    private var fetchMangaDetailTask: Task<Void, Never>?
+    private var fetchMangaDetailTask: Task<Void, Error>?
 
-    var cancellables: Set<AnyCancellable> = []
-    @UIBindable var store: StoreOf<MangaDetail>
+    private(set) var cancellables: Set<AnyCancellable> = []
+    let viewModel: MangaDetailViewModel
 
-    init(store: StoreOf<MangaDetail>) {
-        self.store = store
+    init(model: MangaDetailViewModel) {
+        viewModel = model
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -61,28 +60,59 @@ final class MangaDetailViewController: UIViewController {
 
         configureDataSource()
 
-        store.send(.loadMangaFromStorage)
-        store.publisher
-            .filter { $0.manga != nil }
-            .removeDuplicates { $0.manga == $1.manga && $0.chaptersByVolume == $1.chaptersByVolume }
-            .sink { [unowned self] state in
-                updateDataSource(using: state)
+        try? viewModel.loadMangaFromStorage()
+        updateDataSource()
+
+        let dataSourceChanges = Publishers.CombineLatest(
+            viewModel.$manga.flatMap(\.publisher).removeDuplicates(),
+            viewModel.$chaptersByVolume.removeDuplicates()
+        )
+
+        dataSourceChanges
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.updateDataSource()
             }
             .store(in: &cancellables)
 
-        present(isPresented: $store.isDescriptionExpanded.sending(\.expandDescription)) { [unowned self] in
-            let viewController = MangaDetailDescriptionViewController()
-            viewController.navigationItem.title = store.manga?.title
+        viewModel.navigationDestinationPublisher
+            .sink { [unowned self] destination in
+                switch destination {
+                case .mangaSynopsis:
+                    let viewController = MangaDetailDescriptionViewController()
+                    viewController.navigationItem.title = viewModel.manga?.title
+                    if let synopsis = viewModel.manga?.synopsis {
+                        viewController.setContent(synopsis)
+                    }
 
-            if let synopsis = store.manga?.synopsis {
-                viewController.setContent(synopsis)
+                    present(UINavigationController(rootViewController: viewController), animated: true)
+                }
             }
+            .store(in: &cancellables)
 
-            return UINavigationController(rootViewController: viewController)
-        }
+//        store.send(.loadMangaFromStorage)
+//        store.publisher
+//            .filter { $0.manga != nil }
+//            .removeDuplicates { $0.manga == $1.manga && $0.chaptersByVolume == $1.chaptersByVolume }
+//            .sink { [unowned self] state in
+//                updateDataSource(using: state)
+//            }
+//            .store(in: &cancellables)
+//
+//        present(isPresented: $store.isDescriptionExpanded.sending(\.expandDescription)) { [unowned self] in
+//            let viewController = MangaDetailDescriptionViewController()
+//            viewController.navigationItem.title = store.manga?.title
+//
+//            if let synopsis = store.manga?.synopsis {
+//                viewController.setContent(synopsis)
+//            }
+//
+//            return UINavigationController(rootViewController: viewController)
+//        }
 
         fetchMangaDetailTask = Task {
-            await store.send(.fetchMangaDetail).finish()
+            try await viewModel.fetchMangaDetail()
         }
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Long Kim on 3/11/24.
 //
 
-import MidoriFeatures
+import MidoriViewModels
 import Nuke
 import SwiftUI
 import UIKit
@@ -57,7 +57,7 @@ extension MangaDetailViewController {
                     rating: manga.rating
                 )
                 .environment(\.expandMangaDescription, .init { [unowned self] in
-                    store.send(.expandDescription(true))
+                    viewModel.mangaSynopsisExpanded()
                 })
             }
             .margins(.all, 0)
@@ -80,7 +80,7 @@ extension MangaDetailViewController {
                 return collectionView.dequeueConfiguredReusableCell(
                     using: mangaDetailHeaderRegistration,
                     for: indexPath,
-                    item: store.manga
+                    item: viewModel.manga
                 )
             case let .volume(volume):
                 return collectionView.dequeueConfiguredReusableCell(
@@ -89,7 +89,7 @@ extension MangaDetailViewController {
                     item: volume.localizedDescription
                 )
             case let .chapter(volume, id):
-                let chapters = store.chaptersByVolume[volume]
+                let chapters = viewModel.chaptersByVolume[volume]
                 return collectionView.dequeueConfiguredReusableCell(
                     using: chapterCellRegistration,
                     for: indexPath,
@@ -99,14 +99,14 @@ extension MangaDetailViewController {
         }
     }
 
-    func updateDataSource(using state: MangaDetail.State, animated: Bool = true) {
+    func updateDataSource(animated: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
         snapshot.appendSections([.mangaDetailHeader])
         snapshot.appendItems([.mangaDetailHeader], toSection: .mangaDetailHeader)
         dataSource.apply(snapshot, animatingDifferences: animated)
 
         var hasExpandedSection = false
-        for (volume, chapters) in state.chaptersByVolume {
+        for (volume, chapters) in viewModel.chaptersByVolume {
             let sectionIdentifier = SectionIdentifier.volume(volume)
             var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<ItemIdentifier>()
 

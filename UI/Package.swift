@@ -16,8 +16,9 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "Features"),
+        .package(path: "ViewModels"),
         .package(url: "https://github.com/kean/Nuke", from: "12.8.0"),
+        .package(url: "https://github.com/SnapKit/SnapKit", from: "5.7.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,8 +26,9 @@ let package = Package(
         .target(
             name: "MidoriUI",
             dependencies: [
-                .product(name: "MidoriFeatures", package: "Features"),
+                .product(name: "MidoriViewModels", package: "ViewModels"),
                 .product(name: "Nuke", package: "Nuke"),
+                .product(name: "SnapKit", package: "SnapKit"),
             ]
         ),
         .testTarget(

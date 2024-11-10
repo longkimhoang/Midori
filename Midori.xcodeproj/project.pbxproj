@@ -16,7 +16,6 @@
 		5329F1FE2CC02A5700A6BD2B /* Storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Storage; sourceTree = "<group>"; };
 		53468DD72CDDEB040031E017 /* ViewModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ViewModels; sourceTree = "<group>"; };
 		5383975B2CC0366D002F82D9 /* Midori.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Midori.xctestplan; sourceTree = "<group>"; };
-		53D520D02CC23EF4005CD999 /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
 		53D520D32CC24150005CD999 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UI; sourceTree = "<group>"; };
 		53D520DA2CC2422A005CD999 /* Services */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Services; sourceTree = "<group>"; };
 		53D520DD2CC243CC005CD999 /* App */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = App; sourceTree = "<group>"; };
@@ -61,7 +60,6 @@
 			isa = PBXGroup;
 			children = (
 				53D520DD2CC243CC005CD999 /* App */,
-				53D520D02CC23EF4005CD999 /* Features */,
 				53D520EF2CC27036005CD999 /* MangaDexAPIClient */,
 				53D520DA2CC2422A005CD999 /* Services */,
 				5329F1FE2CC02A5700A6BD2B /* Storage */,

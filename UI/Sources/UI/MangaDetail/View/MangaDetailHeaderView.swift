@@ -5,7 +5,6 @@
 //  Created by Long Kim on 3/11/24.
 //
 
-import MidoriFeatures
 import SwiftUI
 
 struct MangaDetailHeaderView: View {

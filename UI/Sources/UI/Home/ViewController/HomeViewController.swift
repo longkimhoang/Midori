@@ -7,6 +7,7 @@
 
 import Combine
 import CoreImage
+import Dependencies
 import MidoriViewModels
 import Nuke
 import UIKit
@@ -27,7 +28,7 @@ final class HomeViewController: UIViewController {
     private lazy var cancellables: Set<AnyCancellable> = []
     private var dataFetchingTask: Task<Void, Error>?
 
-    let viewModel = HomeViewModel()
+    let viewModel: HomeViewModel
     let imagePrefetcher = ImagePrefetcher(pipeline: .midoriApp)
     nonisolated(unsafe) let context = CIContext() // CIContext is thread-safe
 
@@ -37,8 +38,10 @@ final class HomeViewController: UIViewController {
 
     weak var transitionSourceView: UIView?
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    init(model: HomeViewModel) {
+        viewModel = model
+        super.init(nibName: nil, bundle: nil)
+
         navigationItem.title = String(localized: "Home", bundle: .module)
     }
 
@@ -82,7 +85,11 @@ final class HomeViewController: UIViewController {
             .sink { [unowned self] destination in
                 switch destination {
                 case let .mangaDetail(mangaID):
-                    navigationController?.pushViewController(UIViewController(), animated: true)
+                    let model = withDependencies(from: viewModel) {
+                        MangaDetailViewModel(mangaID: mangaID)
+                    }
+
+                    navigationController?.pushViewController(MangaDetailViewController(model: model), animated: true)
                 }
             }
             .store(in: &cancellables)

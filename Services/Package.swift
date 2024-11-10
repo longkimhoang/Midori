@@ -31,7 +31,6 @@ let package = Package(
             dependencies: [
                 .product(name: "MidoriStorage", package: "Storage"),
                 .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "DependenciesMacros", package: "swift-dependencies"),
             ],
             path: "Sources/Services"
         ),

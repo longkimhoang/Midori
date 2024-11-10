@@ -48,7 +48,7 @@ public final class HomeViewModel {
         try await withThrowingDiscardingTaskGroup { [mangaService, chapterService] group in
             group.addTask { try await mangaService.syncPopularMangas() }
             group.addTask { try await chapterService.syncLatestChapters() }
-            group.addTask { try await mangaService.syncRecentlyAddedMangas(limit: 15, offset: 0) }
+            group.addTask { try await mangaService.syncRecentlyAddedMangas(limit: 15) }
         }
         try loadHomeDataFromStorage()
     }

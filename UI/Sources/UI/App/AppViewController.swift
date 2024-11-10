@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Dependencies
 import MidoriViewModels
 import UIKit
 
@@ -20,7 +21,9 @@ public final class AppViewController: UITabBarController {
         image: UIImage(systemName: "house"),
         identifier: Tab.home.rawValue
     ) { [unowned self] _ in
-        UINavigationController(rootViewController: HomeViewController())
+        let model = HomeViewModel()
+
+        return UINavigationController(rootViewController: HomeViewController(model: model))
     }
 
     override public func viewDidLoad() {
