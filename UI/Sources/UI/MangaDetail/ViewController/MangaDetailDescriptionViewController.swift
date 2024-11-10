@@ -78,7 +78,8 @@ private struct MangaSynopsisContentView: View {
                 .multilineTextAlignment(.leading)
                 .textSelection(.enabled)
                 .padding(coordinator.layoutMargins)
-                .containerRelativeFrame(.horizontal, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .ignoresSafeArea(edges: .horizontal)
         }
         .environment(\.openURL, OpenURLAction {
             coordinator.openURL($0)
@@ -102,7 +103,7 @@ private struct MangaSynopsisContentView: View {
 
     @Observable
     final class Coordinator {
-        var layoutMargins = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        var layoutMargins = EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
         var openURL: (URL) -> Void = { _ in }
     }
 }
