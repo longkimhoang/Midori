@@ -16,7 +16,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
-        .package(url: "https://github.com/pointfreeco/swift-tagged", branch: "main"),
         .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.2"),
     ],
@@ -27,7 +26,6 @@ let package = Package(
             name: "MidoriStorage",
             dependencies: [
                 .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "NonEmpty", package: "swift-nonempty"),
             ]
         ),

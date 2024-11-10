@@ -7,7 +7,6 @@
 
 import Foundation
 import NonEmpty
-import Tagged
 
 /// A string with localized variants.
 ///
@@ -17,9 +16,6 @@ import Tagged
 /// function.
 @DebugDescription
 public struct LocalizedString: Equatable, Codable, Sendable, CustomDebugStringConvertible {
-    /// The language code
-    public typealias LanguageCode = Tagged<LocalizedString, String>
-
     /// The localized variants.
     public let localizedVariants: NonEmptyDictionary<LanguageCode, String>
 
@@ -38,6 +34,31 @@ public struct LocalizedString: Equatable, Codable, Sendable, CustomDebugStringCo
             localizedVariants = \(localizedVariants.debugDescription)
         }
         """
+    }
+}
+
+// MARK: - Language Code
+
+public extension LocalizedString {
+    /// The language code.
+    struct LanguageCode: RawRepresentable, Hashable, Codable, Sendable {
+        public let rawValue: String
+
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+    }
+}
+
+public extension LocalizedString.LanguageCode {
+    init(_ rawValue: String) {
+        self.init(rawValue: rawValue)
+    }
+}
+
+extension LocalizedString.LanguageCode: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.init(value)
     }
 }
 
