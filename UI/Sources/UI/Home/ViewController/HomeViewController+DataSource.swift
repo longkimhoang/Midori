@@ -131,15 +131,18 @@ extension HomeViewController {
             return cell
         }
 
-        let sectionHeaderLabelRegistration = UICollectionView.SupplementaryRegistration<HomeSectionHeaderLabelView>(
+        let sectionHeaderLabelRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
             elementKind: SupplementaryElementKind.sectionHeaderLabel
-        ) { supplementaryView, _, _ in
-            supplementaryView.text = String(localized: "Popular new titles")
+        ) { cell, _, _ in
+            cell.contentConfiguration = UIHostingConfiguration {
+                HomeSectionHeaderLabelView(content: String(localized: "Popular new titles", bundle: .module))
+            }
+            .margins(.horizontal, 0)
         }
 
-        let sectionHeaderButtonRegistration = UICollectionView.SupplementaryRegistration<HomeSectionHeaderButtonView>(
+        let sectionHeaderButtonRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(
             elementKind: SupplementaryElementKind.sectionHeaderButton
-        ) { [unowned self] button, _, indexPath in
+        ) { [unowned self] cell, _, indexPath in
             guard let sectionIdentifier = dataSource.sectionIdentifier(for: indexPath.section) else {
                 return
             }
@@ -148,15 +151,23 @@ extension HomeViewController {
             case .popularMangas:
                 break
             case .latestChapters:
-                button.label = String(localized: "Latest updates", bundle: .module)
-                button.handler = { [unowned self] in
-                    viewModel.latestUpdatesButtonTapped()
+                cell.contentConfiguration = UIHostingConfiguration {
+                    HomeSectionHeaderButtonView(
+                        label: String(localized: "Latest updates", bundle: .module)
+                    ) { [unowned self] in
+                        viewModel.latestUpdatesButtonTapped()
+                    }
                 }
+                .margins(.horizontal, 0)
             case .recentyAddedMangas:
-                button.label = String(localized: "Recently added", bundle: .module)
-                button.handler = { [unowned self] in
-                    viewModel.recentlyAddedButtonTapped()
+                cell.contentConfiguration = UIHostingConfiguration {
+                    HomeSectionHeaderButtonView(
+                        label: String(localized: "Recently added", bundle: .module)
+                    ) { [unowned self] in
+                        viewModel.latestUpdatesButtonTapped()
+                    }
                 }
+                .margins(.horizontal, 0)
             }
         }
 
