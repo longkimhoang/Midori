@@ -26,10 +26,13 @@ struct MangaDetailHeaderView: View {
                 VStack(alignment: .leading) {
                     content
                 }
+
+                Spacer(minLength: 0)
             } else {
                 content
             }
         }
+        .padding(.vertical, horizontalSizeClass == .regular ? 20 : nil)
     }
 
     private var layout: AnyLayout {
@@ -134,15 +137,15 @@ private struct MangaCoverModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(
-                .background.shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
-                in: .rect(cornerRadius: 8)
-            )
             .containerRelativeFrame(
                 .horizontal,
                 count: horizontalSizeClass == .regular ? 4 : 3,
                 span: 1,
                 spacing: 0
+            )
+            .background(
+                .background.shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
+                in: .rect(cornerRadius: 8)
             )
     }
 }

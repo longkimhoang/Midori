@@ -42,7 +42,7 @@ final class MangaDetailDescriptionViewController: UIViewController {
         let contentView = UIView()
         scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.verticalEdges.equalToSuperview()
+            make.verticalEdges.equalTo(scrollView.contentLayoutGuide)
             make.horizontalEdges.equalTo(view.layoutMarginsGuide)
             make.width.equalTo(scrollView.contentLayoutGuide)
             make.height.equalTo(scrollView.frameLayoutGuide).priority(.low)
