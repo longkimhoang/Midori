@@ -20,14 +20,14 @@ extension HomeViewController: UICollectionViewDelegate {
             if let contentView = cell.contentView as? PopularMangaContentView {
                 transitionSourceView = contentView.imageContainerView
             }
-            store.send(.mangaSelected(mangaID))
+            viewModel.mangaSelected(id: mangaID)
         case .latestChapter:
             break
         case let .recentlyAddedManga(mangaID):
             if let contentView = cell.contentView as? RecentlyAddedMangaContentView {
                 transitionSourceView = contentView.coverImageView
             }
-            store.send(.mangaSelected(mangaID))
+            viewModel.mangaSelected(id: mangaID)
         }
     }
 }

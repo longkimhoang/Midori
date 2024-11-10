@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Ch. %@" : {
+      "comment" : "Shortform for chapter"
+    },
+    "No group" : {
+
+    },
+    "Oneshot" : {
+
+    },
+    "Vol. %@" : {
+      "comment" : "Shortform for volume"
+    }
+  },
+  "version" : "1.0"
+}

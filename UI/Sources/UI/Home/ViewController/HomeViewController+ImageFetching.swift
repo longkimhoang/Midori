@@ -65,13 +65,13 @@ extension HomeViewController {
     private func imageRequest(for itemIdentifier: ItemIdentifier) -> ImageRequest? {
         switch itemIdentifier {
         case let .popularManga(id):
-            let manga = store.popularMangas[id: id]
+            let manga = viewModel.data.popularMangas[id: id]
             return ImageRequest(url: manga?.coverImageURL, processors: [.resize(height: 180)])
         case let .latestChapter(id):
-            let chapter = store.latestChapters[id: id]
+            let chapter = viewModel.data.latestChapters[id: id]
             return ImageRequest(url: chapter?.coverImageURL, processors: [.resize(width: 60)])
         case let .recentlyAddedManga(id):
-            let manga = store.recentlyAddedMangas[id: id]
+            let manga = viewModel.data.recentlyAddedMangas[id: id]
             return ImageRequest(url: manga?.coverImageURL, processors: [.resize(height: 128)])
         }
     }

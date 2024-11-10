@@ -5,15 +5,15 @@
 //  Created by Long Kim on 28/10/24.
 //
 
-import ComposableArchitecture
-import MidoriFeatures
+import MidoriViewModels
 import Nuke
 import SwiftUI
 import UIKit
 
 extension HomeViewController {
-    typealias Manga = Home.Manga
-    typealias Chapter = Home.Chapter
+    typealias HomeData = HomeViewModel.HomeData
+    typealias Manga = HomeViewModel.Manga
+    typealias Chapter = HomeViewModel.Chapter
 
     func configureDataSource() {
         let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, (Manga, UIColor?)> {
@@ -104,14 +104,14 @@ extension HomeViewController {
 
             switch itemIdentifier {
             case let .popularManga(id):
-                let item = store.popularMangas[id: id].map { ($0, dominantColor) }
+                let item = viewModel.data.popularMangas[id: id].map { ($0, dominantColor) }
                 cell = collectionView.dequeueConfiguredReusableCell(
                     using: popularMangaCellRegistration,
                     for: indexPath,
                     item: item
                 )
             case let .latestChapter(id):
-                let chapter = store.latestChapters[id: id]
+                let chapter = viewModel.data.latestChapters[id: id]
                 cell = collectionView.dequeueConfiguredReusableCell(
                     using: latestChapterCellRegistration,
                     for: indexPath,
@@ -121,7 +121,7 @@ extension HomeViewController {
                 cell = collectionView.dequeueConfiguredReusableCell(
                     using: recentlyAddedMangaCellRegistration,
                     for: indexPath,
-                    item: store.recentlyAddedMangas[indexPath.item]
+                    item: viewModel.data.recentlyAddedMangas[indexPath.item]
                 )
             }
 
@@ -147,12 +147,12 @@ extension HomeViewController {
             case .latestChapters:
                 button.label = String(localized: "Latest updates", bundle: .module)
                 button.handler = { [unowned self] in
-                    store.send(.latestUpdatesButtonTapped)
+                    viewModel.latestUpdatesButtonTapped()
                 }
             case .recentyAddedMangas:
                 button.label = String(localized: "Recently added", bundle: .module)
                 button.handler = { [unowned self] in
-                    store.send(.recentlyAddedButtonTapped)
+                    viewModel.recentlyAddedButtonTapped()
                 }
             }
         }
@@ -175,18 +175,18 @@ extension HomeViewController {
         }
     }
 
-    func updateDataSource(animated: Bool = true) {
-        guard !store.isEmpty else {
+    func updateDataSource(data: HomeData, animated: Bool = true) {
+        guard !data.isEmpy else {
             return
         }
 
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
 
         snapshot.appendSections([.popularMangas, .latestChapters, .recentyAddedMangas])
-        snapshot.appendItems(store.popularMangas.ids.map(ItemIdentifier.popularManga), toSection: .popularMangas)
-        snapshot.appendItems(store.latestChapters.ids.map(ItemIdentifier.latestChapter), toSection: .latestChapters)
+        snapshot.appendItems(data.popularMangas.ids.map(ItemIdentifier.popularManga), toSection: .popularMangas)
+        snapshot.appendItems(data.latestChapters.ids.map(ItemIdentifier.latestChapter), toSection: .latestChapters)
         snapshot.appendItems(
-            store.recentlyAddedMangas.ids.map(ItemIdentifier.recentlyAddedManga),
+            data.recentlyAddedMangas.ids.map(ItemIdentifier.recentlyAddedManga),
             toSection: .recentyAddedMangas
         )
 

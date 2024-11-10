@@ -5,10 +5,9 @@
 //  Created by Long Kim on 27/10/24.
 //
 
-import ComposableArchitecture
-import ConcurrencyExtras
+import Combine
 import CoreImage
-import MidoriFeatures
+import MidoriViewModels
 import Nuke
 import UIKit
 
@@ -25,9 +24,10 @@ final class HomeViewController: UIViewController {
         case recentlyAddedManga(UUID)
     }
 
-    private var dataFetchingTask: Task<Void, Never>?
+    private lazy var cancellables: Set<AnyCancellable> = []
+    private var dataFetchingTask: Task<Void, Error>?
 
-    let store: StoreOf<Home>
+    let viewModel = HomeViewModel()
     let imagePrefetcher = ImagePrefetcher(pipeline: .midoriApp)
     nonisolated(unsafe) let context = CIContext() // CIContext is thread-safe
 
@@ -37,10 +37,8 @@ final class HomeViewController: UIViewController {
 
     weak var transitionSourceView: UIView?
 
-    init(store: StoreOf<Home>) {
-        self.store = store
-        super.init(nibName: nil, bundle: nil)
-
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         navigationItem.title = String(localized: "Home", bundle: .module)
     }
 
@@ -71,28 +69,46 @@ final class HomeViewController: UIViewController {
 
         configureDataSource()
 
-        store.send(.loadHomeDataFromStorage)
-        observe { [unowned self] in
-            updateDataSource()
-        }
+        try? viewModel.loadHomeDataFromStorage()
 
-        observe { [unowned self] in
-            if store.isEmpty, store.isLoading {
-                contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
-            } else {
-                contentUnavailableConfiguration = nil
+        viewModel.$data
+            .receive(on: RunLoop.main)
+            .sink { [weak self] data in
+                self?.updateDataSource(data: data)
             }
-        }
+            .store(in: &cancellables)
+
+        viewModel.navigationDestinationPublisher
+            .sink { [unowned self] destination in
+                switch destination {
+                case let .mangaDetail(mangaID):
+                    navigationController?.pushViewController(UIViewController(), animated: true)
+                }
+            }
+            .store(in: &cancellables)
+
+        Publishers.CombineLatest(viewModel.$isLoading, viewModel.$data.map(\.isEmpy))
+            .map { isLoading, isEmpty -> UIContentConfiguration? in
+                if isLoading, isEmpty {
+                    return UIContentUnavailableConfiguration.loading()
+                } else {
+                    return nil
+                }
+            }
+            .sink { [weak self] in
+                self?.contentUnavailableConfiguration = $0
+            }
+            .store(in: &cancellables)
 
         dataFetchingTask = Task {
-            await store.send(.fetchHomeData).finish()
+            try await viewModel.fetchHomeData()
         }
     }
 
     @objc private func refresh(_ sender: UIRefreshControl) {
         dataFetchingTask?.cancel()
         dataFetchingTask = Task {
-            await store.send(.fetchHomeData).finish()
+            try await viewModel.fetchHomeData()
             sender.endRefreshing()
         }
     }
