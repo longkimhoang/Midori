@@ -27,17 +27,18 @@ extension HomeViewController {
 
             let image = cachedCoverImage(for: itemIdentifier)
 
-            cell.contentConfiguration = PopularMangaConfiguration(
-                title: manga.title,
-                authors: manga.subtitle,
-                coverImage: image
-            )
-
-            var backgroundConfiguration = UIBackgroundConfiguration.clear()
-            backgroundConfiguration.cornerRadius = 16
-            backgroundConfiguration.backgroundColor = dominantColor ?? .tertiarySystemFill
-
-            cell.backgroundConfiguration = backgroundConfiguration
+            cell.contentConfiguration = UIHostingConfiguration {
+                PopularMangaView(
+                    title: manga.title,
+                    authors: manga.subtitle,
+                    coverImage: image.map(Image.init)
+                )
+            }
+            .background {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(uiColor: dominantColor ?? .tertiarySystemFill).gradient)
+            }
+            .margins(.all, 0)
 
             cell.isAccessibilityElement = true
 
