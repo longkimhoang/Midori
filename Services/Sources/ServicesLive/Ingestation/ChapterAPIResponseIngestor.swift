@@ -50,4 +50,37 @@ actor ChapterAPIResponseIngestor {
 
         try modelContext.save()
     }
+
+    func importPages(from response: AtHomeServer, for chapterID: UUID) throws {
+        guard let chapter = try modelContext.fetch(ChapterEntity.withID(chapterID)).first else {
+            return
+        }
+
+        let baseURL = response.baseURL
+        let hash = response.chapter.hash
+
+        for (index, fileName) in response.chapter.data.enumerated() {
+            let imageURL = baseURL.appending(components: "data", hash, fileName)
+            let pageEntity = PageEntity(
+                pageIndex: index,
+                quality: .normal,
+                imageURL: imageURL
+            )
+            pageEntity.chapter = chapter
+            modelContext.insert(pageEntity)
+        }
+
+        for (index, fileName) in response.chapter.dataSaver.enumerated() {
+            let imageURL = baseURL.appending(components: "data-saver", hash, fileName)
+            let pageEntity = PageEntity(
+                pageIndex: index,
+                quality: .dataSaver,
+                imageURL: imageURL
+            )
+            pageEntity.chapter = chapter
+            modelContext.insert(pageEntity)
+        }
+
+        try modelContext.save()
+    }
 }

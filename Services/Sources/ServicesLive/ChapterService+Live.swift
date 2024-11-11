@@ -16,11 +16,11 @@ import SwiftData
 
 extension ChapterService: DependencyKey {
     public static var liveValue: Self {
-        @Dependency(\.modelContainer) var modelContainer
-        @Dependency(\.mangaDexAPIClient) var client
-
-        return ChapterService(
+        ChapterService(
             syncLatestChapters: {
+                @Dependency(\.modelContainer) var modelContainer
+                @Dependency(\.mangaDexAPIClient) var client
+
                 let mangaAPIResponseIngestor =
                     MangaAPIResponseIngestor(modelContainer: modelContainer)
                 let chapterAPIResponseIngestor =
@@ -70,6 +70,18 @@ extension ChapterService: DependencyKey {
                     }
 
                 try await chapterAPIResponseIngestor.importChapters(chaptersByMangaID)
+            },
+            syncChapterPages: { chapterID in
+                @Dependency(\.modelContainer) var modelContainer
+                @Dependency(\.mangaDexAPIClient) var client
+
+                let chapterAPIResponseIngestor =
+                    ChapterAPIResponseIngestor(modelContainer: modelContainer)
+
+                let request = MangaDexAPI.AtHome.server(chapterID: chapterID).get()
+                let serverResponse = try await client.send(request).value
+
+                try await chapterAPIResponseIngestor.importPages(from: serverResponse, for: chapterID)
             }
         )
     }

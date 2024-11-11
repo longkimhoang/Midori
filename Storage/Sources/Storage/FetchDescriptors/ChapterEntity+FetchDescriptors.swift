@@ -38,4 +38,14 @@ public extension ChapterEntity {
 
         return descriptor
     }
+
+    static func withID(_ id: UUID) -> FetchDescriptor<ChapterEntity> {
+        var descriptor = FetchDescriptor<ChapterEntity>()
+        descriptor.predicate = #Predicate {
+            $0.manga != nil && $0.id == id
+        }
+        descriptor.fetchLimit = 1
+
+        return descriptor
+    }
 }

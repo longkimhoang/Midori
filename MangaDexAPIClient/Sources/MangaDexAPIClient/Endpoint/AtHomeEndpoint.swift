@@ -10,9 +10,9 @@ import Get
 
 public extension MangaDexAPI {
     struct AtHome: Sendable {
-        let path = "/at-home"
+        static let path = "/at-home"
 
-        public func server(chapterID: UUID) -> Server {
+        public static func server(chapterID: UUID) -> Server {
             Server(path: path + "/server/\(chapterID.uuidString.lowercased())")
         }
     }
