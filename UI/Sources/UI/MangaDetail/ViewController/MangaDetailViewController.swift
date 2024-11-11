@@ -49,6 +49,8 @@ final class MangaDetailViewController: UIViewController {
 
     override func loadView() {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
+        collectionView.remembersLastFocusedIndexPath = true
+        collectionView.delegate = self
 
         view = collectionView
 
@@ -87,6 +89,8 @@ final class MangaDetailViewController: UIViewController {
                     }
 
                     present(UINavigationController(rootViewController: viewController), animated: true)
+                case .chapter:
+                    break
                 }
             }
             .store(in: &cancellables)

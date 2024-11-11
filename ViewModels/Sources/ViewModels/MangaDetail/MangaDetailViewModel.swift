@@ -19,6 +19,7 @@ public final class MangaDetailViewModel {
 
     public enum NavigationDestination {
         case mangaSynopsis
+        case chapter(UUID)
     }
 
     @Dependency(\.modelContainer) private var modelContainer
@@ -69,5 +70,9 @@ public final class MangaDetailViewModel {
 
     public func mangaSynopsisExpanded() {
         navigationDestinationSubject.send(.mangaSynopsis)
+    }
+
+    public func chapterSelected(id: UUID) {
+        navigationDestinationSubject.send(.chapter(id))
     }
 }
