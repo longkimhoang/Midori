@@ -41,7 +41,7 @@ public struct LocalizedString: Equatable, Codable, Sendable, CustomDebugStringCo
 
 public extension LocalizedString {
     /// The language code.
-    struct LanguageCode: RawRepresentable, Hashable, Codable, Sendable {
+    struct LanguageCode: RawRepresentable, Hashable, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {
@@ -59,6 +59,18 @@ public extension LocalizedString.LanguageCode {
 extension LocalizedString.LanguageCode: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self.init(value)
+    }
+}
+
+extension LocalizedString.LanguageCode: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        rawValue = try container.decode(String.self)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
     }
 }
 
