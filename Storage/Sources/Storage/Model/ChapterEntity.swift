@@ -35,4 +35,5 @@ public final class ChapterEntity {
 
     @Relationship public var manga: MangaEntity?
     @Relationship public var scanlationGroup: ScanlationGroupEntity?
+    @Relationship public var pages: [PageEntity] = []
 }

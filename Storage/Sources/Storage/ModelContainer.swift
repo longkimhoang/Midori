@@ -10,7 +10,14 @@ import SwiftData
 
 private extension ModelContainer {
     static func make(inMemory: Bool = false) throws -> ModelContainer {
-        let schema = Schema([MangaEntity.self])
+        let schema = Schema([
+            MangaEntity.self,
+            MangaCoverEntity.self,
+            ChapterEntity.self,
+            AuthorEntity.self,
+            ScanlationGroupEntity.self,
+            PageEntity.self,
+        ])
         let configuration = ModelConfiguration(isStoredInMemoryOnly: inMemory)
         return try ModelContainer(for: schema, configurations: configuration)
     }
