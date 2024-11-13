@@ -8,7 +8,7 @@
 import UIKit
 
 extension HomeViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
             return
         }

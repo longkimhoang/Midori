@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Dependencies
 import MidoriViewModels
 import UIKit
 
@@ -88,9 +89,16 @@ final class MangaDetailViewController: UIViewController {
                         viewController.setContent(synopsis)
                     }
 
-                    present(UINavigationController(rootViewController: viewController), animated: true)
-                case .chapter:
-                    break
+                    show(UINavigationController(rootViewController: viewController), sender: self)
+                case let .chapter(id):
+                    let model = withDependencies(from: viewModel) {
+                        ReaderViewModel(chapterID: id)
+                    }
+                    let viewController = ReaderViewController(model: model)
+
+                    let navigationController = UINavigationController(rootViewController: viewController)
+                    navigationController.modalPresentationStyle = .fullScreen
+                    show(navigationController, sender: self)
                 }
             }
             .store(in: &cancellables)

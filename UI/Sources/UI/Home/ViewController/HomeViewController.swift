@@ -93,7 +93,7 @@ final class HomeViewController: UIViewController {
                         MangaDetailViewModel(mangaID: mangaID)
                     }
 
-                    navigationController?.pushViewController(MangaDetailViewController(model: model), animated: true)
+                    show(MangaDetailViewController(model: model), sender: self)
                 }
             }
             .store(in: &cancellables)
