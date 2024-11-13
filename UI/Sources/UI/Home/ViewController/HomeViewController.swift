@@ -59,8 +59,10 @@ final class HomeViewController: UIViewController {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
         collectionView.prefetchDataSource = self
         collectionView.delegate = self
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        #if !targetEnvironment(macCatalyst)
+            collectionView.refreshControl = UIRefreshControl()
+            collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        #endif
 
         view = collectionView
 
