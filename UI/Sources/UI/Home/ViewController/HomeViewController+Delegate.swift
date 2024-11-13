@@ -9,9 +9,7 @@ import UIKit
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath),
-              let cell = collectionView.cellForItem(at: indexPath)
-        else {
+        guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
 
@@ -21,9 +19,6 @@ extension HomeViewController: UICollectionViewDelegate {
         case .latestChapter:
             break
         case let .recentlyAddedManga(mangaID):
-            if let contentView = cell.contentView as? RecentlyAddedMangaContentView {
-                transitionSourceView = contentView.coverImageView
-            }
             viewModel.mangaSelected(id: mangaID)
         }
     }
