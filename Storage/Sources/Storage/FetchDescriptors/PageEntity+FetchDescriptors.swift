@@ -12,7 +12,7 @@ public extension PageEntity {
     static func withChapterID(_ chapterID: UUID, quality: Quality) -> FetchDescriptor<PageEntity> {
         var descriptor = FetchDescriptor<PageEntity>()
         descriptor.predicate = #Predicate {
-            $0.chapter?.id == chapterID && $0.quality == quality
+            $0.chapter?.id == chapterID && $0.qualityRepresentation == quality.rawValue
         }
         descriptor.sortBy = [.init(\.pageIndex)]
 

@@ -95,10 +95,8 @@ final class MangaDetailViewController: UIViewController {
                         ReaderViewModel(chapterID: id)
                     }
                     let viewController = ReaderViewController(model: model)
-
-                    let navigationController = UINavigationController(rootViewController: viewController)
-                    navigationController.modalPresentationStyle = .fullScreen
-                    show(navigationController, sender: self)
+                    viewController.modalPresentationStyle = .fullScreen
+                    present(viewController, animated: true)
                 }
             }
             .store(in: &cancellables)
