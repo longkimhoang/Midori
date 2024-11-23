@@ -49,7 +49,7 @@ final class ReaderViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
 
-        let item = UINavigationItem(title: "Test reader")
+        let item = UINavigationItem()
         item.leftBarButtonItem = UIBarButtonItem(
             primaryAction: UIAction(
                 title: String(localized: "Close", bundle: .module),
@@ -64,6 +64,7 @@ final class ReaderViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tapGesture)
 
+        try? viewModel.loadChapterFromStorage()
         try? viewModel.loadPagesFromStorage()
 
         viewModel.$controlsVisible
@@ -74,6 +75,12 @@ final class ReaderViewController: UIViewController {
                     self.navigationBar.layer.opacity = controlsVisible ? 1 : 0
                     self.setNeedsStatusBarAppearanceUpdate()
                 }
+            }
+            .store(in: &cancellables)
+
+        viewModel.$chapter.flatMap(\.publisher)
+            .sink { [unowned self] chapter in
+                navigationBar.topItem?.title = chapter.title
             }
             .store(in: &cancellables)
 
@@ -90,6 +97,10 @@ final class ReaderViewController: UIViewController {
         if tap.state == .ended {
             viewModel.controlsVisible.toggle()
         }
+    }
+
+    override func contentScrollView(for edge: NSDirectionalRectEdge) -> UIScrollView? {
+        super.contentScrollView(for: edge)
     }
 }
 

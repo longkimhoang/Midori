@@ -9,6 +9,16 @@ import Foundation
 import MidoriStorage
 
 public extension ReaderViewModel {
+    struct Chapter: Equatable {
+        public let title: String
+        public let manga: String
+
+        public init(title: String, manga: String) {
+            self.title = title
+            self.manga = manga
+        }
+    }
+
     struct Page: Identifiable, Equatable {
         public let id: String
         public let imageURL: URL
@@ -17,6 +27,24 @@ public extension ReaderViewModel {
             self.id = id
             self.imageURL = imageURL
         }
+    }
+}
+
+public extension ReaderViewModel.Chapter {
+    init?(_ entity: ChapterEntity) {
+        guard let manga = entity.manga else {
+            return nil
+        }
+
+        title = switch (entity.chapter, entity.title) {
+        case let (.some(chapter), _):
+            String(localized: "Chapter \(chapter)", bundle: .module)
+        case let (.none, .some(title)):
+            title
+        default:
+            String(localized: "Oneshot", bundle: .module)
+        }
+        self.manga = manga.title
     }
 }
 

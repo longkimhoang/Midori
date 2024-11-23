@@ -18,11 +18,19 @@ public final class ReaderViewModel {
     @Dependency(\.chapterService) private var chapterService
 
     public let chapterID: UUID
+    @Published public var chapter: Chapter?
     @Published public var pages: IdentifiedArrayOf<Page> = []
     @Published public var controlsVisible: Bool = true
 
     public init(chapterID: UUID) {
         self.chapterID = chapterID
+    }
+
+    public func loadChapterFromStorage() throws {
+        let context = modelContainer.mainContext
+
+        let chapterEntity = try context.fetch(ChapterEntity.withID(chapterID)).first
+        chapter = chapterEntity.flatMap(Chapter.init)
     }
 
     public func loadPagesFromStorage() throws {
