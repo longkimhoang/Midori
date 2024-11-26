@@ -7,15 +7,24 @@
 
 import Combine
 import MidoriViewModels
+import Nuke
 import SnapKit
 import UIKit
 
 final class ReaderViewController: UIViewController {
+    enum SectionIdentifier {
+        case main
+    }
+
     @ViewLoading var navigationBar: UINavigationBar
+    @ViewLoading var collectionView: UICollectionView
+    @ViewLoading var pageViewController: UIPageViewController
 
     var cancellables: Set<AnyCancellable> = []
+    var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, String>!
 
     let viewModel: ReaderViewModel
+    let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader, maxConcurrentRequestCount: 5)
 
     init(model: ReaderViewModel) {
         viewModel = model
@@ -29,7 +38,22 @@ final class ReaderViewController: UIViewController {
 
     override func loadView() {
         let view = UIView()
-        view.backgroundColor = .systemBackground
+
+        let pageViewController = UIPageViewController(
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal,
+            options: [.interPageSpacing: 20]
+        )
+        pageViewController.dataSource = self
+
+        view.addSubview(pageViewController.view)
+        pageViewController.view.backgroundColor = .systemBackground
+        pageViewController.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        addChild(pageViewController)
+        pageViewController.didMove(toParent: self)
 
         let navigationBar = UINavigationBar()
         navigationBar.delegate = self
@@ -42,12 +66,11 @@ final class ReaderViewController: UIViewController {
 
         self.view = view
         self.navigationBar = navigationBar
+        self.pageViewController = pageViewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemBackground
 
         let item = UINavigationItem()
         item.leftBarButtonItem = UIBarButtonItem(
@@ -84,6 +107,14 @@ final class ReaderViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        viewModel.$pages
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] _ in
+                updateDataSource()
+            }
+            .store(in: &cancellables)
+
         Task {
             try await viewModel.fetchPages()
         }
@@ -97,10 +128,6 @@ final class ReaderViewController: UIViewController {
         if tap.state == .ended {
             viewModel.controlsVisible.toggle()
         }
-    }
-
-    override func contentScrollView(for edge: NSDirectionalRectEdge) -> UIScrollView? {
-        super.contentScrollView(for: edge)
     }
 }
 
