@@ -12,7 +12,8 @@ import UIKit
 
 final class ReaderPageContentViewController: UIViewController {
     private var imageLoadingTask: Task<Void, Error>?
-    private var didLayoutImageView = false
+    private var imageLoadingEvent: ImageTask.Event?
+    private var didPerformInitialLayout: Bool = false
 
     @ViewLoading private var contentScrollView: UIScrollView
     @ViewLoading private var imageView: UIImageView
@@ -53,28 +54,31 @@ final class ReaderPageContentViewController: UIViewController {
         super.viewDidLoad()
 
         imageLoadingTask = Task {
-            do {
-                let request = ImageRequest(page: page)
-                let image = try await ImagePipeline.midoriReader.image(for: request)
+            let request = ImageRequest(page: page)
+            let imageTask = ImagePipeline.midoriReader.imageTask(with: request)
 
-                imageView.image = image
-                imageView.sizeToFit()
-            } catch {
-                // show error
+            for await event in imageTask.events {
+                imageLoadingEvent = event
+                // we're using contentUnavailableConfiguration to show loading and error states
+                // so we need to update it whenever the image state changes
+                setNeedsUpdateContentUnavailableConfiguration()
+
+                switch event {
+                case let .finished(.success(response)):
+                    imageView.image = response.image
+                    imageView.sizeToFit()
+                    view.setNeedsLayout()
+                default:
+                    break
+                }
             }
         }
     }
 
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
 
-        Task {
-            guard !didLayoutImageView else {
-                return
-            }
-
-            try await imageLoadingTask?.value
-
+        if case .finished(.success) = imageLoadingEvent, !didPerformInitialLayout {
             let scaleX = view.bounds.width / imageView.frame.width
             let scaleY = view.bounds.height / imageView.frame.height
             let minScale = min(scaleX, scaleY)
@@ -83,8 +87,27 @@ final class ReaderPageContentViewController: UIViewController {
             contentScrollView.zoomScale = minScale
 
             imageView.center = view.center
+            // We only need to do this setup once
+            didPerformInitialLayout = true
+        }
+    }
 
-            didLayoutImageView = true
+    override func updateContentUnavailableConfiguration(using _: UIContentUnavailableConfigurationState) {
+        switch imageLoadingEvent {
+        case .finished(.success):
+            contentUnavailableConfiguration = nil
+        case .finished(.failure):
+            var configuration = UIContentUnavailableConfiguration.empty()
+            configuration.text = String(localized: "Failed to fatch image", bundle: .module)
+            configuration.textProperties.font = .preferredFont(forTextStyle: .caption1)
+            configuration.textProperties.color = .secondaryLabel
+            contentUnavailableConfiguration = configuration
+        case .progress, nil:
+            var configuration = UIContentUnavailableConfiguration.loading()
+            configuration.text = nil
+            contentUnavailableConfiguration = configuration
+        default:
+            break
         }
     }
 }
