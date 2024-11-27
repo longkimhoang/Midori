@@ -130,7 +130,19 @@ final class ReaderViewController: UIViewController {
     }
 
     @objc func handleTap(_ tap: UITapGestureRecognizer) {
-        if tap.state == .ended {
+        guard tap.state == .ended else {
+            return
+        }
+
+        guard viewModel.controlsVisible else {
+            viewModel.controlsVisible.toggle()
+            return
+        }
+
+        let location = tap.location(in: view)
+        let navigationBarFrame = navigationBar.convert(navigationBar.bounds, to: view)
+
+        if viewModel.controlsVisible, location.y > navigationBarFrame.maxY {
             viewModel.controlsVisible.toggle()
         }
     }
