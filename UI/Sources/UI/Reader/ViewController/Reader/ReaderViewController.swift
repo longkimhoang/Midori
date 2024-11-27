@@ -16,6 +16,12 @@ final class ReaderViewController: UIViewController {
         case main
     }
 
+    private lazy var tapGesture: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        gesture.delegate = self
+        return gesture
+    }()
+
     @ViewLoading var navigationBar: UINavigationBar
     @ViewLoading var collectionView: UICollectionView
     @ViewLoading var pageViewController: UIPageViewController
@@ -84,7 +90,6 @@ final class ReaderViewController: UIViewController {
 
         navigationBar.setItems([item], animated: false)
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tapGesture)
 
         try? viewModel.loadChapterFromStorage()
@@ -142,3 +147,24 @@ extension ReaderViewController: UIBarPositioningDelegate {
 }
 
 extension ReaderViewController: UINavigationBarDelegate {}
+
+extension ReaderViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        guard gestureRecognizer === tapGesture else {
+            return false
+        }
+
+        // check if other gesture is the double tap gesture of the content page
+        let viewControllers = pageViewController.viewControllers ?? []
+        for case let viewController as ReaderPageContentViewController in viewControllers {
+            if viewController.doubleTapGestureRecognizer === otherGestureRecognizer {
+                return true
+            }
+        }
+
+        return false
+    }
+}

@@ -19,6 +19,11 @@ final class ReaderPageContentViewController: UIViewController {
     @ViewLoading private var imageView: UIImageView
 
     let page: ReaderViewModel.Page
+    private(set) lazy var doubleTapGestureRecognizer: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+        gesture.numberOfTapsRequired = 2
+        return gesture
+    }()
 
     init(page: ReaderViewModel.Page) {
         self.page = page
@@ -40,6 +45,9 @@ final class ReaderPageContentViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.delegate = self
+
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        scrollView.addGestureRecognizer(doubleTapGestureRecognizer)
 
         let imageView = UIImageView()
         scrollView.addSubview(imageView)
@@ -109,6 +117,26 @@ final class ReaderPageContentViewController: UIViewController {
         default:
             break
         }
+    }
+
+    @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+        guard gesture.state == .ended else {
+            return
+        }
+
+        let location = gesture.location(in: imageView)
+        let zoomScale = if contentScrollView.zoomScale == contentScrollView.minimumZoomScale {
+            contentScrollView.maximumZoomScale
+        } else {
+            contentScrollView.minimumZoomScale
+        }
+
+        let width = contentScrollView.frame.width / zoomScale
+        let height = contentScrollView.frame.height / zoomScale
+        let x = location.x - width / 2
+        let y = location.y - height / 2
+
+        contentScrollView.zoom(to: CGRect(x: x, y: y, width: width, height: height), animated: true)
     }
 }
 
