@@ -13,7 +13,7 @@ import UIKit
 final class ReaderPageContentViewController: UIViewController {
     private var imageLoadingTask: Task<Void, Error>?
     private var imageLoadingEvent: ImageTask.Event?
-    private var didPerformInitialLayout: Bool = false
+    private var previousLayoutSize: CGSize?
 
     @ViewLoading private var contentScrollView: UIScrollView
     @ViewLoading private var imageView: UIImageView
@@ -86,9 +86,10 @@ final class ReaderPageContentViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        if case .finished(.success) = imageLoadingEvent, !didPerformInitialLayout {
-            let scaleX = view.bounds.width / imageView.frame.width
-            let scaleY = view.bounds.height / imageView.frame.height
+        if case let .finished(.success(response)) = imageLoadingEvent, previousLayoutSize != view.bounds.size {
+            let image = response.image
+            let scaleX = view.bounds.width / image.size.width
+            let scaleY = view.bounds.height / image.size.height
             let minScale = min(scaleX, scaleY)
 
             contentScrollView.minimumZoomScale = minScale
@@ -96,7 +97,16 @@ final class ReaderPageContentViewController: UIViewController {
 
             imageView.center = view.center
             // We only need to do this setup once
-            didPerformInitialLayout = true
+            previousLayoutSize = view.bounds.size
+        }
+    }
+
+    override func viewWillTransition(
+        to _: CGSize,
+        with coordinator: any UIViewControllerTransitionCoordinator
+    ) {
+        coordinator.animate { _ in
+            self.updateImageViewOffset(in: self.contentScrollView)
         }
     }
 
@@ -118,7 +128,21 @@ final class ReaderPageContentViewController: UIViewController {
             break
         }
     }
+}
 
+extension ReaderPageContentViewController: UIScrollViewDelegate {
+    func viewForZooming(in _: UIScrollView) -> UIView? {
+        imageView
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        updateImageViewOffset(in: scrollView)
+    }
+}
+
+// MARK: - Private
+
+private extension ReaderPageContentViewController {
     @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard gesture.state == .ended else {
             return
@@ -138,14 +162,8 @@ final class ReaderPageContentViewController: UIViewController {
 
         contentScrollView.zoom(to: CGRect(x: x, y: y, width: width, height: height), animated: true)
     }
-}
 
-extension ReaderPageContentViewController: UIScrollViewDelegate {
-    func viewForZooming(in _: UIScrollView) -> UIView? {
-        imageView
-    }
-
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    func updateImageViewOffset(in scrollView: UIScrollView) {
         let height = imageView.bounds.height * scrollView.zoomScale
         let width = imageView.bounds.width * scrollView.zoomScale
 
