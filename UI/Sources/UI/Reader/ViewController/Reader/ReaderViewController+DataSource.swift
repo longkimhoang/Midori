@@ -17,7 +17,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         }
 
         pageViewController.setViewControllers(
-            [ReaderPageContentViewController(page: page)],
+            [makeContentViewController(for: page)],
             direction: .forward,
             animated: animated
         )
@@ -42,7 +42,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
             return nil
         }
 
-        return ReaderPageContentViewController(page: viewModel.pages[nextIndex])
+        return makeContentViewController(for: viewModel.pages[nextIndex])
     }
 
     func pageViewController(
@@ -62,6 +62,18 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         }
 
         let previousIndex = viewModel.pages.index(before: index)
-        return ReaderPageContentViewController(page: viewModel.pages[previousIndex])
+        return makeContentViewController(for: viewModel.pages[previousIndex])
+    }
+
+    private func makeContentViewController(for page: Page) -> ReaderPageContentViewController {
+        let viewController = ReaderPageContentViewController(page: page)
+        viewController.isZoomedInPublisher
+            .removeDuplicates()
+            .sink { [unowned self] isZoomedIn in
+                viewModel.controlsVisible = !isZoomedIn
+            }
+            .store(in: &cancellables)
+
+        return viewController
     }
 }

@@ -5,8 +5,10 @@
 //  Created by Long Kim on 25/11/24.
 //
 
+import Combine
 import MidoriViewModels
 import Nuke
+import Numerics
 import SnapKit
 import UIKit
 
@@ -24,6 +26,9 @@ final class ReaderPageContentViewController: UIViewController {
         gesture.numberOfTapsRequired = 2
         return gesture
     }()
+
+    private lazy var isZoomedInSubject = PassthroughSubject<Bool, Never>()
+    private(set) lazy var isZoomedInPublisher = isZoomedInSubject.eraseToAnyPublisher()
 
     init(page: ReaderViewModel.Page) {
         self.page = page
@@ -137,6 +142,12 @@ extension ReaderPageContentViewController: UIScrollViewDelegate {
 
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         updateImageViewOffset(in: scrollView)
+    }
+
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with _: UIView?, atScale scale: CGFloat) {
+        // scale is floating point so normal equality check is not reliable
+        let isZoomedIn = !scale.isApproximatelyEqual(to: scrollView.minimumZoomScale)
+        isZoomedInSubject.send(isZoomedIn)
     }
 }
 
