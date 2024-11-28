@@ -63,28 +63,15 @@ final class ReaderPageContentViewController: UIViewController {
         self.imageView = imageView
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+
+        guard imageLoadingEvent == nil else {
+            return
+        }
 
         imageLoadingTask = Task {
-            let request = ImageRequest(page: page)
-            let imageTask = ImagePipeline.midoriReader.imageTask(with: request)
-
-            for await event in imageTask.events {
-                imageLoadingEvent = event
-                // we're using contentUnavailableConfiguration to show loading and error states
-                // so we need to update it whenever the image state changes
-                setNeedsUpdateContentUnavailableConfiguration()
-
-                switch event {
-                case let .finished(.success(response)):
-                    imageView.image = response.image
-                    imageView.sizeToFit()
-                    view.setNeedsLayout()
-                default:
-                    break
-                }
-            }
+            await performImageLoading()
         }
     }
 
@@ -115,22 +102,42 @@ final class ReaderPageContentViewController: UIViewController {
         }
     }
 
-    override func updateContentUnavailableConfiguration(using _: UIContentUnavailableConfigurationState) {
+    override var contentUnavailableConfigurationState: UIContentUnavailableConfigurationState {
+        var state = super.contentUnavailableConfigurationState
         switch imageLoadingEvent {
         case .finished(.success):
+            state.imageLoadingState = .success
+        case let .finished(.failure(error)):
+            state.imageLoadingState = .failure(error.localizedDescription)
+        case .progress, nil:
+            state.imageLoadingState = .loading
+        default:
+            break
+        }
+
+        return state
+    }
+
+    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
+        switch state.imageLoadingState {
+        case .success:
             contentUnavailableConfiguration = nil
-        case .finished(.failure):
+        case let .failure(message):
             var configuration = UIContentUnavailableConfiguration.empty()
             configuration.text = String(localized: "Failed to fatch image", bundle: .module)
-            configuration.textProperties.font = .preferredFont(forTextStyle: .caption1)
-            configuration.textProperties.color = .secondaryLabel
+            configuration.secondaryText = message
+            configuration.button.title = String(localized: "Retry", bundle: .module)
+            configuration.buttonProperties.primaryAction = UIAction { [unowned self] _ in
+                imageLoadingTask?.cancel()
+                imageLoadingTask = Task {
+                    await performImageLoading()
+                }
+            }
             contentUnavailableConfiguration = configuration
-        case .progress, nil:
+        case .loading:
             var configuration = UIContentUnavailableConfiguration.loading()
             configuration.text = nil
             contentUnavailableConfiguration = configuration
-        default:
-            break
         }
     }
 }
@@ -154,6 +161,27 @@ extension ReaderPageContentViewController: UIScrollViewDelegate {
 // MARK: - Private
 
 private extension ReaderPageContentViewController {
+    func performImageLoading() async {
+        let request = ImageRequest(page: page)
+        let imageTask = ImagePipeline.midoriReader.imageTask(with: request)
+
+        for await event in imageTask.events {
+            imageLoadingEvent = event
+            // we're using contentUnavailableConfiguration to show loading and error states
+            // so we need to update it whenever the image state changes
+            setNeedsUpdateContentUnavailableConfiguration()
+
+            switch event {
+            case let .finished(.success(response)):
+                imageView.image = response.image
+                imageView.sizeToFit()
+                view.setNeedsLayout()
+            default:
+                break
+            }
+        }
+    }
+
     @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard gesture.state == .ended else {
             return
@@ -185,5 +213,22 @@ private extension ReaderPageContentViewController {
         let offsetY = max(0, deltaY / 2)
 
         imageView.frame.origin = CGPoint(x: offsetX, y: offsetY)
+    }
+}
+
+private extension UIConfigurationStateCustomKey {
+    static let imageLoadingState = UIConfigurationStateCustomKey("com.midori.imageLoadingState")
+}
+
+private extension UIContentUnavailableConfigurationState {
+    enum ImageLoadingState: Hashable {
+        case loading
+        case failure(String)
+        case success
+    }
+
+    var imageLoadingState: ImageLoadingState {
+        get { self[.imageLoadingState] as? ImageLoadingState ?? .loading }
+        set { self[.imageLoadingState] = newValue }
     }
 }

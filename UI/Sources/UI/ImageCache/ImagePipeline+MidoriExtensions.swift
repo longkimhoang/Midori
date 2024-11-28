@@ -25,6 +25,11 @@ extension ImagePipeline {
         )
         configuration.isUsingPrepareForDisplay = true
 
+        // Most chapters have at most around 20-30 pages, so we can limit the amount of images cached in memory,
+        // as users are unlikely to jump back to a previous chapter. And if they do, we can serve from disk cache.
+        let memoryCache = ImageCache(countLimit: 30)
+        configuration.imageCache = memoryCache
+
         return ImagePipeline(configuration: configuration)
     }()
 }

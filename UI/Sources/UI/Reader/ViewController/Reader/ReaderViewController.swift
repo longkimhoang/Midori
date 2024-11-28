@@ -30,7 +30,7 @@ final class ReaderViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, String>!
 
     let viewModel: ReaderViewModel
-    let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader, maxConcurrentRequestCount: 5)
+    let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader)
 
     init(model: ReaderViewModel) {
         viewModel = model
@@ -40,6 +40,11 @@ final class ReaderViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        // When view is dismissed, clear the cache.
+        ImagePipeline.midoriReader.cache.removeAll(caches: .memory)
     }
 
     override func loadView() {
