@@ -37,10 +37,10 @@ public extension ReaderViewModel.Chapter {
         }
 
         title = switch (entity.chapter, entity.title) {
+        case let (_, .some(title)):
+            title
         case let (.some(chapter), _):
             String(localized: "Chapter \(chapter)", bundle: .module)
-        case let (.none, .some(title)):
-            title
         default:
             String(localized: "Oneshot", bundle: .module)
         }
