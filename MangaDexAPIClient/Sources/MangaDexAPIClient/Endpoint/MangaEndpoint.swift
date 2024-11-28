@@ -15,7 +15,7 @@ public extension MangaDexAPI {
         let path: String
 
         public init(id: UUID) {
-            path = "\(Self.basePath)/\(id.uuidString.lowercased())"
+            path = "\(Manga.basePath)/\(id.uuidString.lowercased())"
         }
     }
 }
@@ -75,7 +75,7 @@ public extension MangaDexAPI.Manga {
         }
 
         return Request(
-            path: Self.basePath,
+            path: basePath,
             query: query.map { ($0.name, $0.value) }
         )
     }
@@ -116,5 +116,16 @@ public extension MangaDexAPI.Manga {
         query.append(contentsOf: includes.queryItems)
 
         return Request(path: "\(path)/feed", query: query.map { ($0.name, $0.value) })
+    }
+}
+
+// MARK: - Get Manga volumes & chapters
+
+public extension MangaDexAPI.Manga {
+    func aggregate(groups: [UUID] = []) -> Request<MangaAggregate> {
+        var query: [URLQueryItem] = []
+        query.append(contentsOf: groups.queryItems(name: "groups[]"))
+
+        return Request(path: "\(path)/aggregate", query: query.map { ($0.name, $0.value) })
     }
 }
