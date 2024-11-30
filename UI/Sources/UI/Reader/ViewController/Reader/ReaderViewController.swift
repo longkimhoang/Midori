@@ -126,7 +126,14 @@ final class ReaderViewController: UIViewController {
             .store(in: &cancellables)
 
         Task {
-            try await viewModel.fetchPages()
+            try await withThrowingDiscardingTaskGroup { group in
+                group.addTask {
+                    try await self.viewModel.fetchPages()
+                }
+                group.addTask {
+                    try await self.viewModel.fetchAggregate()
+                }
+            }
         }
     }
 

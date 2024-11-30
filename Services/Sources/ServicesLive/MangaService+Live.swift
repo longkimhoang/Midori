@@ -76,6 +76,28 @@ extension MangaService: DependencyKey {
                 let chapters = try await client.send(request).value.data
 
                 try await ingestor.importChapters([mangaPersistentID: chapters])
+            },
+            syncMangaAggregate: { mangaID, scanlationGroupID in
+                @Dependency(\.mangaDexAPIClient) var client
+                @Dependency(\.modelContainer) var modelContainer
+
+                let context = ModelContext(modelContainer)
+                guard let mangaPersistentID = try context.fetchIdentifiers(MangaEntity.withID(mangaID)).first,
+                      let scanlationGroupPersistentID =
+                      try context.fetchIdentifiers(ScanlationGroupEntity.withID(scanlationGroupID)).first
+                else {
+                    throw MangaServiceError.mangaNotFound
+                }
+
+                let ingestor = MangaAPIResponseIngestor(modelContainer: modelContainer)
+                let request = MangaDexAPI.Manga(id: mangaID).aggregate(groups: [scanlationGroupID])
+                let aggregate = try await client.send(request).value
+
+                try await ingestor.importAggregate(
+                    aggregate,
+                    for: mangaPersistentID,
+                    scanlationGroup: scanlationGroupPersistentID
+                )
             }
         )
     }

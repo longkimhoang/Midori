@@ -44,4 +44,5 @@ public final class MangaEntity {
     @Relationship public var chapters: [ChapterEntity] = []
     @Relationship public var currentCover: MangaCoverEntity?
     @Relationship(inverse: \MangaCoverEntity.manga) public var covers: [MangaCoverEntity] = []
+    @Relationship public var aggregates: [MangaAggregateEntity] = []
 }

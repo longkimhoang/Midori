@@ -8,6 +8,7 @@
 import Foundation
 import MangaDexAPIClient
 import MidoriStorage
+import OrderedCollections
 import SwiftData
 
 @ModelActor
@@ -86,6 +87,30 @@ actor MangaAPIResponseIngestor {
             guard let manga = self[identifier, as: MangaEntity.self] else { return }
             result[manga.id] = identifier
         }
+    }
+
+    func importAggregate(
+        _ aggregate: MangaAggregate,
+        for manga: PersistentIdentifier,
+        scanlationGroup: PersistentIdentifier
+    ) throws {
+        let volumes = aggregate.volumes.values.map { volume in
+            let chapters = volume.chapters.values.map { chapter in
+                MangaAggregateEntity.Chapter(
+                    chapter: chapter.chapter,
+                    id: chapter.id,
+                    others: chapter.others
+                )
+            }
+            return MangaAggregateEntity.Volume(volume: volume.volume, chapters: chapters)
+        }
+
+        let aggregateEntity = MangaAggregateEntity(volumes: volumes)
+        aggregateEntity.manga = self[manga, as: MangaEntity.self]
+        aggregateEntity.scanlationGroup = self[scanlationGroup, as: ScanlationGroupEntity.self]
+
+        modelContext.insert(aggregateEntity)
+        try modelContext.save()
     }
 
     private func persistentIdentifiers(for mangas: [Manga]) throws -> [PersistentIdentifier] {
