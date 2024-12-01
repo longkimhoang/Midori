@@ -11,7 +11,6 @@ import Foundation
 import IdentifiedCollections
 import MidoriServices
 import MidoriStorage
-import SwiftData
 
 @MainActor
 public final class ReaderViewModel {
@@ -54,14 +53,9 @@ public final class ReaderViewModel {
         }
 
         let context = modelContainer.mainContext
-
-        var fetchDescriptor = FetchDescriptor<MangaAggregateEntity>()
-
         let mangaID = chapter.manga.id
         let scanlationGroupID = chapter.scanlationGroup.id
-        fetchDescriptor.predicate = #Predicate {
-            $0.manga?.id == mangaID && $0.scanlationGroup?.id == scanlationGroupID
-        }
+        let fetchDescriptor = MangaAggregateEntity.withMangaID(mangaID, scanlationGroupID: scanlationGroupID)
 
         aggregate = try context.fetch(fetchDescriptor).first.flatMap(Aggregate.init)
     }

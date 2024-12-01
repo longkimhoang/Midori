@@ -48,8 +48,13 @@ public extension ReaderViewModel {
     }
 
     struct Aggregate: Equatable {
-        public struct Volume: Equatable {
-            public let volume: String
+        public enum VolumeIdentifier: Hashable {
+            case none
+            case volume(String)
+        }
+
+        public struct Volume: Identifiable, Equatable {
+            public let id: VolumeIdentifier
             public let chapters: IdentifiedArrayOf<Chapter>
         }
 
@@ -58,7 +63,7 @@ public extension ReaderViewModel {
             public let chapter: String
         }
 
-        public let volumes: IdentifiedArray<String, Volume>
+        public let volumes: IdentifiedArrayOf<Volume>
     }
 }
 
@@ -94,15 +99,52 @@ public extension ReaderViewModel.Page {
 
 public extension ReaderViewModel.Aggregate {
     init(_ entity: MangaAggregateEntity) {
-        let volumes = entity.volumes.map { volume in
+        var volumes = entity.volumes.map { volume in
             var chapters = volume.chapters.map {
                 Chapter(id: $0.id, chapter: $0.chapter)
             }
             chapters.sort(using: KeyPathComparator(\.chapter))
 
-            return Volume(volume: volume.volume, chapters: IdentifiedArray(uniqueElements: chapters))
+            return Volume(id: .init(rawValue: volume.volume), chapters: IdentifiedArray(uniqueElements: chapters))
         }
+        volumes.sort(using: KeyPathComparator(\.id))
 
-        self.init(volumes: IdentifiedArray(uniqueElements: volumes, id: \.volume))
+        self.init(volumes: IdentifiedArray(uniqueElements: volumes))
+    }
+}
+
+extension ReaderViewModel.Aggregate.VolumeIdentifier: RawRepresentable {
+    public typealias RawValue = String
+
+    public init(rawValue: String) {
+        if rawValue == "none" {
+            self = .none
+        } else {
+            self = .volume(rawValue)
+        }
+    }
+
+    public var rawValue: String {
+        switch self {
+        case .none:
+            "none"
+        case let .volume(value):
+            value
+        }
+    }
+}
+
+extension ReaderViewModel.Aggregate.VolumeIdentifier: Comparable {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            false
+        case (.none, .volume):
+            false
+        case (.volume, .none):
+            false
+        case let (.volume(lhs), .volume(rhs)):
+            lhs < rhs
+        }
     }
 }
