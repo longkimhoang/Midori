@@ -70,4 +70,46 @@ public final class ReaderViewModel {
         try await mangaService.syncMangaAggregate(mangaID: mangaID, scanlationGroupID: scanlationGroupID)
         try loadAggregateFromStrorage()
     }
+
+    public var nextChapterIdentifier: UUID? {
+        guard let aggregate else {
+            return nil
+        }
+
+        for volume in aggregate.volumes {
+            guard var chapterIndex = volume.chapters.index(id: chapterID) else {
+                continue
+            }
+
+            volume.chapters.formIndex(after: &chapterIndex)
+            guard chapterIndex < volume.chapters.endIndex else {
+                continue
+            }
+
+            return volume.chapters[chapterIndex].id
+        }
+
+        return nil
+    }
+
+    public var previousChapterIdentifier: UUID? {
+        guard let aggregate else {
+            return nil
+        }
+
+        for volume in aggregate.volumes {
+            guard var chapterIndex = volume.chapters.index(id: chapterID) else {
+                continue
+            }
+
+            volume.chapters.formIndex(before: &chapterIndex)
+            guard chapterIndex >= volume.chapters.startIndex else {
+                continue
+            }
+
+            return volume.chapters[chapterIndex].id
+        }
+
+        return nil
+    }
 }
