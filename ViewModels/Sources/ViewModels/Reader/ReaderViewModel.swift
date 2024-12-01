@@ -18,7 +18,7 @@ public final class ReaderViewModel {
     @Dependency(\.chapterService) private var chapterService
     @Dependency(\.mangaService) private var mangaService
 
-    public let chapterID: UUID
+    @Published public var chapterID: UUID
     @Published public var chapter: Chapter?
     @Published public var pages: IdentifiedArrayOf<Page> = []
     @Published public var aggregate: Aggregate?
@@ -71,7 +71,7 @@ public final class ReaderViewModel {
         try loadAggregateFromStrorage()
     }
 
-    public var nextChapterIdentifier: UUID? {
+    public var nextChapter: Aggregate.Chapter? {
         guard let aggregate else {
             return nil
         }
@@ -86,28 +86,7 @@ public final class ReaderViewModel {
                 continue
             }
 
-            return volume.chapters[chapterIndex].id
-        }
-
-        return nil
-    }
-
-    public var previousChapterIdentifier: UUID? {
-        guard let aggregate else {
-            return nil
-        }
-
-        for volume in aggregate.volumes {
-            guard var chapterIndex = volume.chapters.index(id: chapterID) else {
-                continue
-            }
-
-            volume.chapters.formIndex(before: &chapterIndex)
-            guard chapterIndex >= volume.chapters.startIndex else {
-                continue
-            }
-
-            return volume.chapters[chapterIndex].id
+            return volume.chapters[chapterIndex]
         }
 
         return nil

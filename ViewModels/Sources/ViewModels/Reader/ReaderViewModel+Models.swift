@@ -13,10 +13,12 @@ public extension ReaderViewModel {
     struct Manga: Equatable {
         public let id: UUID
         public let title: String
+        public let coverImageURL: URL?
 
-        public init(id: UUID, title: String) {
+        public init(id: UUID, title: String, coverImageURL: URL?) {
             self.id = id
             self.title = title
+            self.coverImageURL = coverImageURL
         }
     }
 
@@ -81,7 +83,11 @@ public extension ReaderViewModel.Chapter {
         default:
             String(localized: "Oneshot", bundle: .module)
         }
-        self.manga = ReaderViewModel.Manga(id: manga.id, title: manga.title)
+        self.manga = ReaderViewModel.Manga(
+            id: manga.id,
+            title: manga.title,
+            coverImageURL: manga.currentCover?.imageURLs[.smallThumbnail]
+        )
         self.scanlationGroup = ReaderViewModel.ScanlationGroup(id: scanlationGroup.id, name: scanlationGroup.name)
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import MidoriViewModels
+import SwiftUI
 import UIKit
 
 extension ReaderViewController: UIPageViewControllerDataSource {
@@ -39,7 +40,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
 
         let nextIndex = viewModel.pages.index(after: index)
         guard nextIndex < viewModel.pages.endIndex else {
-            return nil
+            return makeNextChapterViewController()
         }
 
         return makeContentViewController(for: viewModel.pages[nextIndex])
@@ -75,5 +76,25 @@ extension ReaderViewController: UIPageViewControllerDataSource {
             .store(in: &cancellables)
 
         return viewController
+    }
+
+    private func makeNextChapterViewController() -> UIViewController? {
+        guard let chapter = viewModel.chapter else {
+            return nil
+        }
+
+        let nextChapterView = ReaderNextChapterView(
+            manga: chapter.manga.title,
+            currentChapter: chapter.title,
+            nextChapter: viewModel.nextChapter?.chapter,
+            coverImageURL: chapter.manga.coverImageURL,
+            navigateToNextChapter: { [unowned self] in
+                viewModel
+            }
+        )
+        let hostingController = UIHostingController(rootView: nextChapterView)
+        hostingController.sizingOptions = [.intrinsicContentSize]
+
+        return hostingController
     }
 }

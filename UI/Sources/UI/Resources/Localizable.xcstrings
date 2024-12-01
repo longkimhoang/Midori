@@ -10,6 +10,9 @@
     "Failed to fatch image" : {
 
     },
+    "Go to chapter %@" : {
+
+    },
     "Home" : {
 
     },
@@ -19,6 +22,9 @@
     "More" : {
 
     },
+    "No newer chapters available" : {
+
+    },
     "Popular new titles" : {
 
     },
@@ -26,6 +32,9 @@
 
     },
     "Retry" : {
+
+    },
+    "Return to manga" : {
 
     },
     "Views the full description of the manga." : {

@@ -29,6 +29,7 @@ let package = Package(
             dependencies: [
                 .product(name: "MidoriViewModels", package: "ViewModels"),
                 .product(name: "Nuke", package: "Nuke"),
+                .product(name: "NukeUI", package: "Nuke"),
                 .product(name: "SnapKit", package: "SnapKit"),
                 .product(name: "Numerics", package: "swift-numerics"),
             ]
