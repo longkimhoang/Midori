@@ -91,4 +91,18 @@ public final class ReaderViewModel {
 
         return nil
     }
+
+    public func switchChapter(to chapterID: UUID) async {
+        self.chapterID = chapterID
+
+        do {
+            try loadChapterFromStorage()
+            try loadPagesFromStorage()
+
+            try await withThrowingDiscardingTaskGroup { group in
+                group.addTask { try await self.fetchPages() }
+                group.addTask { try await self.fetchAggregate() }
+            }
+        } catch {}
+    }
 }

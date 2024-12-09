@@ -26,6 +26,7 @@ final class ReaderViewController: UIViewController {
     @ViewLoading var collectionView: UICollectionView
     @ViewLoading var pageViewController: UIPageViewController
 
+    var chapterFetchingTask: Task<Void, Error>?
     var cancellables: Set<AnyCancellable> = []
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, String>!
 
@@ -43,6 +44,7 @@ final class ReaderViewController: UIViewController {
     }
 
     deinit {
+        chapterFetchingTask?.cancel()
         // When view is dismissed, clear the cache.
         ImagePipeline.midoriReader.cache.removeAll(caches: .memory)
     }
@@ -125,7 +127,7 @@ final class ReaderViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Task {
+        chapterFetchingTask = Task {
             try await withThrowingDiscardingTaskGroup { group in
                 group.addTask {
                     try await self.viewModel.fetchPages()

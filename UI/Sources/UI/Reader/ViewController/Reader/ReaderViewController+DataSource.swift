@@ -89,7 +89,13 @@ extension ReaderViewController: UIPageViewControllerDataSource {
             nextChapter: viewModel.nextChapter?.chapter,
             coverImageURL: chapter.manga.coverImageURL,
             navigateToNextChapter: { [unowned self] in
-                viewModel
+                chapterFetchingTask?.cancel()
+                chapterFetchingTask = Task {
+                    guard let nextChapter = viewModel.nextChapter else {
+                        return
+                    }
+                    await viewModel.switchChapter(to: nextChapter.id)
+                }
             }
         )
         let hostingController = UIHostingController(rootView: nextChapterView)
