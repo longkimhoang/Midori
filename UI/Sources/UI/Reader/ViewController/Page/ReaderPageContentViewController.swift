@@ -84,6 +84,10 @@ final class ReaderPageContentViewController: UIViewController {
             let scaleY = view.bounds.height / image.size.height
             let minScale = min(scaleX, scaleY)
 
+            if minScale >= 1 {
+                contentScrollView.maximumZoomScale = minScale * 1.5
+            }
+
             contentScrollView.minimumZoomScale = minScale
             contentScrollView.zoomScale = minScale
 

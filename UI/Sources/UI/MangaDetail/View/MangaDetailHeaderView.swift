@@ -137,12 +137,13 @@ private struct MangaCoverModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .containerRelativeFrame(
-                .horizontal,
-                count: horizontalSizeClass == .regular ? 4 : 3,
-                span: 1,
-                spacing: 0
-            )
+            .containerRelativeFrame(.horizontal) { length, _ in
+                if horizontalSizeClass == .regular {
+                    min(length * 0.25, 160)
+                } else {
+                    length * 1 / 3
+                }
+            }
             .background(
                 .background.shadow(.drop(color: Color(white: 0, opacity: 0.15), radius: 8, y: 12)),
                 in: .rect(cornerRadius: 8)
