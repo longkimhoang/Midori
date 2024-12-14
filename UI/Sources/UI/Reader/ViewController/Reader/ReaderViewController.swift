@@ -8,8 +8,10 @@
 import Combine
 import MidoriViewModels
 import Nuke
-import SnapKit
+import Numerics
+import SwiftNavigation
 import UIKit
+import UIKitNavigation
 
 final class ReaderViewController: UIViewController {
     enum SectionIdentifier {
@@ -30,7 +32,7 @@ final class ReaderViewController: UIViewController {
     var cancellables: Set<AnyCancellable> = []
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, String>!
 
-    let viewModel: ReaderViewModel
+    @UIBindable var viewModel: ReaderViewModel
     let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader)
 
     init(model: ReaderViewModel) {
@@ -102,31 +104,6 @@ final class ReaderViewController: UIViewController {
         try? viewModel.loadChapterFromStorage()
         try? viewModel.loadPagesFromStorage()
 
-        viewModel.$controlsVisible
-            .dropFirst()
-            .receive(on: RunLoop.main)
-            .sink { [unowned self] controlsVisible in
-                UIView.animate(withDuration: 0.2) {
-                    self.navigationBar.layer.opacity = controlsVisible ? 1 : 0
-                    self.setNeedsStatusBarAppearanceUpdate()
-                }
-            }
-            .store(in: &cancellables)
-
-        viewModel.$chapter.flatMap(\.publisher)
-            .sink { [unowned self] chapter in
-                navigationBar.topItem?.title = chapter.title
-            }
-            .store(in: &cancellables)
-
-        viewModel.$pages
-            .dropFirst()
-            .receive(on: RunLoop.main)
-            .sink { [unowned self] _ in
-                updateDataSource()
-            }
-            .store(in: &cancellables)
-
         chapterFetchingTask = Task {
             try await withThrowingDiscardingTaskGroup { group in
                 group.addTask {
@@ -136,6 +113,21 @@ final class ReaderViewController: UIViewController {
                     try await self.viewModel.fetchAggregate()
                 }
             }
+        }
+
+        observe { [unowned self] in
+            navigationBar.topItem?.title = viewModel.chapter?.title
+
+            let navigationBarOpacity: Float = viewModel.controlsVisible ? 1 : 0
+            if !navigationBar.layer.opacity.isApproximatelyEqual(to: navigationBarOpacity) {
+                navigationBar.layer.opacity = navigationBarOpacity
+                setNeedsStatusBarAppearanceUpdate()
+            }
+        }
+
+        observe { [unowned self] in
+            let _ = viewModel.pages
+            updateDataSource()
         }
     }
 
@@ -148,8 +140,12 @@ final class ReaderViewController: UIViewController {
             return
         }
 
+        let animation = UIKitAnimation.easeInOut(duration: 0.2)
+
         guard viewModel.controlsVisible else {
-            viewModel.controlsVisible.toggle()
+            withUIKitAnimation(animation) {
+                viewModel.controlsVisible.toggle()
+            }
             return
         }
 
@@ -157,7 +153,9 @@ final class ReaderViewController: UIViewController {
         let navigationBarFrame = navigationBar.convert(navigationBar.bounds, to: view)
 
         if viewModel.controlsVisible, location.y > navigationBarFrame.maxY {
-            viewModel.controlsVisible.toggle()
+            withUIKitAnimation(animation) {
+                viewModel.controlsVisible.toggle()
+            }
         }
     }
 }

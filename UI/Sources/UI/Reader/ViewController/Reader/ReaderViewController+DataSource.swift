@@ -8,6 +8,7 @@
 import MidoriViewModels
 import SwiftUI
 import UIKit
+import UIKitNavigation
 
 extension ReaderViewController: UIPageViewControllerDataSource {
     typealias Page = ReaderViewModel.Page
@@ -71,7 +72,9 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         viewController.isZoomedInPublisher
             .removeDuplicates()
             .sink { [unowned self] isZoomedIn in
-                viewModel.controlsVisible = !isZoomedIn
+                withUIKitAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.controlsVisible = !isZoomedIn
+                }
             }
             .store(in: &cancellables)
 

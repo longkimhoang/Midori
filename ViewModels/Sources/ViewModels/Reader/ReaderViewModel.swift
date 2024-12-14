@@ -11,18 +11,19 @@ import Foundation
 import IdentifiedCollections
 import MidoriServices
 import MidoriStorage
+import Observation
 
-@MainActor
-public final class ReaderViewModel {
-    @Dependency(\.modelContainer) private var modelContainer
-    @Dependency(\.chapterService) private var chapterService
-    @Dependency(\.mangaService) private var mangaService
+@Observable
+@MainActor public final class ReaderViewModel {
+    @ObservationIgnored @Dependency(\.modelContainer) private var modelContainer
+    @ObservationIgnored @Dependency(\.chapterService) private var chapterService
+    @ObservationIgnored @Dependency(\.mangaService) private var mangaService
 
-    @Published public var chapterID: UUID
-    @Published public var chapter: Chapter?
-    @Published public var pages: IdentifiedArrayOf<Page> = []
-    @Published public var aggregate: Aggregate?
-    @Published public var controlsVisible: Bool = true
+    public var chapterID: UUID
+    public var chapter: Chapter?
+    public var pages: IdentifiedArrayOf<Page> = []
+    public var aggregate: Aggregate?
+    public var controlsVisible: Bool = true
 
     public init(chapterID: UUID) {
         self.chapterID = chapterID
@@ -39,7 +40,13 @@ public final class ReaderViewModel {
         let context = modelContainer.mainContext
 
         let pageEntities = try context.fetch(PageEntity.withChapterID(chapterID, quality: .normal))
-        pages = IdentifiedArray(uniqueElements: pageEntities.compactMap(Page.init))
+        let pages = IdentifiedArray(uniqueElements: pageEntities.compactMap(Page.init))
+
+        guard pages != self.pages else {
+            return
+        }
+
+        self.pages = pages
     }
 
     public func fetchPages() async throws {
