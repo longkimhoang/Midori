@@ -5,27 +5,26 @@
 //  Created by Long Kim on 14/12/24.
 //
 
+import Combine
 import MidoriViewModels
-import SwiftNavigation
 import UIKit
 
 final class MangaAggregateViewController: UIViewController {
     typealias VolumeIdentifier = ReaderViewModel.Aggregate.VolumeIdentifier
     typealias Chapter = ReaderViewModel.Aggregate.Chapter
 
-    struct ItemIdentifier: Hashable {
-        let volume: VolumeIdentifier
-        let chapter: UUID
-    }
-
     @ViewLoading var collectionView: UICollectionView
 
-    var dataSource: UICollectionViewDiffableDataSource<VolumeIdentifier, ItemIdentifier>!
+    var dataSource: UICollectionViewDiffableDataSource<VolumeIdentifier, UUID>!
+    var cancellables: Set<AnyCancellable> = []
+
     let viewModel: MangaAggregateViewModel
 
     init(model: MangaAggregateViewModel) {
         viewModel = model
         super.init(nibName: nil, bundle: nil)
+
+        navigationItem.title = String(localized: "Chapters")
     }
 
     @available(*, unavailable)
@@ -39,6 +38,7 @@ final class MangaAggregateViewController: UIViewController {
 
         let layout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.delegate = self
 
         view = collectionView
         self.collectionView = collectionView
@@ -48,15 +48,13 @@ final class MangaAggregateViewController: UIViewController {
         super.viewDidLoad()
 
         setupDataSource()
+        configureDataSource()
 
-        observe { [unowned self] in
-            let _ = viewModel.selectedChapter
-            highlightSelectedChapter()
-        }
-
-        observe { [unowned self] in
-            let _ = viewModel.aggregate
-            configureDataSource()
-        }
+        viewModel.$selectedChapter
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                highlightSelectedChapter()
+            }
+            .store(in: &cancellables)
     }
 }

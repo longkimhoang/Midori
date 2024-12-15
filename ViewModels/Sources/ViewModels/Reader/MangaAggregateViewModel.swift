@@ -7,10 +7,10 @@
 
 import Foundation
 
-@Observable
-@MainActor public final class MangaAggregateViewModel: Identifiable {
+@MainActor
+public final class MangaAggregateViewModel: Identifiable {
     public let aggregate: ReaderViewModel.Aggregate
-    public var selectedChapter: UUID
+    @Published public var selectedChapter: UUID
 
     public init(aggregate: ReaderViewModel.Aggregate, selectedChapter: UUID) {
         self.aggregate = aggregate

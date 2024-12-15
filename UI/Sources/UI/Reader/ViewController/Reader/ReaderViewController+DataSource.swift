@@ -8,7 +8,6 @@
 import MidoriViewModels
 import SwiftUI
 import UIKit
-import UIKitNavigation
 
 extension ReaderViewController: UIPageViewControllerDataSource {
     typealias Page = ReaderViewModel.Page
@@ -21,7 +20,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         pageViewController.setViewControllers(
             [makeContentViewController(for: page)],
             direction: .forward,
-            animated: animated
+            animated: false
         )
 
         prefetchImages(for: viewModel.pages.elements)
@@ -71,12 +70,8 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         let viewController = ReaderPageContentViewController(page: page)
         viewController.isZoomedInPublisher
             .removeDuplicates()
-            .sink { [unowned self] isZoomedIn in
-                withUIKitAnimation(.easeInOut(duration: 0.2)) {
-                    viewModel.controlsVisible = !isZoomedIn
-                }
-            }
-            .store(in: &cancellables)
+            .map { !$0 }
+            .assign(to: &viewModel.$controlsVisible)
 
         return viewController
     }

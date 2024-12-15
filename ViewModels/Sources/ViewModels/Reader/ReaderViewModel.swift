@@ -13,19 +13,16 @@ import MidoriServices
 import MidoriStorage
 import Observation
 
-@Observable
 @MainActor public final class ReaderViewModel {
-    @ObservationIgnored @Dependency(\.modelContainer) private var modelContainer
-    @ObservationIgnored @Dependency(\.chapterService) private var chapterService
-    @ObservationIgnored @Dependency(\.mangaService) private var mangaService
+    @Dependency(\.modelContainer) private var modelContainer
+    @Dependency(\.chapterService) private var chapterService
+    @Dependency(\.mangaService) private var mangaService
 
-    public var chapterID: UUID
-    public var chapter: Chapter?
-    public var pages: IdentifiedArrayOf<Page> = []
-    public var aggregate: Aggregate?
-    public var controlsVisible: Bool = true
-
-    public var mangaAggregateViewModel: MangaAggregateViewModel?
+    @Published public var chapterID: UUID
+    @Published public var chapter: Chapter?
+    @Published public var pages: IdentifiedArrayOf<Page> = []
+    @Published public var aggregate: Aggregate?
+    @Published public var controlsVisible: Bool = true
 
     public init(chapterID: UUID) {
         self.chapterID = chapterID
@@ -113,12 +110,5 @@ import Observation
                 group.addTask { try await self.fetchAggregate() }
             }
         } catch {}
-    }
-
-    public func showMangaAggregate() {
-        guard let aggregate else {
-            return
-        }
-        mangaAggregateViewModel = MangaAggregateViewModel(aggregate: aggregate, selectedChapter: chapterID)
     }
 }

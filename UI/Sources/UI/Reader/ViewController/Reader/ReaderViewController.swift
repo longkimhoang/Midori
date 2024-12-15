@@ -9,9 +9,7 @@ import Combine
 import MidoriViewModels
 import Nuke
 import Numerics
-import SwiftNavigation
 import UIKit
-import UIKitNavigation
 
 final class ReaderViewController: UIViewController {
     enum SectionIdentifier {
@@ -32,7 +30,7 @@ final class ReaderViewController: UIViewController {
     var cancellables: Set<AnyCancellable> = []
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, String>!
 
-    @UIBindable var viewModel: ReaderViewModel
+    let viewModel: ReaderViewModel
     let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader)
 
     init(model: ReaderViewModel) {
@@ -102,7 +100,7 @@ final class ReaderViewController: UIViewController {
                 title: String(localized: "Show manga chapters list", bundle: .module),
                 image: UIImage(systemName: "list.bullet")
             ) { [unowned self] _ in
-                viewModel.showMangaAggregate()
+                presentMangaAggregate()
             }
         )
 
@@ -124,35 +122,25 @@ final class ReaderViewController: UIViewController {
             }
         }
 
-        observe { [unowned self] in
-            navigationBar.topItem?.title = viewModel.chapter?.title
+        viewModel.$chapter
+            .compactMap { $0?.title }
+            .assign(to: \.title, on: navigationBar.topItem!)
+            .store(in: &cancellables)
 
-            let navigationBarOpacity: Float = viewModel.controlsVisible ? 1 : 0
-            if !navigationBar.layer.opacity.isApproximatelyEqual(to: navigationBarOpacity) {
-                navigationBar.layer.opacity = navigationBarOpacity
+        viewModel.$controlsVisible
+            .receive(on: DispatchQueue.main.animate(withDuration: 0.2))
+            .sink { [unowned self] visible in
+                navigationBar.layer.opacity = visible ? 1 : 0
                 setNeedsStatusBarAppearanceUpdate()
             }
-        }
+            .store(in: &cancellables)
 
-        observe { [unowned self] in
-            let _ = viewModel.pages
-            updateDataSource()
-        }
-
-        present(item: $viewModel.mangaAggregateViewModel) { [unowned self] model in
-            let viewController = MangaAggregateViewController(model: model)
-            viewController.modalPresentationStyle = .popover
-            viewController.popoverPresentationController?.sourceItem = navigationBar.topItem?.rightBarButtonItem
-            viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                systemItem: .close,
-                primaryAction: UIAction { [unowned viewController] _ in
-                    viewController.dismiss(animated: true)
-                }
-            )
-            viewController.navigationItem.title = viewModel.chapter?.manga.title
-
-            return UINavigationController(rootViewController: viewController)
-        }
+        viewModel.$pages
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                updateDataSource()
+            }
+            .store(in: &cancellables)
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -164,12 +152,8 @@ final class ReaderViewController: UIViewController {
             return
         }
 
-        let animation = UIKitAnimation.easeInOut(duration: 0.2)
-
         guard viewModel.controlsVisible else {
-            withUIKitAnimation(animation) {
-                viewModel.controlsVisible.toggle()
-            }
+            viewModel.controlsVisible.toggle()
             return
         }
 
@@ -177,10 +161,40 @@ final class ReaderViewController: UIViewController {
         let navigationBarFrame = navigationBar.convert(navigationBar.bounds, to: view)
 
         if viewModel.controlsVisible, location.y > navigationBarFrame.maxY {
-            withUIKitAnimation(animation) {
-                viewModel.controlsVisible.toggle()
-            }
+            viewModel.controlsVisible.toggle()
         }
+    }
+
+    func presentMangaAggregate() {
+        guard let aggregate = viewModel.aggregate else {
+            return
+        }
+
+        let model = MangaAggregateViewModel(aggregate: aggregate, selectedChapter: viewModel.chapterID)
+        let viewController = MangaAggregateViewController(model: model)
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            systemItem: .close,
+            primaryAction: UIAction { [unowned viewController] _ in
+                viewController.dismiss(animated: true)
+            }
+        )
+
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .popover
+        navigationController.popoverPresentationController?.sourceItem = navigationBar.topItem?.rightBarButtonItem
+
+        model.$selectedChapter
+            .dropFirst()
+            .sink { [unowned self] selectedChapter in
+                chapterFetchingTask?.cancel()
+                chapterFetchingTask = Task {
+                    await viewModel.switchChapter(to: selectedChapter)
+                }
+                dismiss(animated: true)
+            }
+            .store(in: &cancellables)
+
+        present(navigationController, animated: true)
     }
 }
 

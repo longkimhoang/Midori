@@ -109,11 +109,11 @@ public extension ReaderViewModel.Aggregate {
             var chapters = volume.chapters.map {
                 Chapter(id: $0.id, chapter: $0.chapter)
             }
-            chapters.sort(using: KeyPathComparator(\.chapter))
+            chapters.sort(using: KeyPathComparator(\.chapter, order: .reverse))
 
             return Volume(id: .init(rawValue: volume.volume), chapters: IdentifiedArray(uniqueElements: chapters))
         }
-        volumes.sort(using: KeyPathComparator(\.id))
+        volumes.sort(using: KeyPathComparator(\.id, order: .reverse))
 
         self.init(volumes: IdentifiedArray(uniqueElements: volumes))
     }
@@ -148,7 +148,7 @@ extension ReaderViewModel.Aggregate.VolumeIdentifier: Comparable {
         case (.none, .volume):
             false
         case (.volume, .none):
-            false
+            true
         case let (.volume(lhs), .volume(rhs)):
             lhs < rhs
         }

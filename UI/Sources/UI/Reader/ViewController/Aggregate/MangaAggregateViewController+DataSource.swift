@@ -22,8 +22,9 @@ extension MangaAggregateViewController {
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
             [unowned self] collectionView, indexPath, itemIdentifier in
 
-            guard let volume = viewModel.aggregate.volumes[id: itemIdentifier.volume],
-                  let chapter = volume.chapters[id: itemIdentifier.chapter]
+            guard let volumeID = dataSource.sectionIdentifier(for: indexPath.section),
+                  let volume = viewModel.aggregate.volumes[id: volumeID],
+                  let chapter = volume.chapters[id: itemIdentifier]
             else {
                 return nil
             }
@@ -66,12 +67,11 @@ extension MangaAggregateViewController {
     }
 
     func configureDataSource() {
-        var snapshot = NSDiffableDataSourceSnapshot<VolumeIdentifier, ItemIdentifier>()
+        var snapshot = NSDiffableDataSourceSnapshot<VolumeIdentifier, UUID>()
         snapshot.appendSections(viewModel.aggregate.volumes.ids.elements)
 
         for volume in viewModel.aggregate.volumes {
-            let itemIdentifiers = volume.chapters.ids.map { ItemIdentifier(volume: volume.id, chapter: $0) }
-            snapshot.appendItems(itemIdentifiers, toSection: volume.id)
+            snapshot.appendItems(volume.chapters.ids.elements, toSection: volume.id)
         }
 
         dataSource.apply(snapshot) { [weak self] in
@@ -80,15 +80,10 @@ extension MangaAggregateViewController {
     }
 
     func highlightSelectedChapter() {
-        guard let volume = viewModel.aggregate.volumes.first(
-            where: { $0.chapters.ids.contains(viewModel.selectedChapter) }
-        ) else {
+        guard let indexPath = dataSource.indexPath(for: viewModel.selectedChapter) else {
             return
         }
 
-        let itemIdentifier = ItemIdentifier(volume: volume.id, chapter: viewModel.selectedChapter)
-        if let indexPath = dataSource.indexPath(for: itemIdentifier) {
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
-        }
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
     }
 }
