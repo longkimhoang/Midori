@@ -97,6 +97,15 @@ final class ReaderViewController: UIViewController {
             }
         )
 
+        item.rightBarButtonItem = UIBarButtonItem(
+            primaryAction: UIAction(
+                title: String(localized: "Show manga chapters list", bundle: .module),
+                image: UIImage(systemName: "list.bullet")
+            ) { [unowned self] _ in
+                viewModel.showMangaAggregate()
+            }
+        )
+
         navigationBar.setItems([item], animated: false)
 
         view.addGestureRecognizer(tapGesture)
@@ -128,6 +137,21 @@ final class ReaderViewController: UIViewController {
         observe { [unowned self] in
             let _ = viewModel.pages
             updateDataSource()
+        }
+
+        present(item: $viewModel.mangaAggregateViewModel) { [unowned self] model in
+            let viewController = MangaAggregateViewController(model: model)
+            viewController.modalPresentationStyle = .popover
+            viewController.popoverPresentationController?.sourceItem = navigationBar.topItem?.rightBarButtonItem
+            viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                systemItem: .close,
+                primaryAction: UIAction { [unowned viewController] _ in
+                    viewController.dismiss(animated: true)
+                }
+            )
+            viewController.navigationItem.title = viewModel.chapter?.manga.title
+
+            return UINavigationController(rootViewController: viewController)
         }
     }
 

@@ -4,6 +4,9 @@
     "authors unavailable" : {
 
     },
+    "Chapter %@" : {
+
+    },
     "Close" : {
 
     },
@@ -25,6 +28,9 @@
     "No newer chapters available" : {
 
     },
+    "No volume" : {
+
+    },
     "Popular new titles" : {
 
     },
@@ -37,7 +43,13 @@
     "Return to manga" : {
 
     },
+    "Show manga chapters list" : {
+
+    },
     "Views the full description of the manga." : {
+
+    },
+    "Volume %@" : {
 
     }
   },

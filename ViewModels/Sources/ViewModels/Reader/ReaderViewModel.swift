@@ -25,6 +25,8 @@ import Observation
     public var aggregate: Aggregate?
     public var controlsVisible: Bool = true
 
+    public var mangaAggregateViewModel: MangaAggregateViewModel?
+
     public init(chapterID: UUID) {
         self.chapterID = chapterID
     }
@@ -111,5 +113,12 @@ import Observation
                 group.addTask { try await self.fetchAggregate() }
             }
         } catch {}
+    }
+
+    public func showMangaAggregate() {
+        guard let aggregate else {
+            return
+        }
+        mangaAggregateViewModel = MangaAggregateViewModel(aggregate: aggregate, selectedChapter: chapterID)
     }
 }

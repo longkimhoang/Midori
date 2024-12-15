@@ -49,18 +49,18 @@ public extension ReaderViewModel {
         }
     }
 
-    struct Aggregate: Equatable {
-        public enum VolumeIdentifier: Hashable {
+    struct Aggregate: Equatable, Sendable {
+        public enum VolumeIdentifier: Hashable, Sendable {
             case none
             case volume(String)
         }
 
-        public struct Volume: Identifiable, Equatable {
+        public struct Volume: Identifiable, Equatable, Sendable {
             public let id: VolumeIdentifier
             public let chapters: IdentifiedArrayOf<Chapter>
         }
 
-        public struct Chapter: Identifiable, Equatable {
+        public struct Chapter: Identifiable, Equatable, Sendable {
             public let id: UUID
             public let chapter: String
         }
