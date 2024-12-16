@@ -23,6 +23,7 @@ import Observation
     @Published public var pages: IdentifiedArrayOf<Page> = []
     @Published public var aggregate: Aggregate?
     @Published public var controlsVisible: Bool = true
+    @Published public var displayingPageIDs: [Page.ID] = []
 
     public init(chapterID: UUID) {
         self.chapterID = chapterID

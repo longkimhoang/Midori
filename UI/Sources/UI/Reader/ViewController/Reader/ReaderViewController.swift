@@ -79,6 +79,7 @@ final class ReaderViewController: UIViewController {
             options: [.interPageSpacing: 20]
         )
         pageViewController.dataSource = self
+        pageViewController.delegate = self
 
         view.addSubview(pageViewController.view)
         pageViewController.view.backgroundColor = .systemBackground
