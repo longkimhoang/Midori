@@ -67,13 +67,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
     }
 
     private func makeContentViewController(for page: Page) -> ReaderPageContentViewController {
-        let viewController = ReaderPageContentViewController(page: page)
-        viewController.isZoomedInPublisher
-            .removeDuplicates()
-            .map { !$0 }
-            .assign(to: &viewModel.$controlsVisible)
-
-        return viewController
+        ReaderPageContentViewController(page: page)
     }
 
     private func makeNextChapterViewController() -> UIViewController? {

@@ -22,7 +22,6 @@ final class ReaderViewController: UIViewController {
         return gesture
     }()
 
-    @ViewLoading var navigationBar: UINavigationBar
     @ViewLoading var collectionView: UICollectionView
     @ViewLoading var pageViewController: UIPageViewController
 
@@ -36,6 +35,28 @@ final class ReaderViewController: UIViewController {
     init(model: ReaderViewModel) {
         viewModel = model
         super.init(nibName: nil, bundle: nil)
+
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            primaryAction: UIAction(
+                title: String(localized: "Close", bundle: .module),
+                image: UIImage(systemName: "xmark")
+            ) { [unowned self] _ in
+                dismiss(animated: true)
+            }
+        )
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            primaryAction: UIAction(
+                title: String(localized: "Show manga chapters list", bundle: .module),
+                image: UIImage(systemName: "list.bullet")
+            ) { [unowned self] _ in
+                presentMangaAggregate()
+            }
+        )
+
+        let navigationBarApperance = UINavigationBarAppearance()
+        navigationBarApperance.configureWithDefaultBackground()
+        navigationItem.scrollEdgeAppearance = navigationBarApperance
     }
 
     @available(*, unavailable)
@@ -68,43 +89,12 @@ final class ReaderViewController: UIViewController {
         addChild(pageViewController)
         pageViewController.didMove(toParent: self)
 
-        let navigationBar = UINavigationBar()
-        navigationBar.delegate = self
-
-        view.addSubview(navigationBar)
-        navigationBar.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview()
-            make.top.equalToSuperview(\.safeAreaLayoutGuide)
-        }
-
         self.view = view
-        self.navigationBar = navigationBar
         self.pageViewController = pageViewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let item = UINavigationItem()
-        item.leftBarButtonItem = UIBarButtonItem(
-            primaryAction: UIAction(
-                title: String(localized: "Close", bundle: .module),
-                image: UIImage(systemName: "xmark")
-            ) { [unowned self] _ in
-                dismiss(animated: true)
-            }
-        )
-
-        item.rightBarButtonItem = UIBarButtonItem(
-            primaryAction: UIAction(
-                title: String(localized: "Show manga chapters list", bundle: .module),
-                image: UIImage(systemName: "list.bullet")
-            ) { [unowned self] _ in
-                presentMangaAggregate()
-            }
-        )
-
-        navigationBar.setItems([item], animated: false)
 
         view.addGestureRecognizer(tapGesture)
 
@@ -124,14 +114,13 @@ final class ReaderViewController: UIViewController {
 
         viewModel.$chapter
             .compactMap { $0?.title }
-            .assign(to: \.title, on: navigationBar.topItem!)
+            .assign(to: \.title, on: navigationItem)
             .store(in: &cancellables)
 
         viewModel.$controlsVisible
-            .receive(on: DispatchQueue.main.animate(withDuration: 0.2))
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] visible in
-                navigationBar.layer.opacity = visible ? 1 : 0
-                setNeedsStatusBarAppearanceUpdate()
+                navigationController?.setNavigationBarHidden(!visible, animated: true)
             }
             .store(in: &cancellables)
 
@@ -152,7 +141,7 @@ final class ReaderViewController: UIViewController {
             return
         }
 
-        guard viewModel.controlsVisible else {
+        guard viewModel.controlsVisible, let navigationBar = navigationController?.navigationBar else {
             viewModel.controlsVisible.toggle()
             return
         }
@@ -181,7 +170,7 @@ final class ReaderViewController: UIViewController {
 
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .popover
-        navigationController.popoverPresentationController?.sourceItem = navigationBar.topItem?.rightBarButtonItem
+        navigationController.popoverPresentationController?.sourceItem = navigationItem.rightBarButtonItem
 
         model.$selectedChapter
             .dropFirst()
@@ -197,18 +186,6 @@ final class ReaderViewController: UIViewController {
         present(navigationController, animated: true)
     }
 }
-
-extension ReaderViewController: UIBarPositioningDelegate {
-    func position(for bar: any UIBarPositioning) -> UIBarPosition {
-        if bar === navigationBar {
-            return .topAttached
-        }
-
-        return .any
-    }
-}
-
-extension ReaderViewController: UINavigationBarDelegate {}
 
 extension ReaderViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(
