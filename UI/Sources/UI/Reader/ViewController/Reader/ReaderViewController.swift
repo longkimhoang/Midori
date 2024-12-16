@@ -29,6 +29,9 @@ final class ReaderViewController: UIViewController {
     var cancellables: Set<AnyCancellable> = []
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, String>!
 
+    var imageLoadingTask: Task<Void, Never>?
+    @Published var imageLoadingEvents: [Page.ID: ImageTask.Event] = [:]
+
     let viewModel: ReaderViewModel
     let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader)
 

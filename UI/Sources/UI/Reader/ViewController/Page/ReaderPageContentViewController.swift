@@ -13,8 +13,7 @@ import SnapKit
 import UIKit
 
 final class ReaderPageContentViewController: UIViewController {
-    private var imageLoadingTask: Task<Void, Error>?
-    private var imageLoadingEvent: ImageTask.Event?
+    private var cancellable: AnyCancellable?
     private var previousLayoutSize: CGSize?
 
     @ViewLoading private var contentScrollView: UIScrollView
@@ -30,6 +29,8 @@ final class ReaderPageContentViewController: UIViewController {
     private lazy var isZoomedInSubject = PassthroughSubject<Bool, Never>()
     private(set) lazy var isZoomedInPublisher = isZoomedInSubject.eraseToAnyPublisher()
 
+    @Published var imageLoadingEvent: ImageTask.Event?
+
     init(page: ReaderViewModel.Page) {
         self.page = page
         super.init(nibName: nil, bundle: nil)
@@ -38,10 +39,6 @@ final class ReaderPageContentViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        imageLoadingTask?.cancel()
     }
 
     override func loadView() {
@@ -66,13 +63,27 @@ final class ReaderPageContentViewController: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
 
-        guard imageLoadingEvent == nil else {
-            return
-        }
+        cancellable = $imageLoadingEvent
+            .sink { [unowned self] event in
+                // we're using contentUnavailableConfiguration to show loading and error states
+                // so we need to update it whenever the image state changes
+                setNeedsUpdateContentUnavailableConfiguration()
 
-        imageLoadingTask = Task {
-            await performImageLoading()
-        }
+                switch event {
+                case let .finished(.success(response)):
+                    imageView.image = response.image
+                    imageView.sizeToFit()
+                    view.setNeedsLayout()
+                default:
+                    break
+                }
+            }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        cancellable = nil
     }
 
     override func viewWillLayoutSubviews() {
@@ -132,10 +143,10 @@ final class ReaderPageContentViewController: UIViewController {
             configuration.secondaryText = message
             configuration.button.title = String(localized: "Retry", bundle: .module)
             configuration.buttonProperties.primaryAction = UIAction { [unowned self] _ in
-                imageLoadingTask?.cancel()
-                imageLoadingTask = Task {
-                    await performImageLoading()
-                }
+//                imageLoadingTask?.cancel()
+//                imageLoadingTask = Task {
+//                    await performImageLoading()
+//                }
             }
             contentUnavailableConfiguration = configuration
         case .loading:
@@ -165,27 +176,6 @@ extension ReaderPageContentViewController: UIScrollViewDelegate {
 // MARK: - Private
 
 private extension ReaderPageContentViewController {
-    func performImageLoading() async {
-        let request = ImageRequest(page: page)
-        let imageTask = ImagePipeline.midoriReader.imageTask(with: request)
-
-        for await event in imageTask.events {
-            imageLoadingEvent = event
-            // we're using contentUnavailableConfiguration to show loading and error states
-            // so we need to update it whenever the image state changes
-            setNeedsUpdateContentUnavailableConfiguration()
-
-            switch event {
-            case let .finished(.success(response)):
-                imageView.image = response.image
-                imageView.sizeToFit()
-                view.setNeedsLayout()
-            default:
-                break
-            }
-        }
-    }
-
     @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard gesture.state == .ended else {
             return

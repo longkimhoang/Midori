@@ -30,6 +30,9 @@ extension ImagePipeline {
         let memoryCache = ImageCache(countLimit: 30)
         configuration.imageCache = memoryCache
 
+        // Make sure MangaDex@Home servers don't die. They are self hosted CDNs, not Cloudflare :)
+        configuration.dataLoadingQueue.maxConcurrentOperationCount = 3
+
         return ImagePipeline(configuration: configuration)
     }()
 }

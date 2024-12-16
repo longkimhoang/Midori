@@ -23,7 +23,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
             animated: false
         )
 
-        prefetchImages(for: viewModel.pages.elements)
+        fetchImages(for: viewModel.pages.elements)
     }
 
     func pageViewController(
@@ -67,7 +67,12 @@ extension ReaderViewController: UIPageViewControllerDataSource {
     }
 
     private func makeContentViewController(for page: Page) -> ReaderPageContentViewController {
-        ReaderPageContentViewController(page: page)
+        let viewController = ReaderPageContentViewController(page: page)
+        $imageLoadingEvents
+            .map { $0[page.id] }
+            .assign(to: &viewController.$imageLoadingEvent)
+
+        return viewController
     }
 
     private func makeNextChapterViewController() -> UIViewController? {

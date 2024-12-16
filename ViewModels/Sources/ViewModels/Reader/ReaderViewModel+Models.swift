@@ -39,7 +39,7 @@ public extension ReaderViewModel {
         }
     }
 
-    struct Page: Identifiable, Equatable {
+    struct Page: Identifiable, Equatable, Sendable {
         public let id: String
         public let imageURL: URL
 
