@@ -20,21 +20,25 @@ extension ReaderViewController {
         imageLoadingTask = Task {
             await withDiscardingTaskGroup { group in
                 for page in pages {
-                    let request = ImageRequest(page: page)
-                    let task = ImagePipeline.midoriReader.imageTask(with: request)
-                    group.addTask {
-                        await withTaskCancellationHandler {
-                            for await event in task.events {
-                                await MainActor.run { [weak self] in
-                                    self?.imageLoadingEvents[page.id] = event
-                                }
-                            }
-                        } onCancel: {
-                            task.cancel()
-                        }
+                    group.addTask { [unowned self] in
+                        await fetchImage(for: page)
                     }
                 }
             }
+        }
+    }
+
+    func fetchImage(for page: ReaderViewModel.Page) async {
+        let request = ImageRequest(page: page)
+        let task = ImagePipeline.midoriReader.imageTask(with: request)
+        await withTaskCancellationHandler {
+            for await event in task.events {
+                await MainActor.run { [weak self] in
+                    self?.imageLoadingEvents[page.id] = event
+                }
+            }
+        } onCancel: {
+            task.cancel()
         }
     }
 }

@@ -9,13 +9,12 @@ import NukeUI
 import SwiftUI
 
 struct ReaderNextChapterView: View {
-    @Environment(\.dismiss) private var dismiss
-
     let manga: String
     let currentChapter: String
     let nextChapter: String?
     let coverImageURL: URL?
     let navigateToNextChapter: () -> Void
+    let closeReader: () -> Void
 
     var body: some View {
         ScrollView {
@@ -63,7 +62,7 @@ struct ReaderNextChapterView: View {
 
     @ViewBuilder private var noMoreChaptersView: some View {
         Button(role: .cancel) {
-            dismiss()
+            closeReader()
         } label: {
             Text("Return to manga", bundle: .module)
         }
@@ -80,7 +79,8 @@ struct ReaderNextChapterView: View {
         currentChapter: "Chapter 1",
         nextChapter: "2",
         coverImageURL: nil,
-        navigateToNextChapter: {}
+        navigateToNextChapter: {},
+        closeReader: {}
     )
 }
 
@@ -90,6 +90,7 @@ struct ReaderNextChapterView: View {
         currentChapter: "Chapter 1",
         nextChapter: nil,
         coverImageURL: nil,
-        navigateToNextChapter: {}
+        navigateToNextChapter: {},
+        closeReader: {}
     )
 }

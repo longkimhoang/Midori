@@ -72,6 +72,12 @@ extension ReaderViewController: UIPageViewControllerDataSource {
             .map { $0[page.id] }
             .assign(to: &viewController.$imageLoadingEvent)
 
+        viewController.onRetryImageLoading = { [unowned self] in
+            Task {
+                await fetchImage(for: page)
+            }
+        }
+
         return viewController
     }
 
@@ -93,6 +99,9 @@ extension ReaderViewController: UIPageViewControllerDataSource {
                     }
                     await viewModel.switchChapter(to: nextChapter.id)
                 }
+            },
+            closeReader: { [unowned self] in
+                dismiss(animated: true)
             }
         )
         .ignoresSafeArea()
