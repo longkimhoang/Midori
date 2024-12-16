@@ -48,14 +48,28 @@ final class ReaderViewController: UIViewController {
             }
         )
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let showChapterListButton = UIBarButtonItem(
             primaryAction: UIAction(
-                title: String(localized: "Show manga chapters list", bundle: .module),
+                title: String(localized: "Show chapters", bundle: .module),
                 image: UIImage(systemName: "list.bullet")
-            ) { [unowned self] _ in
-                presentMangaAggregate()
+            ) { [unowned self] action in
+                if let sender = action.sender as? UIBarButtonItem {
+                    presentMangaAggregate(sender)
+                }
             }
         )
+
+        let optionsButton = UIBarButtonItem(
+            primaryAction: UIAction(
+                title: String(localized: "Show reader options", bundle: .module),
+                image: UIImage(systemName: "gear")
+            ) { [unowned self] action in
+                if let sender = action.sender as? UIBarButtonItem {
+                }
+            }
+        )
+
+        navigationItem.rightBarButtonItems = [optionsButton, showChapterListButton]
 
         let navigationBarApperance = UINavigationBarAppearance()
         navigationBarApperance.configureWithDefaultBackground()
@@ -158,7 +172,7 @@ final class ReaderViewController: UIViewController {
         }
     }
 
-    func presentMangaAggregate() {
+    func presentMangaAggregate(_ sender: UIBarButtonItem) {
         guard let aggregate = viewModel.aggregate else {
             return
         }
