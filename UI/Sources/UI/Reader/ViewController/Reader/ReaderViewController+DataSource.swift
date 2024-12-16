@@ -90,6 +90,8 @@ extension ReaderViewController: UIPageViewControllerDataSource {
                 }
             }
         )
+        .ignoresSafeArea()
+
         let hostingController = UIHostingController(rootView: nextChapterView)
         hostingController.sizingOptions = [.intrinsicContentSize]
 

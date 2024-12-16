@@ -82,16 +82,24 @@ import Observation
             return nil
         }
 
-        for volume in aggregate.volumes {
+        for (volumeIndex, volume) in aggregate.volumes.indexed() {
             guard var chapterIndex = volume.chapters.index(id: chapterID) else {
                 continue
             }
 
-            volume.chapters.formIndex(after: &chapterIndex)
-            guard chapterIndex < volume.chapters.endIndex else {
-                continue
+            // if chapter is the first of a volume, return the last chapter
+            // of the next volume if available
+            guard chapterIndex > volume.chapters.startIndex else {
+                // if there's no next volume, return nil
+                if volumeIndex == aggregate.volumes.startIndex {
+                    return nil
+                } else {
+                    let index = aggregate.volumes.index(before: volumeIndex)
+                    return aggregate.volumes[index].chapters.last
+                }
             }
 
+            volume.chapters.formIndex(before: &chapterIndex)
             return volume.chapters[chapterIndex]
         }
 
