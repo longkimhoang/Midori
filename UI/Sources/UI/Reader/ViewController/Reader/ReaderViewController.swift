@@ -146,12 +146,50 @@ final class ReaderViewController: UIViewController {
                 updateDataSource()
             }
             .store(in: &cancellables)
+
+        viewModel.readerOptions.$useRightToLeftLayout
+            .dropFirst()
+            .sink { [unowned self] in
+                updateReaderRightToLeftPreference(to: $0)
+            }
+            .store(in: &cancellables)
     }
 
     override var prefersStatusBarHidden: Bool {
         !viewModel.controlsVisible
     }
+}
 
+extension ReaderViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        guard gestureRecognizer === tapGesture else {
+            return false
+        }
+
+        // check if other gesture is the double tap gesture of the content page
+        let viewControllers = pageViewController.viewControllers ?? []
+        for case let viewController as ReaderPageContentViewController in viewControllers {
+            if viewController.doubleTapGestureRecognizer === otherGestureRecognizer {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+
+extension ReaderViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for _: UIPresentationController) -> UIModalPresentationStyle {
+        .none
+    }
+}
+
+// MARK: - Private
+
+private extension ReaderViewController {
     @objc func handleTap(_ tap: UITapGestureRecognizer) {
         guard tap.state == .ended else {
             return
@@ -214,31 +252,19 @@ final class ReaderViewController: UIViewController {
 
         present(hostingController, animated: true)
     }
-}
 
-extension ReaderViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
-        guard gestureRecognizer === tapGesture else {
-            return false
+    func updateReaderRightToLeftPreference(to isRTL: Bool) {
+        let semanticContentAttribute: UISemanticContentAttribute = isRTL ? .forceRightToLeft: .unspecified
+        pageViewController.view.semanticContentAttribute = semanticContentAttribute
+
+        let viewControllers = viewModel.displayingPageIDs.compactMap {
+            viewModel.pages[id: $0].map(makeContentViewController)
         }
 
-        // check if other gesture is the double tap gesture of the content page
-        let viewControllers = pageViewController.viewControllers ?? []
-        for case let viewController as ReaderPageContentViewController in viewControllers {
-            if viewController.doubleTapGestureRecognizer === otherGestureRecognizer {
-                return true
-            }
+        guard !viewControllers.isEmpty else {
+            return
         }
 
-        return false
-    }
-}
-
-extension ReaderViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for _: UIPresentationController) -> UIModalPresentationStyle {
-        .none
+        pageViewController.setViewControllers(viewControllers, direction: .forward, animated: false)
     }
 }

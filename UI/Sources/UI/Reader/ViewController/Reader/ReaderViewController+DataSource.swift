@@ -66,7 +66,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         return makeContentViewController(for: viewModel.pages[previousIndex])
     }
 
-    private func makeContentViewController(for page: Page) -> ReaderPageContentViewController {
+    func makeContentViewController(for page: Page) -> ReaderPageContentViewController {
         let viewController = ReaderPageContentViewController(page: page)
         $imageLoadingEvents
             .map { $0[page.id] }
@@ -81,7 +81,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         return viewController
     }
 
-    private func makeNextChapterViewController() -> UIViewController? {
+    func makeNextChapterViewController() -> UIViewController? {
         guard let chapter = viewModel.chapter else {
             return nil
         }
