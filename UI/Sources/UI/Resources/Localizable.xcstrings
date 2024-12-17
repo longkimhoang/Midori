@@ -34,6 +34,9 @@
     "No volume" : {
 
     },
+    "Page transition style" : {
+
+    },
     "Popular new titles" : {
 
     },
@@ -46,10 +49,13 @@
     "Return to manga" : {
 
     },
-    "Show manga chapters list" : {
+    "Show chapters" : {
 
     },
     "Show reader options" : {
+
+    },
+    "Use right-to-left layout" : {
 
     },
     "Views the full description of the manga." : {

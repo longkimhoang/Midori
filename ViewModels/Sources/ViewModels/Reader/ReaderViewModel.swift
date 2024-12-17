@@ -25,6 +25,8 @@ import Observation
     @Published public var controlsVisible: Bool = true
     @Published public var displayingPageIDs: [Page.ID] = []
 
+    public var readerOptions = ReaderOptionsViewModel()
+
     public init(chapterID: UUID) {
         self.chapterID = chapterID
     }

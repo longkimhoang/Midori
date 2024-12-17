@@ -9,6 +9,7 @@ import Combine
 import MidoriViewModels
 import Nuke
 import Numerics
+import SwiftUI
 import UIKit
 
 final class ReaderViewController: UIViewController {
@@ -60,13 +61,10 @@ final class ReaderViewController: UIViewController {
         )
 
         let optionsButton = UIBarButtonItem(
-            primaryAction: UIAction(
-                title: String(localized: "Show reader options", bundle: .module),
-                image: UIImage(systemName: "gear")
-            ) { [unowned self] action in
-                if let sender = action.sender as? UIBarButtonItem {
-                }
-            }
+            title: String(localized: "Show reader options", bundle: .module),
+            image: UIImage(systemName: "gear"),
+            target: self,
+            action: #selector(optionsButtonTapped)
         )
 
         navigationItem.rightBarButtonItems = [optionsButton, showChapterListButton]
@@ -172,7 +170,7 @@ final class ReaderViewController: UIViewController {
         }
     }
 
-    func presentMangaAggregate(_ sender: UIBarButtonItem) {
+    func presentMangaAggregate(_: UIBarButtonItem) {
         guard let aggregate = viewModel.aggregate else {
             return
         }
@@ -203,6 +201,19 @@ final class ReaderViewController: UIViewController {
 
         present(navigationController, animated: true)
     }
+
+    @objc func optionsButtonTapped(_ sender: UIBarButtonItem) {
+        let optionsView = ReaderOptionsView(model: viewModel.readerOptions)
+        let hostingController = UIHostingController(rootView: optionsView)
+        hostingController.sizingOptions = [.preferredContentSize]
+        hostingController.modalPresentationStyle = .popover
+        hostingController.popoverPresentationController?.sourceItem = sender
+        hostingController.popoverPresentationController?.backgroundColor = .clear
+        hostingController.popoverPresentationController?.delegate = self
+        hostingController.view.backgroundColor = .clear
+
+        present(hostingController, animated: true)
+    }
 }
 
 extension ReaderViewController: UIGestureRecognizerDelegate {
@@ -223,5 +234,11 @@ extension ReaderViewController: UIGestureRecognizerDelegate {
         }
 
         return false
+    }
+}
+
+extension ReaderViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for _: UIPresentationController) -> UIModalPresentationStyle {
+        .none
     }
 }
