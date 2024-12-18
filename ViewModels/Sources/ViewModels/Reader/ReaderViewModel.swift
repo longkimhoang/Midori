@@ -5,6 +5,7 @@
 //  Created by Long Kim on 12/11/24.
 //
 
+import Algorithms
 import Combine
 import Dependencies
 import Foundation
@@ -23,12 +24,25 @@ import Observation
     @Published public var pages: IdentifiedArrayOf<Page> = []
     @Published public var aggregate: Aggregate?
     @Published public var controlsVisible: Bool = true
-    @Published public var displayingPageIDs: [Page.ID] = []
+    @Published public var displayingPageIDs: [Page.ID] = [] {
+        didSet {
+            let index = displayingPageIDs.first.flatMap { pages.index(id: $0) }.map { $0 + 1 }
+            if let index {
+                pageScrubber.currentPage = index
+            }
+        }
+    }
 
     public var readerOptions = ReaderOptionsViewModel()
+    public var pageScrubber = PageScrubberViewModel()
 
     public init(chapterID: UUID) {
         self.chapterID = chapterID
+
+        $pages
+            .map(\.count)
+            .filter { $0 > 0 }
+            .assign(to: &pageScrubber.$numberOfPages)
     }
 
     public func loadChapterFromStorage() throws {

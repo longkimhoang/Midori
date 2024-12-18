@@ -23,6 +23,8 @@ extension ReaderViewController: UIPageViewControllerDataSource {
             animated: false
         )
 
+        viewModel.displayingPageIDs = [page.id]
+
         fetchImages(for: viewModel.pages.elements)
     }
 
