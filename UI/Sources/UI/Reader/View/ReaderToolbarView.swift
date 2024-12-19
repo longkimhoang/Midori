@@ -66,6 +66,8 @@ struct ReaderToolbarView: View {
 }
 
 private struct ToolbarButtonStyle: ButtonStyle {
+    @Environment(\.displayScale) private var displayScale
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundStyle(.tint)
@@ -73,6 +75,10 @@ private struct ToolbarButtonStyle: ButtonStyle {
                 $0.opacity(configuration.isPressed ? 0.3 : 1)
             }
             .background(Material.bar, in: .capsule)
+            .overlay {
+                Capsule()
+                    .strokeBorder(.separator, lineWidth: 1 / displayScale)
+            }
     }
 }
 
