@@ -30,6 +30,7 @@ final class ReaderViewController: UIViewController {
         controller.didMove(toParent: self)
 
         controller.view.translatesAutoresizingMaskIntoConstraints = false
+        controller.view.backgroundColor = .clear
         return controller
     }()
 
@@ -214,7 +215,7 @@ private extension ReaderViewController {
             // toolbar
             toolbarHostingController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             toolbarHostingController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            toolbarHostingController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            toolbarHostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
         Publishers.CombineLatest(viewModel.$pages, viewModel.$displayingPageIDs)

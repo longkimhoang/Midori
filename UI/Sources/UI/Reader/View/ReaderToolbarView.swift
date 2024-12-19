@@ -33,7 +33,7 @@ struct ReaderToolbarView: View {
                 .presentationCompactAdaptation(.none)
                 .environment(\.layoutDirection, readerOptions.useRightToLeftLayout ? .rightToLeft : .leftToRight)
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(ToolbarButtonStyle())
         .padding()
         .frame(maxWidth: .infinity)
     }
@@ -43,7 +43,7 @@ struct ReaderToolbarView: View {
             onShowGalleryTapped()
         } label: {
             Label(String(localized: "Show all pages", bundle: .module), systemImage: "rectangle.grid.3x2")
-                .frame(maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .buttonBorderShape(.circle)
         .frame(width: buttonHeight, height: buttonHeight)
@@ -55,13 +55,24 @@ struct ReaderToolbarView: View {
             showsScrubber.toggle()
         } label: {
             Text(verbatim: "\(indices) / \(pageCount)")
-                .padding(.horizontal, 8)
+                .padding(.horizontal)
                 .frame(maxHeight: .infinity)
         }
         .buttonBorderShape(.capsule)
         .frame(height: buttonHeight)
         .accessibilityLabel(String(localized: "Page \(indices) of \(pageCount)", bundle: .module))
         .accessibilityHint(String(localized: "Shows a slider for navigating through pages", bundle: .module))
+    }
+}
+
+private struct ToolbarButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(.tint)
+            .animation(.snappy(duration: 0.2)) {
+                $0.opacity(configuration.isPressed ? 0.3 : 1)
+            }
+            .background(Material.bar, in: .capsule)
     }
 }
 

@@ -8,6 +8,7 @@
 import Combine
 import MidoriViewModels
 import Nuke
+import Numerics
 import SnapKit
 import UIKit
 
