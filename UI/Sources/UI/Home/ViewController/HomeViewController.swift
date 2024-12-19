@@ -93,7 +93,10 @@ final class HomeViewController: UIViewController {
                         MangaDetailViewModel(mangaID: mangaID)
                     }
 
-                    show(MangaDetailViewController(model: model), sender: self)
+                    let viewController = MangaDetailViewController(model: model)
+                    viewController.hidesBottomBarWhenPushed = true
+
+                    show(viewController, sender: self)
                 }
             }
             .store(in: &cancellables)

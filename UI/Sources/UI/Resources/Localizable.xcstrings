@@ -1,16 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ / %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ / %2$lld"
-          }
-        }
-      }
-    },
     "authors unavailable" : {
 
     },
@@ -81,7 +71,7 @@
     "Show reader options" : {
 
     },
-    "Shows a slider for quickly navigating through pages" : {
+    "Shows a slider for navigating through pages" : {
 
     },
     "Use right-to-left layout" : {

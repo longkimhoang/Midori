@@ -23,22 +23,14 @@ final class ReaderViewController: UIViewController {
         return gesture
     }()
 
-    private lazy var pageIndexButton: UIButton = {
-        var configuration = UIButton.Configuration.borderless()
-        configuration.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-        configuration.baseForegroundColor = .label
+    private lazy var toolbarHostingController: UIHostingController<ReaderToolbarView?> = {
+        let controller = UIHostingController<ReaderToolbarView?>(rootView: nil)
+        controller.sizingOptions = [.intrinsicContentSize]
+        addChild(controller)
+        controller.didMove(toParent: self)
 
-        let button = UIButton(configuration: configuration)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.accessibilityHint = String(
-            localized: "Shows a slider for quickly navigating through pages",
-            bundle: .module
-        )
-
-        button.addTarget(self, action: #selector(pageIndexButtonTapped), for: .primaryActionTriggered)
-
-        return button
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
     }()
 
     @ViewLoading var collectionView: UICollectionView
@@ -152,7 +144,9 @@ final class ReaderViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] visible in
                 navigationController?.setNavigationBarHidden(!visible, animated: true)
-                navigationController?.setToolbarHidden(!visible, animated: true)
+                UIView.animate(withDuration: UINavigationController.hideShowBarDuration) {
+                    self.toolbarHostingController.view.alpha = visible ? 1 : 0
+                }
             }
             .store(in: &cancellables)
 
@@ -214,24 +208,17 @@ extension ReaderViewController: UIPopoverPresentationControllerDelegate {
 
 private extension ReaderViewController {
     func setupToolbar() {
-        navigationController?.isToolbarHidden = !viewModel.controlsVisible
-        let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let galleryItem = UIBarButtonItem(
-            title: String(localized: "Show all pages", bundle: .module),
-            image: UIImage(systemName: "rectangle.grid.3x2")
-        )
-        setToolbarItems([flexibleItem, galleryItem], animated: false)
+        view.addSubview(toolbarHostingController.view)
 
-        if let toolbar = navigationController?.toolbar {
-            toolbar.addSubview(pageIndexButton)
-            NSLayoutConstraint.activate([
-                pageIndexButton.centerXAnchor.constraint(equalTo: toolbar.centerXAnchor),
-                pageIndexButton.bottomAnchor.constraint(equalTo: toolbar.bottomAnchor),
-                pageIndexButton.heightAnchor.constraint(equalToConstant: 44),
-            ])
-        }
+        NSLayoutConstraint.activate([
+            // toolbar
+            toolbarHostingController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            toolbarHostingController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            toolbarHostingController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ])
 
         Publishers.CombineLatest(viewModel.$pages, viewModel.$displayingPageIDs)
+            .filter { !$0.0.isEmpty && !$0.1.isEmpty }
             .map { pages, displayingPageIDs in
                 let indices = displayingPageIDs
                     .compactMap { pages.index(id: $0) }
@@ -241,16 +228,7 @@ private extension ReaderViewController {
                 return (indices, pages.count)
             }
             .sink { [unowned self] indices, pageCount in
-                guard var configuration = pageIndexButton.configuration else {
-                    return
-                }
-
-                configuration.title = "\(indices) / \(pageCount)"
-                pageIndexButton.configuration = configuration
-                pageIndexButton.accessibilityLabel = String(
-                    localized: "Page \(indices) of \(pageCount)",
-                    bundle: .module
-                )
+                updateToolbarView(indices: indices, pageCount: pageCount)
             }
             .store(in: &cancellables)
     }
@@ -271,11 +249,6 @@ private extension ReaderViewController {
         if viewModel.controlsVisible, location.y > navigationBarFrame.maxY {
             viewModel.controlsVisible.toggle()
         }
-    }
-
-    @objc func scrubberValueChanged(_ sender: UISlider) {
-        let value = sender.value.rounded()
-        sender.setValue(value, animated: false)
     }
 
     @objc func chapterListButtonTapped(_ sender: UIBarButtonItem) {
@@ -324,22 +297,6 @@ private extension ReaderViewController {
         present(hostingController, animated: true)
     }
 
-    @objc func pageIndexButtonTapped(_ sender: UIButton) {
-        let useRightToLeftLayout = viewModel.readerOptions.useRightToLeftLayout
-        let scrubberView = PageScrubberView(viewModel: viewModel.pageScrubber)
-            .environment(\.layoutDirection, useRightToLeftLayout ? .rightToLeft : .leftToRight)
-        let hostingController = UIHostingController(rootView: scrubberView)
-        hostingController.sizingOptions = [.preferredContentSize]
-        hostingController.modalPresentationStyle = .popover
-        hostingController.popoverPresentationController?.sourceItem = sender
-        hostingController.popoverPresentationController?.backgroundColor = .clear
-        hostingController.popoverPresentationController?.delegate = self
-        hostingController.popoverPresentationController?.permittedArrowDirections = .down
-        hostingController.view.backgroundColor = .clear
-
-        present(hostingController, animated: true)
-    }
-
     func updateReaderRightToLeftPreference(to isRTL: Bool) {
         let semanticContentAttribute: UISemanticContentAttribute = isRTL ? .forceRightToLeft : .unspecified
         pageViewController.view.semanticContentAttribute = semanticContentAttribute
@@ -368,5 +325,16 @@ private extension ReaderViewController {
         let viewController = makeContentViewController(for: page)
         pageViewController.setViewControllers([viewController], direction: .forward, animated: false)
         viewModel.displayingPageIDs = [page.id]
+    }
+
+    func updateToolbarView(indices: String, pageCount: Int) {
+        let toolbarView = ReaderToolbarView(
+            indices: indices,
+            pageCount: pageCount,
+            pageScrubber: viewModel.pageScrubber,
+            readerOptions: viewModel.readerOptions,
+            onShowGalleryTapped: {}
+        )
+        toolbarHostingController.rootView = toolbarView
     }
 }
