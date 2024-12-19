@@ -40,7 +40,7 @@ struct PageScrubberView: View {
     private var value: Binding<Double> {
         Binding(
             get: { Double(viewModel.currentPage) },
-            set: { viewModel.currentPage = Int($0) }
+            set: { viewModel.currentPage = Int($0.rounded(.toNearestOrEven)) }
         )
     }
 }
