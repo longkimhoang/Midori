@@ -26,8 +26,7 @@ final class ReaderPageContentViewController: UIViewController {
         return gesture
     }()
 
-    @Published var imageLoadingEvent: ImageTask.Event?
-    var onRetryImageLoading: (() -> Void)?
+    @Published var image: UIImage?
 
     init(page: ReaderViewModel.Page) {
         self.page = page
@@ -59,50 +58,7 @@ final class ReaderPageContentViewController: UIViewController {
 
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
-
-        cancellable = $imageLoadingEvent
-            .sink { [unowned self] event in
-                // we're using contentUnavailableConfiguration to show loading and error states
-                // so we need to update it whenever the image state changes
-                setNeedsUpdateContentUnavailableConfiguration()
-
-                switch event {
-                case let .finished(.success(response)):
-                    imageView.image = response.image
-                    imageView.sizeToFit()
-                    view.setNeedsLayout()
-                default:
-                    break
-                }
-            }
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        cancellable = nil
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-
-        if case let .finished(.success(response)) = imageLoadingEvent, previousLayoutSize != view.bounds.size {
-            let image = response.image
-            let scaleX = view.bounds.width / image.size.width
-            let scaleY = view.bounds.height / image.size.height
-            let minScale = min(scaleX, scaleY)
-
-            if minScale >= 1 {
-                contentScrollView.maximumZoomScale = minScale * 1.5
-            }
-
-            contentScrollView.minimumZoomScale = minScale
-            contentScrollView.zoomScale = minScale
-
-            imageView.center = view.center
-            // We only need to do this setup once
-            previousLayoutSize = view.bounds.size
-        }
+        loadImage()
     }
 
     override func viewWillTransition(
@@ -111,42 +67,6 @@ final class ReaderPageContentViewController: UIViewController {
     ) {
         coordinator.animate { _ in
             self.updateImageViewOffset(in: self.contentScrollView)
-        }
-    }
-
-    override var contentUnavailableConfigurationState: UIContentUnavailableConfigurationState {
-        var state = super.contentUnavailableConfigurationState
-        switch imageLoadingEvent {
-        case .finished(.success):
-            state.imageLoadingState = .success
-        case let .finished(.failure(error)):
-            state.imageLoadingState = .failure(error.localizedDescription)
-        case .progress, nil:
-            state.imageLoadingState = .loading
-        default:
-            break
-        }
-
-        return state
-    }
-
-    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
-        switch state.imageLoadingState {
-        case .success:
-            contentUnavailableConfiguration = nil
-        case let .failure(message):
-            var configuration = UIContentUnavailableConfiguration.empty()
-            configuration.text = String(localized: "Failed to fatch image", bundle: .module)
-            configuration.secondaryText = message
-            configuration.button.title = String(localized: "Retry", bundle: .module)
-            configuration.buttonProperties.primaryAction = UIAction { [unowned self] _ in
-                onRetryImageLoading?()
-            }
-            contentUnavailableConfiguration = configuration
-        case .loading:
-            var configuration = UIContentUnavailableConfiguration.loading()
-            configuration.text = nil
-            contentUnavailableConfiguration = configuration
         }
     }
 }
@@ -164,6 +84,56 @@ extension ReaderPageContentViewController: UIScrollViewDelegate {
 // MARK: - Private
 
 private extension ReaderPageContentViewController {
+    func loadImage() {
+        let request = ImageRequest(page: page)
+        cancellable = ImagePipeline.midoriReader.imagePublisher(with: request)
+            .handleEvents(
+                receiveSubscription: { [weak self] _ in
+                    var configuration = UIContentUnavailableConfiguration.loading()
+                    configuration.text = nil
+                    self?.contentUnavailableConfiguration = configuration
+                }
+            )
+            .sink { [weak self] completion in
+                guard let self else {
+                    return
+                }
+                switch completion {
+                case let .failure(error):
+                    var configuration = UIContentUnavailableConfiguration.empty()
+                    configuration.text = String(localized: "Failed to fatch image", bundle: .module)
+                    configuration.secondaryText = error.localizedDescription
+                    configuration.button.title = String(localized: "Retry", bundle: .module)
+                    configuration.buttonProperties.primaryAction = UIAction { [unowned self] _ in
+                        loadImage()
+                    }
+                    contentUnavailableConfiguration = configuration
+                case .finished:
+                    break
+                }
+            } receiveValue: { [weak self] response in
+                guard let self else {
+                    return
+                }
+                imageView.image = response.image
+                imageView.sizeToFit()
+                let image = response.image
+                let scaleX = view.frame.width / image.size.width
+                let scaleY = view.frame.height / image.size.height
+                let minScale = min(scaleX, scaleY)
+
+                if minScale >= 1 {
+                    contentScrollView.maximumZoomScale = minScale * 1.5
+                }
+
+                contentScrollView.minimumZoomScale = minScale
+                contentScrollView.zoomScale = minScale
+
+                imageView.center = view.center
+                contentUnavailableConfiguration = nil
+            }
+    }
+
     @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard gesture.state == .ended else {
             return
@@ -195,22 +165,5 @@ private extension ReaderPageContentViewController {
         let offsetY = max(0, deltaY / 2)
 
         imageView.frame.origin = CGPoint(x: offsetX, y: offsetY)
-    }
-}
-
-private extension UIConfigurationStateCustomKey {
-    static let imageLoadingState = UIConfigurationStateCustomKey("com.midori.imageLoadingState")
-}
-
-private extension UIContentUnavailableConfigurationState {
-    enum ImageLoadingState: Hashable {
-        case loading
-        case failure(String)
-        case success
-    }
-
-    var imageLoadingState: ImageLoadingState {
-        get { self[.imageLoadingState] as? ImageLoadingState ?? .loading }
-        set { self[.imageLoadingState] = newValue }
     }
 }

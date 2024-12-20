@@ -24,8 +24,6 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         )
 
         viewModel.displayingPageIDs = [page.id]
-
-        fetchImages(for: viewModel.pages.elements)
     }
 
     func pageViewController(
@@ -69,18 +67,7 @@ extension ReaderViewController: UIPageViewControllerDataSource {
     }
 
     func makeContentViewController(for page: Page) -> ReaderPageContentViewController {
-        let viewController = ReaderPageContentViewController(page: page)
-        $imageLoadingEvents
-            .map { $0[page.id] }
-            .assign(to: &viewController.$imageLoadingEvent)
-
-        viewController.onRetryImageLoading = { [unowned self] in
-            Task {
-                await fetchImage(for: page)
-            }
-        }
-
-        return viewController
+        ReaderPageContentViewController(page: page)
     }
 
     func makeNextChapterViewController() -> UIViewController? {
