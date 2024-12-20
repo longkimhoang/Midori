@@ -115,6 +115,12 @@ private extension ReaderPageContentViewController {
                 guard let self else {
                     return
                 }
+
+                guard imageView.image != response.image else {
+                    contentUnavailableConfiguration = nil
+                    return
+                }
+
                 imageView.image = response.image
                 imageView.sizeToFit()
                 let image = response.image
