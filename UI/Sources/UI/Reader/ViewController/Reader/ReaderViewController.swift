@@ -45,7 +45,7 @@ final class ReaderViewController: UIViewController {
     @Published var imageLoadingEvents: [Page.ID: ImageTask.Event] = [:]
 
     let viewModel: ReaderViewModel
-    let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader)
+    let imagePrefetcher = ImagePrefetcher(pipeline: .midoriReader, destination: .diskCache)
 
     init(model: ReaderViewModel) {
         viewModel = model

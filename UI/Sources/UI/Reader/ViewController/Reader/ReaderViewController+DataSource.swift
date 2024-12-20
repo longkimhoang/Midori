@@ -24,6 +24,9 @@ extension ReaderViewController: UIPageViewControllerDataSource {
         )
 
         viewModel.displayingPageIDs = [page.id]
+
+        imagePrefetcher.stopPrefetching()
+        imagePrefetcher.startPrefetching(with: viewModel.pages.map { .init(page: $0) })
     }
 
     func pageViewController(
