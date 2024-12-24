@@ -11,6 +11,7 @@ extension HomeViewController {
     enum SupplementaryElementKind {
         static let sectionHeaderLabel = "section-header-label"
         static let sectionHeaderButton = "section-header-button"
+        static let separator = "separator"
     }
 
     func makeCollectionViewLayout() -> UICollectionViewLayout {
@@ -63,7 +64,10 @@ extension HomeViewController {
             widthDimension: .fractionalWidth(1),
             heightDimension: .estimated(60)
         )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let item = NSCollectionLayoutItem(
+            layoutSize: itemSize,
+            supplementaryItems: [makeSeparator(layoutEnvironment: layoutEnvironment)]
+        )
 
         let contentWidth = layoutEnvironment.container.effectiveContentSize.width
         let estimatedItemWidth: CGFloat = 360
@@ -124,6 +128,20 @@ extension HomeViewController {
             layoutSize: itemSize,
             elementKind: SupplementaryElementKind.sectionHeaderButton,
             alignment: .topLeading
+        )
+    }
+
+    private func makeSeparator(
+        layoutEnvironment: NSCollectionLayoutEnvironment
+    ) -> NSCollectionLayoutSupplementaryItem {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .absolute(1 / layoutEnvironment.traitCollection.displayScale)
+        )
+        return NSCollectionLayoutSupplementaryItem(
+            layoutSize: itemSize,
+            elementKind: SupplementaryElementKind.separator,
+            containerAnchor: .init(edges: .bottom)
         )
     }
 }

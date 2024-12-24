@@ -36,7 +36,9 @@ extension HomeViewController: UICollectionViewDelegate {
         switch itemIdentifier {
         case let .latestChapter(chapterID):
             guard let chapter = viewModel.data.latestChapters[id: chapterID],
-                  let cell = collectionView.cellForItem(at: indexPath) as? LatestChapterCell
+                  let cell = collectionView.cellForItem(at: indexPath),
+                  let configuration = cell.contentConfiguration as? LatestChapterUIConfiguration,
+                  let serializedIdentifier = try? JSONEncoder().encode(itemIdentifier)
             else {
                 return nil
             }
@@ -58,12 +60,19 @@ extension HomeViewController: UICollectionViewDelegate {
             )
 
             return UIContextMenuConfiguration(
+                identifier: String(decoding: serializedIdentifier, as: UTF8.self) as NSString,
                 previewProvider: {
-                    let content = cell.coordinator.previewContent
+                    let content = LatestChapterPreviewView(
+                        manga: configuration.manga,
+                        chapter: configuration.chapter,
+                        group: configuration.group,
+                        coverImage: configuration.coverImage.map(Image.init)
+                    )
                     let hostingController = UIHostingController(rootView: content)
-                    hostingController.sizingOptions = [.preferredContentSize]
-                    let size = hostingController.view.intrinsicContentSize
-                    hostingController.preferredContentSize = size
+                    let contentSize = hostingController.sizeThatFits(
+                        in: CGSize(width: 300, height: UIView.layoutFittingExpandedSize.height)
+                    )
+                    hostingController.preferredContentSize = contentSize
                     return hostingController
                 },
                 actionProvider: { _ in
@@ -73,6 +82,80 @@ extension HomeViewController: UICollectionViewDelegate {
             )
         case .popularManga, .recentlyAddedManga:
             return nil
+        }
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfiguration _: UIContextMenuConfiguration,
+        highlightPreviewForItemAt indexPath: IndexPath
+    ) -> UITargetedPreview? {
+        guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
+        switch itemIdentifier {
+        case .latestChapter:
+            guard let cell = collectionView.cellForItem(at: indexPath),
+                  let contentView = cell.contentView as? LatestChapterUIView
+            else {
+                return nil
+            }
+
+            return UITargetedPreview(view: contentView.imageView)
+        case .popularManga, .recentlyAddedManga:
+            return nil
+        }
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfiguration _: UIContextMenuConfiguration,
+        dismissalPreviewForItemAt indexPath: IndexPath
+    ) -> UITargetedPreview? {
+        guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+
+        switch itemIdentifier {
+        case .latestChapter:
+            guard let cell = collectionView.cellForItem(at: indexPath),
+                  let contentView = cell.contentView as? LatestChapterUIView
+            else {
+                return nil
+            }
+
+            return UITargetedPreview(view: contentView.imageView)
+        case .popularManga, .recentlyAddedManga:
+            return nil
+        }
+    }
+
+    func collectionView(
+        _: UICollectionView,
+        willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
+        animator: any UIContextMenuInteractionCommitAnimating
+    ) {
+        guard let serializedItemIdentifier = configuration.identifier as? String,
+              let itemIdentifier = try? JSONDecoder().decode(
+                  ItemIdentifier.self,
+                  from: Data(serializedItemIdentifier.utf8)
+              )
+        else {
+            return
+        }
+
+        switch itemIdentifier {
+        case let .latestChapter(chapterID):
+            guard let chapter = viewModel.data.latestChapters[id: chapterID] else {
+                return
+            }
+
+            animator.addAnimations {
+                self.navigateToMangaDetail(mangaID: chapter.mangaInfo.id)
+            }
+        case .popularManga, .recentlyAddedManga:
+            break
         }
     }
 }

@@ -19,7 +19,7 @@ final class HomeViewController: UIViewController {
         case recentyAddedMangas
     }
 
-    enum ItemIdentifier: Hashable {
+    enum ItemIdentifier: Hashable, Codable {
         case popularManga(UUID)
         case latestChapter(UUID)
         case recentlyAddedManga(UUID)
@@ -89,14 +89,7 @@ final class HomeViewController: UIViewController {
             .sink { [unowned self] destination in
                 switch destination {
                 case let .mangaDetail(mangaID):
-                    let model = withDependencies(from: viewModel) {
-                        MangaDetailViewModel(mangaID: mangaID)
-                    }
-
-                    let viewController = MangaDetailViewController(model: model)
-                    viewController.hidesBottomBarWhenPushed = true
-
-                    show(viewController, sender: self)
+                    navigateToMangaDetail(mangaID: mangaID)
                 case let .reader(chapterID):
                     let model = withDependencies(from: viewModel) {
                         ReaderViewModel(chapterID: chapterID)
@@ -134,5 +127,20 @@ final class HomeViewController: UIViewController {
             try await viewModel.fetchHomeData()
             sender.endRefreshing()
         }
+    }
+}
+
+// MARK: - Navigation
+
+extension HomeViewController {
+    func navigateToMangaDetail(mangaID: UUID) {
+        let model = withDependencies(from: viewModel) {
+            MangaDetailViewModel(mangaID: mangaID)
+        }
+
+        let viewController = MangaDetailViewController(model: model)
+        viewController.hidesBottomBarWhenPushed = true
+
+        show(viewController, sender: self)
     }
 }

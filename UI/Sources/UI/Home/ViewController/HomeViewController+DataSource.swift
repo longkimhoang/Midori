@@ -67,19 +67,20 @@ extension HomeViewController {
 
             let image = cachedCoverImage(for: itemIdentifier)
 
-            let latestChapterView = LatestChapterView(
-                manga: chapter.mangaInfo.title,
-                chapter: chapter.chapter,
-                group: chapter.group,
-                coverImage: image.map(Image.init)
-            )
+            var configuration = LatestChapterUIConfiguration()
+            configuration.manga = chapter.mangaInfo.title
+            configuration.chapter = chapter.chapter
+            configuration.coverImage = image
+            configuration.group = chapter.group
 
-            cell.contentConfiguration = UIHostingConfiguration {
-                latestChapterView
+            cell.contentConfiguration = configuration
+
+            if let contentView = cell.contentView as? LatestChapterUIView {
+                NSLayoutConstraint.activate([
+                    cell.separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.mangaLabel.leadingAnchor),
+                    cell.separatorLayoutGuide.trailingAnchor.constraint(equalTo: contentView.mangaLabel.trailingAnchor),
+                ])
             }
-            .margins(.all, 0)
-
-            cell.coordinator.previewContent = .init(content: latestChapterView.content)
 
             if image == nil {
                 fetchCoverImage(for: itemIdentifier)
@@ -179,6 +180,17 @@ extension HomeViewController {
             }
         }
 
+        let latestChapterSeparatorRegistration =
+            UICollectionView.SupplementaryRegistration<LatestChapterCellSeparatorView>(
+                elementKind: SupplementaryElementKind.separator
+            ) { [unowned self] separator, _, indexPath in
+                guard let cell = collectionView.cellForItem(at: indexPath) as? LatestChapterCell else {
+                    return
+                }
+
+                separator.separatorView.frame = cell.separatorLayoutGuide.layoutFrame
+            }
+
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch elementKind {
             case SupplementaryElementKind.sectionHeaderLabel:
@@ -189,6 +201,11 @@ extension HomeViewController {
             case SupplementaryElementKind.sectionHeaderButton:
                 collectionView.dequeueConfiguredReusableSupplementary(
                     using: sectionHeaderButtonRegistration,
+                    for: indexPath
+                )
+            case SupplementaryElementKind.separator:
+                collectionView.dequeueConfiguredReusableSupplementary(
+                    using: latestChapterSeparatorRegistration,
                     for: indexPath
                 )
             default:
