@@ -334,8 +334,27 @@ private extension ReaderViewController {
             pageCount: pageCount,
             pageScrubber: viewModel.pageScrubber,
             readerOptions: viewModel.readerOptions,
-            onShowGalleryTapped: {}
+            onShowGalleryTapped: { [unowned self] in
+                let galleryViewController = makeGalleryViewController()
+                present(UINavigationController(rootViewController: galleryViewController), animated: true)
+            }
         )
         toolbarHostingController.rootView = toolbarView
+    }
+
+    func makeGalleryViewController() -> ReaderPageGalleryViewController {
+        let galleryViewController = ReaderPageGalleryViewController(model: viewModel)
+        galleryViewController.modalPresentationStyle = .pageSheet
+        galleryViewController.$selectedPageID
+            .sink { [unowned self] selectedPageID in
+                guard let selectedPageID, let pageIndex = viewModel.pages.index(id: selectedPageID) else {
+                    return
+                }
+
+                navigateToPage(pageIndex)
+            }
+            .store(in: &cancellables)
+
+        return galleryViewController
     }
 }

@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "All pages" : {
+
+    },
     "authors unavailable" : {
 
     },
@@ -46,6 +49,9 @@
           }
         }
       }
+    },
+    "Page %lld" : {
+
     },
     "Page transition style" : {
 
