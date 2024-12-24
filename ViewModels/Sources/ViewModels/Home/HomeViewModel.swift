@@ -60,4 +60,8 @@ public final class HomeViewModel {
     public func mangaSelected(id: UUID) {
         navigationDestinationSubject.send(.mangaDetail(id))
     }
+
+    public func latestChapterSelected(id: UUID) {
+        navigationDestinationSubject.send(.reader(id))
+    }
 }

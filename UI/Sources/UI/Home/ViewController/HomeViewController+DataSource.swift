@@ -58,7 +58,7 @@ extension HomeViewController {
             }
         }
 
-        let latestChapterCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, Chapter> {
+        let latestChapterCellRegistration = UICollectionView.CellRegistration<LatestChapterCell, Chapter> {
             [unowned self] cell, indexPath, chapter in
 
             guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
@@ -67,15 +67,19 @@ extension HomeViewController {
 
             let image = cachedCoverImage(for: itemIdentifier)
 
+            let latestChapterView = LatestChapterView(
+                manga: chapter.mangaInfo.title,
+                chapter: chapter.chapter,
+                group: chapter.group,
+                coverImage: image.map(Image.init)
+            )
+
             cell.contentConfiguration = UIHostingConfiguration {
-                LatestChapterView(
-                    manga: chapter.manga,
-                    chapter: chapter.chapter,
-                    group: chapter.group,
-                    coverImage: image.map(Image.init)
-                )
+                latestChapterView
             }
             .margins(.all, 0)
+
+            cell.coordinator.previewContent = .init(content: latestChapterView.content)
 
             if image == nil {
                 fetchCoverImage(for: itemIdentifier)

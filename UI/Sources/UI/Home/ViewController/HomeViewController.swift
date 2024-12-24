@@ -97,6 +97,15 @@ final class HomeViewController: UIViewController {
                     viewController.hidesBottomBarWhenPushed = true
 
                     show(viewController, sender: self)
+                case let .reader(chapterID):
+                    let model = withDependencies(from: viewModel) {
+                        ReaderViewModel(chapterID: chapterID)
+                    }
+
+                    let viewController = ReaderViewController(model: model)
+                    let navigationController = UINavigationController(rootViewController: viewController)
+                    navigationController.modalPresentationStyle = .fullScreen
+                    present(navigationController, animated: true)
                 }
             }
             .store(in: &cancellables)

@@ -19,8 +19,13 @@ public extension HomeViewModel {
     }
 
     struct Chapter: Identifiable, Equatable, Sendable {
+        public struct MangaInfo: Equatable, Sendable {
+            public let id: UUID
+            public let title: String
+        }
+
         public let id: UUID
-        public let manga: String
+        public let mangaInfo: MangaInfo
         public let chapter: String
         public let group: String
         public let coverImageURL: URL?
@@ -48,6 +53,7 @@ public extension HomeViewModel {
 
     enum NavigationDestination: Equatable {
         case mangaDetail(UUID)
+        case reader(UUID)
     }
 }
 
@@ -68,7 +74,7 @@ extension HomeViewModel.Chapter {
 
         self.init(
             id: entity.id,
-            manga: manga.title,
+            mangaInfo: .init(id: manga.id, title: manga.title),
             chapter: entity.combinedTitle(),
             group: entity.groupName,
             coverImageURL: entity.manga?.currentCover?.imageURLs[.smallThumbnail]
