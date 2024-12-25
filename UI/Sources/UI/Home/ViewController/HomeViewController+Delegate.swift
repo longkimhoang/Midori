@@ -96,36 +96,17 @@ extension HomeViewController: UICollectionViewDelegate {
 
         switch itemIdentifier {
         case .latestChapter:
-            guard let cell = collectionView.cellForItem(at: indexPath),
-                  let contentView = cell.contentView as? LatestChapterUIView
-            else {
+            guard let cell = collectionView.cellForItem(at: indexPath) else {
                 return nil
             }
 
-            return UITargetedPreview(view: contentView.imageView)
-        case .popularManga, .recentlyAddedManga:
-            return nil
-        }
-    }
+            let parameters = UIPreviewParameters()
+            parameters.visiblePath = UIBezierPath(
+                roundedRect: cell.bounds.inset(by: .init(top: 0, left: -8, bottom: 0, right: 0)),
+                cornerRadius: 8
+            )
 
-    func collectionView(
-        _ collectionView: UICollectionView,
-        contextMenuConfiguration _: UIContextMenuConfiguration,
-        dismissalPreviewForItemAt indexPath: IndexPath
-    ) -> UITargetedPreview? {
-        guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
-            return nil
-        }
-
-        switch itemIdentifier {
-        case .latestChapter:
-            guard let cell = collectionView.cellForItem(at: indexPath),
-                  let contentView = cell.contentView as? LatestChapterUIView
-            else {
-                return nil
-            }
-
-            return UITargetedPreview(view: contentView.imageView)
+            return UITargetedPreview(view: cell, parameters: parameters)
         case .popularManga, .recentlyAddedManga:
             return nil
         }

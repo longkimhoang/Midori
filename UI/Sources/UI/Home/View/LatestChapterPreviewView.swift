@@ -39,5 +39,6 @@ struct LatestChapterPreviewView: View {
         }
         .multilineTextAlignment(.center)
         .padding()
+        .frame(minWidth: 200, idealWidth: 300)
     }
 }

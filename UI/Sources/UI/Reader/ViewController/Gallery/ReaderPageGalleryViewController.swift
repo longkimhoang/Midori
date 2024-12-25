@@ -65,7 +65,7 @@ final class ReaderPageGalleryViewController: UIViewController {
 private extension ReaderPageGalleryViewController {
     func makeCollectionViewLayout() -> UICollectionViewLayout {
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { _, layoutEnvironment in
-            let estimatedItemWidth: CGFloat = 200
+            let estimatedItemWidth: CGFloat = 180
             let containerWidth = layoutEnvironment.container.effectiveContentSize.width
             let minItemCount: CGFloat = layoutEnvironment.traitCollection.horizontalSizeClass == .compact ? 2 : 3
             let itemCount = max(minItemCount, containerWidth / estimatedItemWidth)
