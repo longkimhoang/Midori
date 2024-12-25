@@ -72,6 +72,10 @@ public struct PersonalClientAuthenticator: Authenticator {
         return try decoder.decode(AuthCredential.self, from: data)
     }
 
+    public func adopt(crendedential: AuthCredential, into request: inout URLRequest) {
+        request.setValue("Bearer \(crendedential.accessToken)", forHTTPHeaderField: "Authorization")
+    }
+
     public func refresh(existing credential: AuthCredential) async throws -> AuthCredential {
         var request = URLRequest(url: baseURL)
         let body = try withCheckedConfiguration { configuration in

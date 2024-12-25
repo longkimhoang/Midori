@@ -5,6 +5,8 @@
 //  Created by Long Kim on 26/12/24.
 //
 
+import Foundation
+
 /// A type that performs authentication for MangaDex API endpoints.
 public protocol Authenticator: Sendable {
     /// The type of the options used to sign in.
@@ -16,6 +18,12 @@ public protocol Authenticator: Sendable {
     /// - Parameter options: The options used to sign in.
     /// - Returns: A credential instance indicating the result.
     func signIn(using options: SignInOptions) async throws -> AuthCredential
+
+    /// Adopts the credential into the provided request.
+    /// - Parameters:
+    ///   - crendedential: The credential to adopt.
+    ///   - request: An `URLRequest` instance to transform.
+    func adopt(crendedential: AuthCredential, into request: inout URLRequest)
 
     /// Refreshes the provided credential.
     /// - Parameter credential: The credential to refresh.
