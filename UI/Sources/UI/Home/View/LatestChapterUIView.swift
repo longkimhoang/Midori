@@ -14,6 +14,7 @@ final class LatestChapterUIView: UIView, UIContentView {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 8
         imageView.layer.masksToBounds = true
+        imageView.layer.borderColor = UIColor.separator.cgColor
         return imageView
     }()
 
@@ -119,6 +120,12 @@ final class LatestChapterUIView: UIView, UIContentView {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        imageView.layer.borderWidth = 1 / traitCollection.displayScale
     }
 
     func configure(using configuration: LatestChapterUIConfiguration) {
