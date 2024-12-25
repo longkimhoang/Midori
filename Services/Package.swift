@@ -17,6 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "MangaDexAPIClient"),
+        .package(path: "MangaDexAuth"),
         .package(path: "Storage"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
         .package(url: "https://github.com/WeTransfer/Mocker", from: "3.0.2"),
@@ -39,6 +40,7 @@ let package = Package(
             dependencies: [
                 "MidoriServices",
                 "MangaDexAPIClient",
+                "MangaDexAuth",
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
