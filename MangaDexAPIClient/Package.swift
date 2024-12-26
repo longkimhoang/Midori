@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "MangaDexAPIStubs", targets: ["MangaDexAPIStubs"]),
     ],
     dependencies: [
+        .package(path: "MangaDexAuth"),
         .package(url: "https://github.com/kean/Get", from: "2.2.1"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),
     ],
@@ -25,6 +26,7 @@ let package = Package(
         .target(
             name: "MangaDexAPIClient",
             dependencies: [
+                "MangaDexAuth",
                 "Get",
                 .product(name: "Dependencies", package: "swift-dependencies"),
             ]

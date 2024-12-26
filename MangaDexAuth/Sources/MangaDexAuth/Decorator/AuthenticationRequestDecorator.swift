@@ -13,7 +13,7 @@ public protocol AuthenticationRequestDecorator<AuthenticatorType>: Actor {
 
     var credential: AuthCredential? { get set }
 
-    func decorate(request: inout URLRequest) async throws
+    func decorate(_ request: inout URLRequest) async throws
     func refreshCredential() async throws
 }
 
@@ -27,7 +27,7 @@ actor AuthenticationRequestDecoratorImplementation<AuthenticatorType: Authentica
         self.authenticator = authenticator
     }
 
-    public func decorate(request: inout URLRequest) async throws {
+    public func decorate(_ request: inout URLRequest) async throws {
         if let credential {
             authenticator.adopt(crendedential: credential, into: &request)
         }
