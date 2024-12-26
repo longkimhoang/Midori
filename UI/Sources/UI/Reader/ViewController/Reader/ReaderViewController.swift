@@ -176,6 +176,32 @@ final class ReaderViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         !viewModel.controlsVisible
     }
+
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        for press in presses {
+            guard let key = press.key else {
+                continue
+            }
+
+            if key.charactersIgnoringModifiers == UIKeyCommand.inputLeftArrow {
+                let index = viewModel.displayingPageIDs.first.flatMap { viewModel.pages.index(id: $0) }
+                if let index, index > viewModel.pages.startIndex {
+                    navigateToPage(index - 1, animated: true)
+                }
+                return
+            }
+
+            if key.charactersIgnoringModifiers == UIKeyCommand.inputRightArrow {
+                let index = viewModel.displayingPageIDs.first.flatMap { viewModel.pages.index(id: $0) }
+                if let index, index < viewModel.pages.endIndex - 1 {
+                    navigateToPage(index + 1, animated: true)
+                }
+                return
+            }
+        }
+
+        super.pressesBegan(presses, with: event)
+    }
 }
 
 extension ReaderViewController: UIGestureRecognizerDelegate {
@@ -313,18 +339,25 @@ private extension ReaderViewController {
         pageViewController.setViewControllers(viewControllers, direction: .forward, animated: false)
     }
 
-    func navigateToPage(_ pageIndex: Int) {
+    func navigateToPage(_ pageIndex: Int, animated: Bool = false) {
         guard viewModel.pages.indices.contains(pageIndex) else {
             return
         }
 
         let page = viewModel.pages[pageIndex]
-        guard page.id != viewModel.displayingPageIDs.first else {
+        guard let currentPageID = viewModel.displayingPageIDs.first,
+              let currentIndex = viewModel.pages.index(id: currentPageID),
+              pageIndex != currentIndex
+        else {
             return
         }
 
         let viewController = makeContentViewController(for: page)
-        pageViewController.setViewControllers([viewController], direction: .forward, animated: false)
+        pageViewController.setViewControllers(
+            [viewController],
+            direction: pageIndex > currentIndex ? .forward : .reverse,
+            animated: animated
+        )
         viewModel.displayingPageIDs = [page.id]
     }
 
