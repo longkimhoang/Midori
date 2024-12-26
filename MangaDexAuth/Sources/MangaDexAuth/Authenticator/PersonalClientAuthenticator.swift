@@ -8,11 +8,6 @@
 import Foundation
 import os.lock
 
-public enum PersonalClientAuthenticationError: Error {
-    case invalidConfiguration
-    case invalidResponse
-}
-
 public struct PersonalClientAuthenticator: Authenticator {
     public struct Configuration: Sendable {
         public let clientId: String
@@ -66,7 +61,7 @@ public struct PersonalClientAuthenticator: Authenticator {
 
         let (data, response) = try await session.data(for: request)
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw PersonalClientAuthenticationError.invalidResponse
+            throw AuthError.network(response)
         }
 
         return try decoder.decode(AuthCredential.self, from: data)
@@ -93,7 +88,7 @@ public struct PersonalClientAuthenticator: Authenticator {
 
         let (data, response) = try await session.data(for: request)
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw PersonalClientAuthenticationError.invalidResponse
+            throw AuthError.network(response)
         }
 
         return try decoder.decode(AuthCredential.self, from: data)
@@ -105,7 +100,7 @@ public struct PersonalClientAuthenticator: Authenticator {
 
     func withCheckedConfiguration<R>(_ body: @Sendable (Configuration) throws -> R) throws -> R {
         guard let configuration = configuration.withLock({ $0 }) else {
-            throw PersonalClientAuthenticationError.invalidConfiguration
+            throw AuthError.invalidConfiguration
         }
         return try body(configuration)
     }
