@@ -5,6 +5,7 @@
 //  Created by Long Kim on 26/12/24.
 //
 
+import Dependencies
 import Foundation
 import Get
 import os.lock
@@ -91,5 +92,16 @@ public struct PersonalClientAuthenticator: Authenticator {
             throw AuthError.invalidConfiguration
         }
         return try body(configuration)
+    }
+}
+
+extension PersonalClientAuthenticator: DependencyKey {
+    public static let liveValue = PersonalClientAuthenticator()
+}
+
+public extension DependencyValues {
+    var personalClientAuthenticator: PersonalClientAuthenticator {
+        get { self[PersonalClientAuthenticator.self] }
+        set { self[PersonalClientAuthenticator.self] = newValue }
     }
 }

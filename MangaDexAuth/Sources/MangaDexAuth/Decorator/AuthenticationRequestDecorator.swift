@@ -56,7 +56,7 @@ actor AuthenticationRequestDecoratorImplementation<AuthenticatorType: Authentica
 
 private enum AuthenticationRequestDecoratorDependencyKey: DependencyKey {
     static let liveValue: any AuthenticationRequestDecorator = {
-        let authenticator = PersonalClientAuthenticator()
+        @Dependency(\.personalClientAuthenticator) var authenticator
         return AuthenticationRequestDecoratorImplementation(authenticator: authenticator)
     }()
 }
