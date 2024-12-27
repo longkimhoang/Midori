@@ -8,11 +8,11 @@
 import Dependencies
 import Foundation
 
-public protocol AuthenticationRequestDecorator<AuthenticatorType>: Actor {
-    associatedtype AuthenticatorType: Authenticator
-
+public protocol AuthenticationCredentialProviding: Actor {
     var credential: AuthCredential? { get set }
+}
 
+public protocol AuthenticationRequestDecorator: AuthenticationCredentialProviding {
     func decorate(_ request: inout URLRequest) async throws
     func refreshCredential() async throws
 }
@@ -66,5 +66,12 @@ public extension DependencyValues {
     var authenticationRequestDecorator: any AuthenticationRequestDecorator {
         get { self[AuthenticationRequestDecoratorDependencyKey.self] }
         set { self[AuthenticationRequestDecoratorDependencyKey.self] = newValue }
+    }
+
+    /// The authentication credential provider.
+    ///
+    /// Use this value instead of ``authenticationRequestDecorator`` if you only need access to the credential object.
+    var authenticationCredentialProvider: any AuthenticationCredentialProviding {
+        authenticationRequestDecorator
     }
 }
