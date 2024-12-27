@@ -40,6 +40,7 @@ let package = Package(
             dependencies: [
                 "MidoriServices",
                 "MangaDexAPIClient",
+                "MangaDexAuth",
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),

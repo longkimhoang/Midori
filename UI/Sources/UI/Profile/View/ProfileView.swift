@@ -13,9 +13,58 @@ struct ProfileView: View {
 
     var body: some View {
         Form {
+            AccountSection(viewModel: model.account)
             PersonalClientSection(viewModel: model.account)
         }
+        .scrollDismissesKeyboard(.immediately)
         .navigationTitle(Text("Profile", bundle: .module))
+    }
+}
+
+private struct AccountSection: View {
+    private enum Field {
+        case username
+        case password
+    }
+
+    @State private var username: String = ""
+    @State private var password: String = ""
+    @FocusState private var focusedField: Field?
+
+    @ObservedObject var viewModel: AccountViewModel
+
+    var body: some View {
+        switch viewModel.authState {
+        case .loggedOut:
+            section {
+                TextField(String(localized: "Username", bundle: .module), text: $username)
+                    .textContentType(.username)
+                    .focused($focusedField, equals: .username)
+
+                SecureField(String(localized: "Password", bundle: .module), text: $password)
+                    .textContentType(.password)
+                    .focused($focusedField, equals: .password)
+
+                Button(String(localized: "Sign in", bundle: .module)) {
+                    focusedField = nil
+                }
+            }
+            .onSubmit {
+                print("Submit")
+            }
+        case .loggedIn:
+            EmptyView()
+        case nil, .clientSetupRequired:
+            EmptyView()
+        }
+    }
+
+    private func section<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        Section {
+            content()
+        } header: {
+            Text("Account", bundle: .module)
+        }
     }
 }
 
@@ -24,7 +73,12 @@ private struct PersonalClientSection: View {
 
     var body: some View {
         Section {
-            if viewModel.authState != .clientSetupRequired {}
+            if viewModel.authState != .clientSetupRequired, !viewModel.personalClientInput.clientID.isEmpty {
+                LabeledContent(
+                    String(localized: "Client ID", bundle: .main),
+                    value: viewModel.personalClientInput.clientID
+                )
+            }
 
             NavigationLink {
                 PersonalClientInputForm(viewModel: viewModel)
@@ -37,13 +91,13 @@ private struct PersonalClientSection: View {
             Text(
                 """
                 In order to access your account, you'll need to set up a personal OAuth client. \
-                [Learn more](https://api.mangadex.org/docs/02-authentication/personal-clients/)
+                [Learn more](https://api.mangadex.org/docs/02-authentication/personal-clients/).
                 """,
                 bundle: .module
             )
         }
         .task {
-            await viewModel.loadClientFromKeychain()
+            await viewModel.loadClientDetails()
         }
     }
 }
@@ -72,8 +126,10 @@ private struct PersonalClientInputForm: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(String(localized: "Save", bundle: .module)) {
-                    viewModel.setupPersonalClient()
-                    dismiss()
+                    Task {
+                        await viewModel.savePersonalClient()
+                        dismiss()
+                    }
                 }
             }
         }

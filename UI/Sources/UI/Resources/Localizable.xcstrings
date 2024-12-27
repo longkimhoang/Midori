@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Account" : {
+
+    },
     "All pages" : {
 
     },
@@ -37,7 +40,7 @@
     "Home" : {
 
     },
-    "In order to access your account, you'll need to set up a personal OAuth client. [Learn more](https://api.mangadex.org/docs/02-authentication/personal-clients/)" : {
+    "In order to access your account, you'll need to set up a personal OAuth client. [Learn more](https://api.mangadex.org/docs/02-authentication/personal-clients/)." : {
 
     },
     "Latest updates" : {
@@ -66,6 +69,9 @@
 
     },
     "Page transition style" : {
+
+    },
+    "Password" : {
 
     },
     "Popular new titles" : {
@@ -104,7 +110,13 @@
     "Shows a slider for navigating through pages" : {
 
     },
+    "Sign in" : {
+
+    },
     "Use right-to-left layout" : {
+
+    },
+    "Username" : {
 
     },
     "View manga" : {
