@@ -26,15 +26,33 @@ public final class AppViewController: UITabBarController {
         return UINavigationController(rootViewController: HomeViewController(model: model))
     }
 
+    private lazy var profileTab = UITab(
+        title: String(localized: "Profile", bundle: .module),
+        image: UIImage(systemName: "person.crop.circle"),
+        identifier: Tab.profile.rawValue
+    ) { [unowned self] _ in
+        UIViewController()
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        tabs = [homeTab]
+        delegate = self
+        tabs = [homeTab, profileTab]
 
         viewModel.$selectedTab
+            .removeDuplicates()
             .sink { [unowned self] identifier in
                 selectedTab = tab(forIdentifier: identifier.rawValue)
             }
             .store(in: &cancellables)
+    }
+}
+
+extension AppViewController: UITabBarControllerDelegate {
+    public func tabBarController(_: UITabBarController, didSelectTab selectedTab: UITab, previousTab _: UITab?) {
+        if let tab = Tab(rawValue: selectedTab.identifier) {
+            viewModel.selectedTab = tab
+        }
     }
 }

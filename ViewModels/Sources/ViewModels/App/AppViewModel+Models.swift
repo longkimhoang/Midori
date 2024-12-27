@@ -7,6 +7,8 @@
 
 public extension AppViewModel {
     enum Tab: String {
-        case home, search
+        case home
+        case search
+        case profile
     }
 }
