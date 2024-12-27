@@ -10,6 +10,7 @@ import Combine
 @MainActor
 public final class AppViewModel {
     @Published public var selectedTab: Tab
+    public var profile = ProfileViewModel()
 
     public init() {
         selectedTab = .home

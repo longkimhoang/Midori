@@ -8,6 +8,7 @@
 import Combine
 import Dependencies
 import MidoriViewModels
+import SwiftUI
 import UIKit
 
 public final class AppViewController: UITabBarController {
@@ -31,7 +32,9 @@ public final class AppViewController: UITabBarController {
         image: UIImage(systemName: "person.crop.circle"),
         identifier: Tab.profile.rawValue
     ) { [unowned self] _ in
-        UIViewController()
+        let profileView = ProfileView(model: viewModel.profile)
+
+        return UINavigationController(rootViewController: UIHostingController(rootView: profileView))
     }
 
     override public func viewDidLoad() {
@@ -39,6 +42,9 @@ public final class AppViewController: UITabBarController {
 
         delegate = self
         tabs = [homeTab, profileTab]
+        #if targetEnvironment(macCatalyst)
+            mode = .tabSidebar
+        #endif
 
         viewModel.$selectedTab
             .removeDuplicates()

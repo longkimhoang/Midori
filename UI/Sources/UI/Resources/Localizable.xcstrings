@@ -4,6 +4,9 @@
     "All pages" : {
 
     },
+    "Auth client" : {
+
+    },
     "authors unavailable" : {
 
     },
@@ -11,6 +14,12 @@
 
     },
     "Chapters" : {
+
+    },
+    "Client ID" : {
+
+    },
+    "Client secret" : {
 
     },
     "Close" : {
@@ -26,6 +35,9 @@
 
     },
     "Home" : {
+
+    },
+    "In order to access your account, you'll need to set up a personal OAuth client. [Learn more](https://api.mangadex.org/docs/02-authentication/personal-clients/)" : {
 
     },
     "Latest updates" : {
@@ -72,6 +84,12 @@
 
     },
     "Return to manga" : {
+
+    },
+    "Save" : {
+
+    },
+    "Setup personal client" : {
 
     },
     "Show all pages" : {
