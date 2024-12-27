@@ -6,13 +6,11 @@
 //
 
 import Foundation
+import Get
 import os.lock
 
 public struct PersonalClientAuthenticator: Authenticator {
-    public struct Configuration: Sendable {
-        public let clientId: String
-        public let clientSecret: String
-    }
+    public typealias Configuration = PersonalClientConfiguration
 
     public struct SignInOptions: Sendable {
         public let username: String
@@ -24,13 +22,7 @@ public struct PersonalClientAuthenticator: Authenticator {
         }
     }
 
-    let session = URLSession(configuration: .ephemeral)
-
-    let decoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return decoder
-    }()
+    let apiClient: APIClient
 
     /// The client's configuration.
     ///
@@ -41,30 +33,33 @@ public struct PersonalClientAuthenticator: Authenticator {
 
     public init(configuration: Configuration? = nil) {
         self.configuration = OSAllocatedUnfairLock(initialState: configuration)
+        apiClient = APIClient(
+            baseURL: URL(string: "https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token")
+        ) {
+            $0.sessionConfiguration = .ephemeral
+            $0.decoder.keyDecodingStrategy = .convertFromSnakeCase
+        }
     }
 
     public func signIn(using options: SignInOptions) async throws -> AuthCredential {
-        var request = URLRequest(url: baseURL)
         let body = try withCheckedConfiguration { configuration in
             """
             grant_type=password
             username=\(options.username)
             password=\(options.password)
-            client_id=\(configuration.clientId)
+            client_id=\(configuration.clientID)
             client_secret=\(configuration.clientSecret)
             """
         }
 
-        request.httpMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.httpBody = Data(body.utf8)
+        let request = Request<AuthCredential>(
+            path: "/",
+            method: .post,
+            body: body,
+            headers: ["Content-Type": "application/x-www-form-urlencoded"]
+        )
 
-        let (data, response) = try await session.data(for: request)
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw AuthError.network(response)
-        }
-
-        return try decoder.decode(AuthCredential.self, from: data)
+        return try await apiClient.send(request).value
     }
 
     public func adopt(crendedential: AuthCredential, into request: inout URLRequest) {
@@ -72,30 +67,23 @@ public struct PersonalClientAuthenticator: Authenticator {
     }
 
     public func refresh(existing credential: AuthCredential) async throws -> AuthCredential {
-        var request = URLRequest(url: baseURL)
         let body = try withCheckedConfiguration { configuration in
             """
             grant_type=refresh_token
             refresh_token=\(credential.refreshToken)
-            client_id=\(configuration.clientId)
+            client_id=\(configuration.clientID)
             client_secret=\(configuration.clientSecret)
             """
         }
 
-        request.httpMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.httpBody = Data(body.utf8)
+        let request = Request<AuthCredential>(
+            path: "/",
+            method: .post,
+            body: body,
+            headers: ["Content-Type": "application/x-www-form-urlencoded"]
+        )
 
-        let (data, response) = try await session.data(for: request)
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw AuthError.network(response)
-        }
-
-        return try decoder.decode(AuthCredential.self, from: data)
-    }
-
-    var baseURL: URL {
-        URL(string: "https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token")!
+        return try await apiClient.send(request).value
     }
 
     func withCheckedConfiguration<R>(_ body: @Sendable (Configuration) throws -> R) throws -> R {
