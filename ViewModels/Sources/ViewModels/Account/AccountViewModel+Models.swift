@@ -14,7 +14,7 @@ public extension AccountViewModel {
         public let username: String
     }
 
-    struct PersonalClientInput: Equatable, Sendable {
+    struct PersonalClient: Equatable, Sendable {
         public var clientID: String = ""
         public var clientSecret: String = ""
     }
@@ -26,7 +26,7 @@ public extension AccountViewModel {
     }
 }
 
-public extension AccountViewModel.PersonalClientInput {
+public extension AccountViewModel.PersonalClient {
     init(_ configuration: PersonalClientConfiguration) {
         self.init(clientID: configuration.clientID, clientSecret: configuration.clientSecret)
     }

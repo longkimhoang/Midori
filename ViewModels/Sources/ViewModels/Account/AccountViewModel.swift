@@ -14,13 +14,13 @@ public final class AccountViewModel: ObservableObject {
     @Dependency(\.personalAuthClientService) private var personalAuthClientService
 
     @Published public var authState: AuthState?
-    @Published public var personalClientInput = PersonalClientInput()
+    @Published public var personalClient = PersonalClient()
 
     public init() {}
 
     public nonisolated func savePersonalClient() async {
         await personalAuthClientService.saveClientConfiguration(
-            .init(clientID: personalClientInput.clientID, clientSecret: personalClientInput.clientSecret)
+            .init(clientID: personalClient.clientID, clientSecret: personalClient.clientSecret)
         )
     }
 
@@ -33,7 +33,7 @@ public final class AccountViewModel: ObservableObject {
         }
 
         await MainActor.run {
-            personalClientInput = PersonalClientInput(config)
+            personalClient = PersonalClient(config)
             authState = .loggedOut
         }
     }
