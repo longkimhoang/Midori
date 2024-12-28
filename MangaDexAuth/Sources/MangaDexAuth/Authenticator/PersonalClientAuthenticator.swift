@@ -44,13 +44,13 @@ public struct PersonalClientAuthenticator: Authenticator {
 
     public func signIn(using options: SignInOptions) async throws -> AuthCredential {
         let body = try withCheckedConfiguration { configuration in
-            """
-            grant_type=password
-            username=\(options.username)
-            password=\(options.password)
-            client_id=\(configuration.clientID)
-            client_secret=\(configuration.clientSecret)
-            """
+            makeFormData(from: [
+                "grant_type": "password",
+                "username": options.username,
+                "password": options.password,
+                "client_id": configuration.clientID,
+                "client_secret": configuration.clientSecret,
+            ])
         }
 
         let request = Request<AuthCredential>(
@@ -69,12 +69,12 @@ public struct PersonalClientAuthenticator: Authenticator {
 
     public func refresh(existing credential: AuthCredential) async throws -> AuthCredential {
         let body = try withCheckedConfiguration { configuration in
-            """
-            grant_type=refresh_token
-            refresh_token=\(credential.refreshToken)
-            client_id=\(configuration.clientID)
-            client_secret=\(configuration.clientSecret)
-            """
+            makeFormData(from: [
+                "grant_type": "refresh_token",
+                "refresh_token": credential.refreshToken,
+                "client_id": configuration.clientID,
+                "client_secret": configuration.clientSecret,
+            ])
         }
 
         let request = Request<AuthCredential>(
@@ -92,6 +92,15 @@ public struct PersonalClientAuthenticator: Authenticator {
             throw AuthError.invalidConfiguration
         }
         return try body(configuration)
+    }
+
+    func makeFormData(from entries: KeyValuePairs<String, String>) -> Data {
+        let string = entries
+            .map { key, value in
+                "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+            }
+            .joined(separator: "&")
+        return Data(string.utf8)
     }
 }
 

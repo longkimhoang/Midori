@@ -12,6 +12,7 @@ import Foundation
 @MainActor
 public final class AccountViewModel: ObservableObject {
     @Dependency(\.personalAuthClientService) private var personalAuthClientService
+    @Dependency(\.authService) private var authService
 
     @Published public var authState: AuthState?
     @Published public var personalClient = PersonalClient()
@@ -36,5 +37,9 @@ public final class AccountViewModel: ObservableObject {
             personalClient = PersonalClient(config)
             authState = .loggedOut
         }
+    }
+
+    public func signIn(username: String, password: String) async throws {
+        try await authService.signIn(username: username, password: password)
     }
 }

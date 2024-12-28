@@ -12,6 +12,12 @@ public protocol AuthenticationCredentialProviding: Actor {
     var credential: AuthCredential? { get set }
 }
 
+public extension AuthenticationCredentialProviding {
+    func setCredential(_ credential: AuthCredential) {
+        self.credential = credential
+    }
+}
+
 public protocol AuthenticationRequestDecorator: AuthenticationCredentialProviding {
     func decorate(_ request: inout URLRequest) async throws
     func refreshCredential() async throws

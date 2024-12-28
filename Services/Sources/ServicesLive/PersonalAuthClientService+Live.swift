@@ -26,7 +26,15 @@ extension PersonalAuthClientService: DependencyKey {
                 return nil
             }
 
-            return try? JSONDecoder().decode(PersonalClientConfiguration.self, from: data)
+            let configuration = try? JSONDecoder().decode(PersonalClientConfiguration.self, from: data)
+            if let configuration {
+                @Dependency(\.personalClientAuthenticator) var authenticator
+                authenticator.configuration.withLock {
+                    $0 = .init(clientID: configuration.clientID, clientSecret: configuration.clientSecret)
+                }
+            }
+
+            return configuration
         },
         saveClientConfiguration: { configuration in
             guard let data = try? JSONEncoder().encode(configuration) else {
@@ -48,6 +56,11 @@ extension PersonalAuthClientService: DependencyKey {
 
             if result == errSecDuplicateItem {
                 SecItemUpdate(query as CFDictionary, update as CFDictionary)
+            }
+
+            @Dependency(\.personalClientAuthenticator) var authenticator
+            authenticator.configuration.withLock {
+                $0 = .init(clientID: configuration.clientID, clientSecret: configuration.clientSecret)
             }
         }
     )

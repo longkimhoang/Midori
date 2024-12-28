@@ -36,9 +36,6 @@ struct PersonalClientSection: View {
                 bundle: .module
             )
         }
-        .task {
-            await viewModel.loadClientDetails()
-        }
     }
 }
 

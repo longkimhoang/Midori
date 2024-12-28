@@ -38,13 +38,13 @@ struct AccountSection: View {
                     .focused($focusedField, equals: .password)
                     .submitLabel(.done)
                     .onSubmit {
-                        print("Submit")
+                        handleSubmit()
                     }
 
                 Button(String(localized: "Sign in", bundle: .module)) {
                     focusedField = nil
+                    handleSubmit()
                 }
-                .disabled(username.isEmpty || password.isEmpty)
             case .loggedIn:
                 EmptyView()
             case .clientSetupRequired:
@@ -55,6 +55,16 @@ struct AccountSection: View {
             }
         } header: {
             Text("Account", bundle: .module)
+        }
+    }
+
+    private func handleSubmit() {
+        guard !username.isEmpty, !password.isEmpty else {
+            return
+        }
+
+        Task {
+            try await viewModel.signIn(username: username, password: password)
         }
     }
 }

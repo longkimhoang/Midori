@@ -52,6 +52,10 @@ public final class AppViewController: UITabBarController {
                 selectedTab = tab(forIdentifier: identifier.rawValue)
             }
             .store(in: &cancellables)
+
+        Task {
+            await viewModel.profile.account.loadClientDetails()
+        }
     }
 }
 
