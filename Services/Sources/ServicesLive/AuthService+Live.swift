@@ -55,6 +55,17 @@ extension AuthService: DependencyKey {
                 } catch {
                     return nil
                 }
+            },
+            signOut: {
+                guard let username = UserDefaults.standard.string(forKey: usernameDefaultsKey),
+                      let data = keychain[data: username],
+                      let credential = try? JSONDecoder().decode(AuthCredential.self, from: data)
+                else {
+                    return
+                }
+                try await authenticator.signOut(revoking: credential)
+                keychain[data: username] = nil
+                UserDefaults.standard.removeObject(forKey: usernameDefaultsKey)
             }
         )
     }()

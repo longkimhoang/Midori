@@ -58,7 +58,9 @@ struct AccountSection: View {
                 AccountInformation(username: user.username)
 
                 Button(String(localized: "Sign out", bundle: .module), role: .destructive) {
-                    // sign out
+                    Task {
+                        try await viewModel.signOut()
+                    }
                 }
             case .clientSetupRequired:
                 Text("Client setup required", bundle: .module)

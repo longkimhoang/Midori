@@ -35,7 +35,7 @@ public struct PersonalClientAuthenticator: Authenticator {
     public init(configuration: Configuration? = nil) {
         self.configuration = OSAllocatedUnfairLock(initialState: configuration)
         apiClient = APIClient(
-            baseURL: URL(string: "https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token")
+            baseURL: URL(string: "https://auth.mangadex.org/realms/mangadex/protocol/openid-connect")
         ) {
             $0.sessionConfiguration = .ephemeral
             $0.decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -54,7 +54,7 @@ public struct PersonalClientAuthenticator: Authenticator {
         }
 
         let request = Request<AuthCredential>(
-            path: "/",
+            path: "/token",
             method: .post,
             body: body,
             headers: ["Content-Type": "application/x-www-form-urlencoded"]
@@ -78,13 +78,32 @@ public struct PersonalClientAuthenticator: Authenticator {
         }
 
         let request = Request<AuthCredential>(
-            path: "/",
+            path: "/token",
             method: .post,
             body: body,
             headers: ["Content-Type": "application/x-www-form-urlencoded"]
         )
 
         return try await apiClient.send(request).value
+    }
+
+    public func signOut(revoking credential: AuthCredential) async throws {
+        let body = try withCheckedConfiguration { configuration in
+            makeFormData(from: [
+                "refresh_token": credential.refreshToken,
+                "client_id": configuration.clientID,
+                "client_secret": configuration.clientSecret,
+            ])
+        }
+
+        let request = Request(
+            path: "/logout",
+            method: .post,
+            body: body,
+            headers: ["Content-Type": "application/x-www-form-urlencoded"]
+        )
+
+        try await apiClient.send(request)
     }
 
     func withCheckedConfiguration<R>(_ body: @Sendable (Configuration) throws -> R) throws -> R {

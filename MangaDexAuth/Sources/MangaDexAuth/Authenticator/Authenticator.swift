@@ -29,4 +29,9 @@ public protocol Authenticator: Sendable {
     /// - Parameter credential: The credential to refresh.
     /// - Returns: A new, refreshed credential.
     func refresh(existing credential: AuthCredential) async throws -> AuthCredential
+
+    /// Performs sign out.
+    ///
+    /// - Parameter credential: The current credential.
+    func signOut(revoking credential: AuthCredential) async throws
 }

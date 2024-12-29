@@ -63,6 +63,14 @@ public final class AccountViewModel: ObservableObject {
         authState = .loggedIn(user)
     }
 
+    public func signOut() async throws {
+        isLoading = true
+        defer { isLoading = false }
+
+        try await authService.signOut()
+        authState = .loggedOut
+    }
+
     nonisolated func fetchClientConfiguration() async -> PersonalClientConfiguration? {
         await personalAuthClientService.fetchClientConfiguration()
     }
