@@ -49,6 +49,12 @@
     "Latest updates" : {
 
     },
+    "Logged in as %@" : {
+
+    },
+    "Member" : {
+
+    },
     "More" : {
 
     },
@@ -114,6 +120,9 @@
 
     },
     "Sign in" : {
+
+    },
+    "Sign out" : {
 
     },
     "Use right-to-left layout" : {

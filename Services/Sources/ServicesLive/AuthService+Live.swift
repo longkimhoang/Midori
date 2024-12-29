@@ -24,6 +24,7 @@ extension AuthService: DependencyKey {
             let request = MangaDexAPI.User.me()
             let user = try await apiClient.send(request).value.data
             try userAPIResponseIngestor.importLoggedInUser(user)
+            return user.id
         }
     )
 }

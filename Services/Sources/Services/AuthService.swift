@@ -6,19 +6,20 @@
 //
 
 import Dependencies
+import Foundation
 
 public struct AuthService: Sendable {
-    public var signInWithUsernameAndPassword: @Sendable (_ username: String, _ password: String) async throws -> Void
+    public var signInWithUsernameAndPassword: @Sendable (_ username: String, _ password: String) async throws -> UUID
 
     public init(
-        signInWithUsernameAndPassword: @escaping @Sendable (_ username: String, _ password: String) async throws -> Void
+        signInWithUsernameAndPassword: @escaping @Sendable (_ username: String, _ password: String) async throws -> UUID
     ) {
         self.signInWithUsernameAndPassword = signInWithUsernameAndPassword
     }
 }
 
 public extension AuthService {
-    func signIn(username: String, password: String) async throws {
+    func signIn(username: String, password: String) async throws -> UUID {
         try await signInWithUsernameAndPassword(username, password)
     }
 }

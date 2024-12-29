@@ -8,9 +8,11 @@
 import Combine
 import Dependencies
 import Foundation
+import MidoriStorage
 
 @MainActor
 public final class AccountViewModel: ObservableObject {
+    @Dependency(\.modelContainer) private var modelContainer
     @Dependency(\.personalAuthClientService) private var personalAuthClientService
     @Dependency(\.authService) private var authService
 
@@ -40,6 +42,12 @@ public final class AccountViewModel: ObservableObject {
     }
 
     public func signIn(username: String, password: String) async throws {
-        try await authService.signIn(username: username, password: password)
+        let userID = try await authService.signIn(username: username, password: password)
+        let context = modelContainer.mainContext
+        guard let user = try context.fetch(UserEntity.withID(userID)).first.map(User.init) else {
+            return
+        }
+
+        authState = .loggedIn(user)
     }
 }

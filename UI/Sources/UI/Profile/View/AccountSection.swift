@@ -45,8 +45,12 @@ struct AccountSection: View {
                     focusedField = nil
                     handleSubmit()
                 }
-            case .loggedIn:
-                EmptyView()
+            case let .loggedIn(user):
+                AccountInformation(username: user.username)
+
+                Button(String(localized: "Sign out", bundle: .module), role: .destructive) {
+                    // sign out
+                }
             case .clientSetupRequired:
                 Text("Client setup required", bundle: .module)
                     .foregroundStyle(.secondary)
@@ -67,4 +71,40 @@ struct AccountSection: View {
             try await viewModel.signIn(username: username, password: password)
         }
     }
+}
+
+private struct AccountInformation: View {
+    let username: String
+
+    var body: some View {
+        HStack {
+            Circle()
+                .foregroundStyle(.fill.tertiary)
+                .overlay {
+                    Image(systemName: "person.crop.circle")
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(width: 48, height: 48)
+
+            VStack(alignment: .leading) {
+                Text(username)
+                    .font(.title3)
+                Text("Member", bundle: .module)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement()
+        .accessibilityLabel(Text("Logged in as \(username)", bundle: .module))
+    }
+}
+
+#Preview("AccountInformation", traits: .sizeThatFitsLayout) {
+    AccountInformation(username: "longkh158")
+        .padding()
+        .frame(maxWidth: .infinity)
 }

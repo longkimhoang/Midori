@@ -7,6 +7,7 @@
 
 import Foundation
 import MidoriServices
+import MidoriStorage
 
 public extension AccountViewModel {
     struct User: Equatable, Sendable {
@@ -26,7 +27,13 @@ public extension AccountViewModel {
     }
 }
 
-public extension AccountViewModel.PersonalClient {
+extension AccountViewModel.User {
+    init(_ entity: UserEntity) {
+        self.init(id: entity.id, username: entity.username)
+    }
+}
+
+extension AccountViewModel.PersonalClient {
     init(_ configuration: PersonalClientConfiguration) {
         self.init(clientID: configuration.clientID, clientSecret: configuration.clientSecret)
     }
