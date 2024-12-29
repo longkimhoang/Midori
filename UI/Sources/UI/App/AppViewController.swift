@@ -42,9 +42,6 @@ public final class AppViewController: UITabBarController {
 
         delegate = self
         tabs = [homeTab, profileTab]
-        #if targetEnvironment(macCatalyst)
-            mode = .tabSidebar
-        #endif
 
         viewModel.$selectedTab
             .removeDuplicates()

@@ -18,6 +18,7 @@ public final class AccountViewModel: ObservableObject {
 
     @Published public var authState: AuthState?
     @Published public var personalClient = PersonalClient()
+    @Published public var isLoading: Bool = false
 
     public init() {}
 
@@ -42,6 +43,9 @@ public final class AccountViewModel: ObservableObject {
     }
 
     public func signIn(username: String, password: String) async throws {
+        isLoading = true
+        defer { isLoading = false }
+
         let userID = try await authService.signIn(username: username, password: password)
         let context = modelContainer.mainContext
         guard let user = try context.fetch(UserEntity.withID(userID)).first.map(User.init) else {

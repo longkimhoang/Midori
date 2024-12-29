@@ -41,9 +41,18 @@ struct AccountSection: View {
                         handleSubmit()
                     }
 
-                Button(String(localized: "Sign in", bundle: .module)) {
+                Button {
                     focusedField = nil
                     handleSubmit()
+                } label: {
+                    if viewModel.isLoading {
+                        HStack {
+                            Text("Signing in", bundle: .module)
+                            ProgressView()
+                        }
+                    } else {
+                        Text("Sign in", bundle: .module)
+                    }
                 }
             case let .loggedIn(user):
                 AccountInformation(username: user.username)
@@ -60,6 +69,8 @@ struct AccountSection: View {
         } header: {
             Text("Account", bundle: .module)
         }
+        .animation(.default, value: viewModel.authState)
+        .disabled(viewModel.isLoading)
     }
 
     private func handleSubmit() {
