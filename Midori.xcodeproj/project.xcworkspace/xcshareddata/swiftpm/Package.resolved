@@ -1,5 +1,5 @@
 {
-  "originHash" : "8c8e15458d425baadfb2afd191aaadaf3550dd4bd52fb9527dadc16a6d67fd8d",
+  "originHash" : "14ed3e6aa30f069d5726cc5ac5809359d64aba4a0000f56c900a94b93b65b5b2",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
         "version" : "2.2.1"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "state" : {
+        "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
+        "version" : "4.2.2"
       }
     },
     {

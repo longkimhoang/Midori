@@ -7,22 +7,14 @@
 
 import Dependencies
 import Foundation
+@preconcurrency import KeychainAccess
 import MidoriServices
 import Security
 
 extension PersonalAuthClientService: DependencyKey {
     public static let liveValue: Self = PersonalAuthClientService(
         fetchClientConfiguration: {
-            let query = [
-                kSecClass: kSecClassGenericPassword,
-                kSecAttrService: service,
-                kSecAttrAccount: account,
-                kSecReturnData: true,
-            ] as CFDictionary
-
-            var item: CFTypeRef?
-            let result = SecItemCopyMatching(query, &item)
-            guard result == errSecSuccess, let data = item as? Data else {
+            guard let data = keychain[data: account] else {
                 return nil
             }
 
@@ -41,23 +33,7 @@ extension PersonalAuthClientService: DependencyKey {
                 return
             }
 
-            let query = [
-                kSecClass: kSecClassGenericPassword,
-                kSecAttrService: service,
-                kSecAttrAccount: account,
-            ]
-
-            let update = [
-                kSecValueData: data,
-            ]
-
-            let attributes = query.merging(update) { $1 }
-            let result = SecItemAdd(attributes as CFDictionary, nil)
-
-            if result == errSecDuplicateItem {
-                SecItemUpdate(query as CFDictionary, update as CFDictionary)
-            }
-
+            keychain[data: account] = data
             @Dependency(\.personalClientAuthenticator) var authenticator
             authenticator.configuration.withLock {
                 $0 = .init(clientID: configuration.clientID, clientSecret: configuration.clientSecret)
@@ -66,5 +42,5 @@ extension PersonalAuthClientService: DependencyKey {
     )
 
     static let account = "PersonalAuthClient"
-    static let service = "com.longkimhoang.Midori.services.personal-auth-client"
+    static let keychain = Keychain(service: "com.longkimhoang.Midori.services.personal-auth-client")
 }
