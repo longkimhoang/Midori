@@ -8,6 +8,7 @@
 import Combine
 import Dependencies
 import Foundation
+import MidoriServices
 import MidoriStorage
 
 @MainActor
@@ -28,18 +29,25 @@ public final class AccountViewModel: ObservableObject {
         )
     }
 
-    public nonisolated func loadClientDetails() async {
-        guard let config = await personalAuthClientService.fetchClientConfiguration() else {
-            await MainActor.run {
-                authState = .clientSetupRequired
-            }
+    public func initializeAuthState() async throws {
+        guard let config = await fetchClientConfiguration() else {
+            authState = .clientSetupRequired
             return
         }
 
-        await MainActor.run {
-            personalClient = PersonalClient(config)
+        personalClient = PersonalClient(config)
+        guard let userID = try await authService.initializeSession() else {
             authState = .loggedOut
+            return
         }
+
+        let context = modelContainer.mainContext
+        guard let user = try context.fetch(UserEntity.withID(userID)).first.map(User.init) else {
+            authState = .loggedOut
+            return
+        }
+
+        authState = .loggedIn(user)
     }
 
     public func signIn(username: String, password: String) async throws {
@@ -53,5 +61,9 @@ public final class AccountViewModel: ObservableObject {
         }
 
         authState = .loggedIn(user)
+    }
+
+    nonisolated func fetchClientConfiguration() async -> PersonalClientConfiguration? {
+        await personalAuthClientService.fetchClientConfiguration()
     }
 }

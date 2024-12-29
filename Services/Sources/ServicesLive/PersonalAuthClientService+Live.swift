@@ -7,7 +7,7 @@
 
 import Dependencies
 import Foundation
-@preconcurrency import KeychainAccess
+import KeychainAccess
 import MidoriServices
 import Security
 
@@ -42,5 +42,5 @@ extension PersonalAuthClientService: DependencyKey {
     )
 
     static let account = "PersonalAuthClient"
-    static let keychain = Keychain(service: "com.longkimhoang.Midori.services.personal-auth-client")
+    nonisolated(unsafe) static let keychain = Keychain.personalAuthClient
 }

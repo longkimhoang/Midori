@@ -92,9 +92,10 @@ private struct AccountInformation: View {
             Circle()
                 .foregroundStyle(.fill.tertiary)
                 .overlay {
-                    Image(systemName: "person.crop.circle")
+                    Image(systemName: "person.crop.circle.fill")
                         .resizable()
                         .aspectRatio(1, contentMode: .fit)
+                        .symbolRenderingMode(.hierarchical)
                         .foregroundStyle(.secondary)
                 }
                 .frame(width: 48, height: 48)

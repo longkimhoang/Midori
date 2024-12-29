@@ -10,11 +10,15 @@ import Foundation
 
 public struct AuthService: Sendable {
     public var signInWithUsernameAndPassword: @Sendable (_ username: String, _ password: String) async throws -> UUID
+    public var initializeSession: @Sendable () async throws -> UUID?
 
     public init(
-        signInWithUsernameAndPassword: @escaping @Sendable (_ username: String, _ password: String) async throws -> UUID
+        signInWithUsernameAndPassword: @escaping @Sendable (_ username: String, _ password: String) async throws ->
+            UUID,
+        initializeSession: @escaping @Sendable () async throws -> UUID?
     ) {
         self.signInWithUsernameAndPassword = signInWithUsernameAndPassword
+        self.initializeSession = initializeSession
     }
 }
 
@@ -26,7 +30,8 @@ public extension AuthService {
 
 extension AuthService: TestDependencyKey {
     public static let testValue = AuthService(
-        signInWithUsernameAndPassword: unimplemented("AuthService.signInWithUsernameAndPassword")
+        signInWithUsernameAndPassword: unimplemented("AuthService.signInWithUsernameAndPassword"),
+        initializeSession: unimplemented("AuthService.initializeSession")
     )
 }
 

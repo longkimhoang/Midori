@@ -51,7 +51,7 @@ public final class AppViewController: UITabBarController {
             .store(in: &cancellables)
 
         Task {
-            await viewModel.profile.account.loadClientDetails()
+            try await viewModel.profile.account.initializeAuthState()
         }
     }
 }
