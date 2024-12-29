@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 extension HomeViewController: UICollectionViewDelegate {
-    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, performPrimaryActionForItemAt indexPath: IndexPath) {
         guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath) else {
             return
         }

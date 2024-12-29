@@ -8,7 +8,7 @@
 import UIKit
 
 extension MangaAggregateViewController: UICollectionViewDelegate {
-    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, performPrimaryActionForItemAt indexPath: IndexPath) {
         guard let chapterID = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
