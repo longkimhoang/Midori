@@ -101,7 +101,7 @@ private struct AccountInformation: View {
 
             VStack(alignment: .leading) {
                 Text(username)
-                    .font(.title3)
+                    .font(.headline)
                 Text("Member", bundle: .module)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
