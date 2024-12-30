@@ -41,13 +41,7 @@ public final class AccountViewModel: ObservableObject {
             return
         }
 
-        let context = modelContainer.mainContext
-        guard let user = try context.fetch(UserEntity.withID(userID)).first.map(User.init) else {
-            authState = .loggedOut
-            return
-        }
-
-        authState = .loggedIn(user)
+        try updateAuthState(userID: userID)
     }
 
     public func signIn(username: String, password: String) async throws {
@@ -55,12 +49,7 @@ public final class AccountViewModel: ObservableObject {
         defer { isLoading = false }
 
         let userID = try await authService.signIn(username: username, password: password)
-        let context = modelContainer.mainContext
-        guard let user = try context.fetch(UserEntity.withID(userID)).first.map(User.init) else {
-            return
-        }
-
-        authState = .loggedIn(user)
+        try updateAuthState(userID: userID)
     }
 
     public func signOut() async throws {
@@ -73,5 +62,14 @@ public final class AccountViewModel: ObservableObject {
 
     nonisolated func fetchClientConfiguration() async -> PersonalClientConfiguration? {
         await personalAuthClientService.fetchClientConfiguration()
+    }
+
+    func updateAuthState(userID: UUID) throws {
+        let context = modelContainer.mainContext
+        guard let user = try context.fetch(UserEntity.withID(userID)).first.map(User.init) else {
+            return
+        }
+
+        authState = .loggedIn(user)
     }
 }
