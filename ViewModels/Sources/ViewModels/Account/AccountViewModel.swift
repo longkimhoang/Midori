@@ -18,14 +18,14 @@ public final class AccountViewModel: ObservableObject {
     @Dependency(\.authService) private var authService
 
     @Published public var authState: AuthState?
-    @Published public var personalClient = PersonalClient()
+    @Published public var personalClient: PersonalClient?
     @Published public var isLoading: Bool = false
 
     public init() {}
 
-    public nonisolated func savePersonalClient() async {
+    public nonisolated func savePersonalClient(_ client: PersonalClient) async {
         await personalAuthClientService.saveClientConfiguration(
-            .init(clientID: personalClient.clientID, clientSecret: personalClient.clientSecret)
+            .init(clientID: client.clientID, clientSecret: client.clientSecret)
         )
     }
 

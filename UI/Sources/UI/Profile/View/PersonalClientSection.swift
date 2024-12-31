@@ -9,15 +9,15 @@ import MidoriViewModels
 import SwiftUI
 
 struct PersonalClientSection: View {
-    @ObservedObject var viewModel: AccountViewModel
+    @ObservedObject var viewModel: ProfileViewModel
 
     var body: some View {
         Section {
-            if viewModel.authState != .clientSetupRequired, !viewModel.personalClient.clientID.isEmpty {
-                LabeledContent(
-                    String(localized: "Client ID", bundle: .main),
-                    value: viewModel.personalClient.clientID
-                )
+            if !viewModel.client.clientID.isEmpty {
+                LabeledContent(String(localized: "Client ID", bundle: .main)) {
+                    Text(viewModel.client.clientID)
+                        .fontDesign(.monospaced)
+                }
             }
 
             NavigationLink {
@@ -40,21 +40,23 @@ struct PersonalClientSection: View {
 }
 
 private struct PersonalClientInputForm: View {
+    @EnvironmentObject private var accountViewModel: AccountViewModel
     @Environment(\.dismiss) private var dismiss
 
-    @ObservedObject var viewModel: AccountViewModel
+    @ObservedObject var viewModel: ProfileViewModel
 
     var body: some View {
         Form {
             Section {
                 TextField(
                     String(localized: "Client ID", bundle: .module),
-                    text: $viewModel.personalClient.clientID
+                    text: $viewModel.client.clientID
                 )
+                .fontDesign(.monospaced)
 
                 SecureField(
                     String(localized: "Client secret", bundle: .module),
-                    text: $viewModel.personalClient.clientSecret
+                    text: $viewModel.client.clientSecret
                 )
             }
         }
@@ -64,7 +66,7 @@ private struct PersonalClientInputForm: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button(String(localized: "Save", bundle: .module)) {
                     Task {
-                        await viewModel.savePersonalClient()
+                        await accountViewModel.savePersonalClient(viewModel.client)
                         dismiss()
                     }
                 }

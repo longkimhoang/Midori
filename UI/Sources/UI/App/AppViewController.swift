@@ -33,6 +33,7 @@ public final class AppViewController: UITabBarController {
         identifier: Tab.profile.rawValue
     ) { [unowned self] _ in
         let profileView = ProfileView(model: viewModel.profile)
+            .environmentObject(viewModel.account)
 
         return UINavigationController(rootViewController: UIHostingController(rootView: profileView))
     }
@@ -51,7 +52,7 @@ public final class AppViewController: UITabBarController {
             .store(in: &cancellables)
 
         Task {
-            try await viewModel.profile.account.initializeAuthState()
+            try await viewModel.account.initializeAuthState()
         }
     }
 }

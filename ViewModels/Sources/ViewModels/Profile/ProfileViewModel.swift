@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 public final class ProfileViewModel: ObservableObject {
-    public var account = AccountViewModel()
+    @Published public var client = AccountViewModel.PersonalClient()
 
     public init() {}
 }
