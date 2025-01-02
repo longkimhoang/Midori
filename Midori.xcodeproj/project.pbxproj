@@ -15,6 +15,7 @@
 		5329F1EC2CC027E700A6BD2B /* Midori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Midori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5329F1FE2CC02A5700A6BD2B /* Storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Storage; sourceTree = "<group>"; };
 		53468DD72CDDEB040031E017 /* ViewModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ViewModels; sourceTree = "<group>"; };
+		537CC2DF2D26453600366C3A /* Midori macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Midori macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5383975B2CC0366D002F82D9 /* Midori.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Midori.xctestplan; sourceTree = "<group>"; };
 		53D520D32CC24150005CD999 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UI; sourceTree = "<group>"; };
 		53D520DA2CC2422A005CD999 /* Services */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Services; sourceTree = "<group>"; };
@@ -42,6 +43,11 @@
 			path = Midori;
 			sourceTree = "<group>";
 		};
+		537CC2E02D26453600366C3A /* Midori macOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Midori macOS";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +57,13 @@
 			files = (
 				53D6ECFD2CCE1F5E007A03AB /* MidoriServicesLive in Frameworks */,
 				53AA5E4C2CCD388D005A4538 /* MidoriApp in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		537CC2DC2D26453600366C3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +83,7 @@
 				5383975B2CC0366D002F82D9 /* Midori.xctestplan */,
 				5329F1FF2CC02E1800A6BD2B /* Frameworks */,
 				5329F1EE2CC027E700A6BD2B /* Midori */,
+				537CC2E02D26453600366C3A /* Midori macOS */,
 				5329F1ED2CC027E700A6BD2B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -78,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				5329F1EC2CC027E700A6BD2B /* Midori.app */,
+				537CC2DF2D26453600366C3A /* Midori macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -116,6 +131,28 @@
 			productReference = 5329F1EC2CC027E700A6BD2B /* Midori.app */;
 			productType = "com.apple.product-type.application";
 		};
+		537CC2DE2D26453600366C3A /* Midori macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 537CC2EB2D26453700366C3A /* Build configuration list for PBXNativeTarget "Midori macOS" */;
+			buildPhases = (
+				537CC2DB2D26453600366C3A /* Sources */,
+				537CC2DC2D26453600366C3A /* Frameworks */,
+				537CC2DD2D26453600366C3A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				537CC2E02D26453600366C3A /* Midori macOS */,
+			);
+			name = "Midori macOS";
+			packageProductDependencies = (
+			);
+			productName = "Midori macOS";
+			productReference = 537CC2DF2D26453600366C3A /* Midori macOS.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -123,12 +160,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					5329F1EB2CC027E700A6BD2B = {
 						CreatedOnToolsVersion = 16.0;
 						LastSwiftMigration = 1610;
+					};
+					537CC2DE2D26453600366C3A = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -149,6 +189,7 @@
 			projectRoot = "";
 			targets = (
 				5329F1EB2CC027E700A6BD2B /* Midori */,
+				537CC2DE2D26453600366C3A /* Midori macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -161,10 +202,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		537CC2DD2D26453600366C3A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5329F1E82CC027E700A6BD2B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		537CC2DB2D26453600366C3A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -316,9 +371,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.longkimhoang.Midori;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -355,9 +412,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.longkimhoang.Midori;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -366,6 +425,68 @@
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6";
 				_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES;
+			};
+			name = Release;
+		};
+		537CC2EC2D26453700366C3A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Midori macOS/Midori.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Midori macOS/Preview Content\"";
+				DEVELOPMENT_TEAM = ZZTDCDTRL8;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Midori;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.longkimhoang.Midori-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		537CC2ED2D26453700366C3A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Midori macOS/Midori.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Midori macOS/Preview Content\"";
+				DEVELOPMENT_TEAM = ZZTDCDTRL8;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Midori;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.longkimhoang.Midori-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -386,6 +507,15 @@
 			buildConfigurations = (
 				5329F1FB2CC027E800A6BD2B /* Debug */,
 				5329F1FC2CC027E800A6BD2B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		537CC2EB2D26453700366C3A /* Build configuration list for PBXNativeTarget "Midori macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				537CC2EC2D26453700366C3A /* Debug */,
+				537CC2ED2D26453700366C3A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

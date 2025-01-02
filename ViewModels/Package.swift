@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "ViewModels",
     defaultLocalization: "en",
-    platforms: [.iOS(.v18)],
+    platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
