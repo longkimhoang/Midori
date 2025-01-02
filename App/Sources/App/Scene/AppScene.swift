@@ -11,8 +11,6 @@ public struct AppScene: Scene {
     public init() {}
 
     public var body: some Scene {
-        WindowGroup {
-
-        }
+        WindowGroup {}
     }
 }
