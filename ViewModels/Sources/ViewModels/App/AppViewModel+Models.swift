@@ -10,5 +10,6 @@ public extension AppViewModel {
         case home
         case search
         case profile
+        case updates
     }
 }

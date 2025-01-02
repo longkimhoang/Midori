@@ -22,9 +22,15 @@ public final class AppViewController: UITabBarController {
         image: UIImage(systemName: "house"),
         identifier: Tab.home.rawValue
     ) { [unowned self] _ in
-        let model = HomeViewModel()
+        return UINavigationController(rootViewController: HomeViewController(model: viewModel.home))
+    }
 
-        return UINavigationController(rootViewController: HomeViewController(model: model))
+    private lazy var feedTab = UITab(
+        title: String(localized: "Updates", bundle: .module),
+        image: UIImage(systemName: "bell"),
+        identifier: Tab.updates.rawValue
+    ) { [unowned self] _ in
+        UIViewController()
     }
 
     private lazy var profileTab = UITab(
@@ -42,7 +48,7 @@ public final class AppViewController: UITabBarController {
         super.viewDidLoad()
 
         delegate = self
-        tabs = [homeTab, profileTab]
+        tabs = [homeTab, feedTab, profileTab]
 
         viewModel.$selectedTab
             .removeDuplicates()
