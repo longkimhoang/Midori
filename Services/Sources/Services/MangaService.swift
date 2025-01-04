@@ -18,19 +18,22 @@ public struct MangaService: Sendable {
     public var syncMangaWithID: @Sendable (_ id: UUID) async throws -> Void
     public var syncMangaFeed: @Sendable (_ id: UUID, _ limit: Int, _ offset: Int) async throws -> Void
     public var syncMangaAggregate: @Sendable (_ mangaID: UUID, _ scanlationGroupID: UUID) async throws -> Void
+    public var syncUserFollowedFeed: @Sendable (_ limit: Int, _ offset: Int) async throws -> Void
 
     public init(
         syncPopularMangas: @Sendable @escaping () async throws -> Void,
         syncRecentlyAddedMangas: @Sendable @escaping (_ limit: Int, _ offset: Int) async throws -> Void,
         syncMangaWithID: @Sendable @escaping (_ id: UUID) async throws -> Void,
         syncMangaFeed: @Sendable @escaping (_ id: UUID, _ limit: Int, _ offset: Int) async throws -> Void,
-        syncMangaAggregate: @Sendable @escaping (_ mangaID: UUID, _ scanlationGroupID: UUID) async throws -> Void
+        syncMangaAggregate: @Sendable @escaping (_ mangaID: UUID, _ scanlationGroupID: UUID) async throws -> Void,
+        syncUserFollowedFeed: @Sendable @escaping (_ limit: Int, _ offset: Int) async throws -> Void
     ) {
         self.syncPopularMangas = syncPopularMangas
         self.syncRecentlyAddedMangas = syncRecentlyAddedMangas
         self.syncMangaWithID = syncMangaWithID
         self.syncMangaFeed = syncMangaFeed
         self.syncMangaAggregate = syncMangaAggregate
+        self.syncUserFollowedFeed = syncUserFollowedFeed
     }
 }
 
@@ -50,6 +53,10 @@ public extension MangaService {
     func syncMangaAggregate(mangaID: UUID, scanlationGroupID: UUID) async throws {
         try await syncMangaAggregate(mangaID, scanlationGroupID)
     }
+
+    func syncUserFollowedFeed(limit: Int, offset: Int = 0) async throws {
+        try await syncUserFollowedFeed(limit, offset)
+    }
 }
 
 extension MangaService: TestDependencyKey {
@@ -58,7 +65,8 @@ extension MangaService: TestDependencyKey {
         syncRecentlyAddedMangas: unimplemented("MangaService.syncRecentlyAddedMangas"),
         syncMangaWithID: unimplemented("MangaService.syncMangaWithID"),
         syncMangaFeed: unimplemented("MangaService.syncMangaFeed"),
-        syncMangaAggregate: unimplemented("MangaService.syncMangaAggregate")
+        syncMangaAggregate: unimplemented("MangaService.syncMangaAggregate"),
+        syncUserFollowedFeed: unimplemented("MangaService.syncUserFollowedFeed")
     )
 }
 
