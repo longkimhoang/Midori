@@ -8,8 +8,8 @@
 import Dependencies
 import SwiftData
 
-private extension ModelContainer {
-    static func make(inMemory: Bool = false) throws -> ModelContainer {
+extension ModelContainer {
+    fileprivate static func make(inMemory: Bool = false) throws -> ModelContainer {
         let schema = Schema([MangaEntity.self, UserEntity.self])
         let configuration = ModelConfiguration(isStoredInMemoryOnly: inMemory)
         return try ModelContainer(for: schema, configurations: configuration)
@@ -26,8 +26,8 @@ private enum ModelContainerDependencyKey: DependencyKey {
     static let liveValue = try! ModelContainer.make()
 }
 
-public extension DependencyValues {
-    var modelContainer: ModelContainer {
+extension DependencyValues {
+    public var modelContainer: ModelContainer {
         get { self[ModelContainerDependencyKey.self] }
         set { self[ModelContainerDependencyKey.self] = newValue }
     }

@@ -17,9 +17,10 @@ extension MidoriStorage.LocalizedString {
                 result[LanguageCode(element.key)] = element.value
             }
 
-        self.init(localizedVariants: NonEmpty(
-            (LanguageCode(defaultVariant.0), defaultVariant.1),
-            localizedVariants
-        ))
+        self.init(
+            localizedVariants: NonEmpty(
+                (LanguageCode(defaultVariant.0), defaultVariant.1),
+                localizedVariants
+            ))
     }
 }

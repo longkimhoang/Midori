@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-public extension ChapterEntity {
-    static func latest(limit: Int = 100, offset: Int = 0) -> FetchDescriptor<ChapterEntity> {
+extension ChapterEntity {
+    public static func latest(limit: Int = 100, offset: Int = 0) -> FetchDescriptor<ChapterEntity> {
         var descriptor = FetchDescriptor<ChapterEntity>()
         descriptor.predicate = #Predicate {
             $0.manga != nil
@@ -22,7 +22,7 @@ public extension ChapterEntity {
         return descriptor
     }
 
-    static func feed(for mangaID: UUID, limit: Int = 100, offset: Int = 0) -> FetchDescriptor<ChapterEntity> {
+    public static func feed(for mangaID: UUID, limit: Int = 100, offset: Int = 0) -> FetchDescriptor<ChapterEntity> {
         var descriptor = FetchDescriptor<ChapterEntity>()
         descriptor.predicate = #Predicate {
             $0.manga?.id == mangaID
@@ -39,7 +39,7 @@ public extension ChapterEntity {
         return descriptor
     }
 
-    static func withID(_ id: UUID) -> FetchDescriptor<ChapterEntity> {
+    public static func withID(_ id: UUID) -> FetchDescriptor<ChapterEntity> {
         var descriptor = FetchDescriptor<ChapterEntity>()
         descriptor.predicate = #Predicate {
             $0.manga != nil && $0.id == id

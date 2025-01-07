@@ -81,20 +81,24 @@ private struct MangaSynopsisContentView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .ignoresSafeArea(edges: .horizontal)
         }
-        .environment(\.openURL, OpenURLAction {
-            coordinator.openURL($0)
-            return .handled
-        })
+        .environment(
+            \.openURL,
+            OpenURLAction {
+                coordinator.openURL($0)
+                return .handled
+            })
     }
 
     var attributedContent: AttributedString {
         let attributes = AttributeContainer()
             .font(.body)
 
-        guard let attributedContent = try? AttributedString(
-            markdown: content,
-            options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        ) else {
+        guard
+            let attributedContent = try? AttributedString(
+                markdown: content,
+                options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+            )
+        else {
             return AttributedString(content).mergingAttributes(attributes)
         }
 
@@ -110,17 +114,18 @@ private struct MangaSynopsisContentView: View {
 
 #Preview {
     let viewController = MangaDetailDescriptionViewController()
-    viewController.setContent("""
-    "Hey, boyfriend, how you doing?"
+    viewController.setContent(
+        """
+        "Hey, boyfriend, how you doing?"
 
-    Souta Sakuhara is a first-year high school boy. His first ever girlfriend has just been stolen away from him by a "girlfriend." That girlfriend is Shizuno Mizushima, a tomboy who's also the tallest girl he's ever met, who's now his hated rival in love, taunting him with it. But then…
+        Souta Sakuhara is a first-year high school boy. His first ever girlfriend has just been stolen away from him by a "girlfriend." That girlfriend is Shizuno Mizushima, a tomboy who's also the tallest girl he's ever met, who's now his hated rival in love, taunting him with it. But then…
 
-    "Since nobody else wants to be your girlfriend, how about you go out with me?"
+        "Since nobody else wants to be your girlfriend, how about you go out with me?"
 
-    She suddenly pins him against the wall! She also started saying, "Give me a month, and I'll make you fall in love with me…… I'm not going to let you go so easily!"
+        She suddenly pins him against the wall! She also started saying, "Give me a month, and I'll make you fall in love with me…… I'm not going to let you go so easily!"
 
-    A one-way romantic comedy in which a handsome and beautiful girl will tempt you every day!
-    """)
+        A one-way romantic comedy in which a handsome and beautiful girl will tempt you every day!
+        """)
 
     return UINavigationController(rootViewController: viewController)
 }

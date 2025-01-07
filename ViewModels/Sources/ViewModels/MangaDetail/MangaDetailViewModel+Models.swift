@@ -9,8 +9,8 @@ import Dependencies
 import Foundation
 import MidoriStorage
 
-public extension MangaDetailViewModel {
-    struct Manga: Equatable, Sendable {
+extension MangaDetailViewModel {
+    public struct Manga: Equatable, Sendable {
         public let title: String
         public let alternateTitle: String?
         public let subtitle: AttributedString?
@@ -19,14 +19,14 @@ public extension MangaDetailViewModel {
         public let rating: Double
     }
 
-    struct Chapter: Identifiable, Equatable, Sendable {
+    public struct Chapter: Identifiable, Equatable, Sendable {
         public let id: UUID
         public let title: String
         public let group: String
         public let readableAt: String
     }
 
-    enum Volume: Hashable, Identifiable, Sendable {
+    public enum Volume: Hashable, Identifiable, Sendable {
         case none
         case volume(String)
 

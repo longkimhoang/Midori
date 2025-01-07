@@ -7,9 +7,10 @@
 
 import Dependencies
 import Foundation
-@testable import MidoriStorage
 import SwiftData
 import Testing
+
+@testable import MidoriStorage
 
 @Suite("Chapter model")
 struct ChapterTests {

@@ -9,18 +9,18 @@ import Foundation
 import MidoriServices
 import MidoriStorage
 
-public extension AccountViewModel {
-    struct User: Equatable, Sendable {
+extension AccountViewModel {
+    public struct User: Equatable, Sendable {
         public let id: UUID
         public let username: String
     }
 
-    struct PersonalClient: Equatable, Sendable {
+    public struct PersonalClient: Equatable, Sendable {
         public var clientID: String = ""
         public var clientSecret: String = ""
     }
 
-    enum AuthState: Equatable, Sendable {
+    public enum AuthState: Equatable, Sendable {
         case clientSetupRequired
         case loggedOut
         case loggedIn(User)

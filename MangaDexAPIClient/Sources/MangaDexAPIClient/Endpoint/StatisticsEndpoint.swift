@@ -8,14 +8,14 @@
 import Foundation
 import Get
 
-public extension MangaDexAPI {
+extension MangaDexAPI {
     /// Statistics endpoint.
-    enum Statistics {}
+    public enum Statistics {}
 }
 
-public extension MangaDexAPI.Statistics {
+extension MangaDexAPI.Statistics {
     /// Manga statistics.
-    struct Manga {
+    public struct Manga {
         static let basePath = "statistics/manga"
         let path: String
 
@@ -48,8 +48,8 @@ public struct GetMangaStatisticsListResponse: Decodable, Sendable {
     }
 }
 
-public extension MangaDexAPI.Statistics.Manga {
-    static func list(ids: [UUID]) -> Request<GetMangaStatisticsListResponse> {
+extension MangaDexAPI.Statistics.Manga {
+    public static func list(ids: [UUID]) -> Request<GetMangaStatisticsListResponse> {
         var query: [URLQueryItem] = []
         query.append(contentsOf: ids.queryItems(name: "manga[]"))
 

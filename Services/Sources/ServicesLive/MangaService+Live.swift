@@ -83,8 +83,8 @@ extension MangaService: DependencyKey {
 
                 let context = ModelContext(modelContainer)
                 guard let mangaPersistentID = try context.fetchIdentifiers(MangaEntity.withID(mangaID)).first,
-                      let scanlationGroupPersistentID =
-                      try context.fetchIdentifiers(ScanlationGroupEntity.withID(scanlationGroupID)).first
+                    let scanlationGroupPersistentID =
+                        try context.fetchIdentifiers(ScanlationGroupEntity.withID(scanlationGroupID)).first
                 else {
                     throw MangaServiceError.mangaNotFound
                 }

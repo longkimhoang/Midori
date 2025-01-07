@@ -83,8 +83,8 @@ extension ReaderPageContentViewController: UIScrollViewDelegate {
 
 // MARK: - Private
 
-private extension ReaderPageContentViewController {
-    func loadImage() {
+extension ReaderPageContentViewController {
+    fileprivate func loadImage() {
         let request = ImageRequest(page: page)
         cancellable = ImagePipeline.midoriReader.imagePublisher(with: request)
             .handleEvents(
@@ -140,17 +140,18 @@ private extension ReaderPageContentViewController {
             }
     }
 
-    @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+    @objc fileprivate func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard gesture.state == .ended else {
             return
         }
 
         let location = gesture.location(in: imageView)
-        let zoomScale = if contentScrollView.zoomScale == contentScrollView.minimumZoomScale {
-            contentScrollView.maximumZoomScale
-        } else {
-            contentScrollView.minimumZoomScale
-        }
+        let zoomScale =
+            if contentScrollView.zoomScale == contentScrollView.minimumZoomScale {
+                contentScrollView.maximumZoomScale
+            } else {
+                contentScrollView.minimumZoomScale
+            }
 
         let width = contentScrollView.frame.width / zoomScale
         let height = contentScrollView.frame.height / zoomScale
@@ -160,7 +161,7 @@ private extension ReaderPageContentViewController {
         contentScrollView.zoom(to: CGRect(x: x, y: y, width: width, height: height), animated: true)
     }
 
-    func updateImageViewOffset(in scrollView: UIScrollView) {
+    fileprivate func updateImageViewOffset(in scrollView: UIScrollView) {
         let height = imageView.bounds.height * scrollView.zoomScale
         let width = imageView.bounds.width * scrollView.zoomScale
 

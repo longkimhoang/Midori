@@ -36,8 +36,8 @@ extension AuthService: DependencyKey {
             },
             initializeSession: {
                 guard let username = UserDefaults.standard.string(forKey: usernameDefaultsKey),
-                      let data = keychain[data: username],
-                      let credential = try? JSONDecoder().decode(AuthCredential.self, from: data)
+                    let data = keychain[data: username],
+                    let credential = try? JSONDecoder().decode(AuthCredential.self, from: data)
                 else {
                     return nil
                 }
@@ -58,8 +58,8 @@ extension AuthService: DependencyKey {
             },
             signOut: {
                 guard let username = UserDefaults.standard.string(forKey: usernameDefaultsKey),
-                      let data = keychain[data: username],
-                      let credential = try? JSONDecoder().decode(AuthCredential.self, from: data)
+                    let data = keychain[data: username],
+                    let credential = try? JSONDecoder().decode(AuthCredential.self, from: data)
                 else {
                     return
                 }

@@ -168,7 +168,7 @@ final class ReaderViewController: UIViewController {
         viewModel.pageScrubber.$currentPage
             .dropFirst()
             .sink { [unowned self] page in
-                navigateToPage(page - 1) // page is 1-indexed
+                navigateToPage(page - 1)  // page is 1-indexed
             }
             .store(in: &cancellables)
     }
@@ -233,8 +233,8 @@ extension ReaderViewController: UIPopoverPresentationControllerDelegate {
 
 // MARK: - Private
 
-private extension ReaderViewController {
-    func setupToolbar() {
+extension ReaderViewController {
+    fileprivate func setupToolbar() {
         view.addSubview(toolbarHostingController.view)
 
         NSLayoutConstraint.activate([
@@ -247,7 +247,8 @@ private extension ReaderViewController {
         Publishers.CombineLatest(viewModel.$pages, viewModel.$displayingPageIDs)
             .filter { !$0.0.isEmpty && !$0.1.isEmpty }
             .map { pages, displayingPageIDs in
-                let indices = displayingPageIDs
+                let indices =
+                    displayingPageIDs
                     .compactMap { pages.index(id: $0) }
                     .map { String($0 + 1) }
                     .joined(separator: "-")
@@ -260,7 +261,7 @@ private extension ReaderViewController {
             .store(in: &cancellables)
     }
 
-    @objc func handleTap(_ tap: UITapGestureRecognizer) {
+    @objc fileprivate func handleTap(_ tap: UITapGestureRecognizer) {
         guard tap.state == .ended else {
             return
         }
@@ -278,7 +279,7 @@ private extension ReaderViewController {
         }
     }
 
-    @objc func chapterListButtonTapped(_ sender: UIBarButtonItem) {
+    @objc fileprivate func chapterListButtonTapped(_ sender: UIBarButtonItem) {
         guard let aggregate = viewModel.aggregate else {
             return
         }
@@ -310,7 +311,7 @@ private extension ReaderViewController {
         present(navigationController, animated: true)
     }
 
-    @objc func optionsButtonTapped(_ sender: UIBarButtonItem) {
+    @objc fileprivate func optionsButtonTapped(_ sender: UIBarButtonItem) {
         let optionsView = ReaderOptionsView(model: viewModel.readerOptions)
         let hostingController = UIHostingController(rootView: optionsView)
         hostingController.sizingOptions = [.preferredContentSize]
@@ -324,7 +325,7 @@ private extension ReaderViewController {
         present(hostingController, animated: true)
     }
 
-    func updateReaderRightToLeftPreference(to isRTL: Bool) {
+    fileprivate func updateReaderRightToLeftPreference(to isRTL: Bool) {
         let semanticContentAttribute: UISemanticContentAttribute = isRTL ? .forceRightToLeft : .unspecified
         pageViewController.view.semanticContentAttribute = semanticContentAttribute
 
@@ -339,15 +340,15 @@ private extension ReaderViewController {
         pageViewController.setViewControllers(viewControllers, direction: .forward, animated: false)
     }
 
-    func navigateToPage(_ pageIndex: Int, animated: Bool = false) {
+    fileprivate func navigateToPage(_ pageIndex: Int, animated: Bool = false) {
         guard viewModel.pages.indices.contains(pageIndex) else {
             return
         }
 
         let page = viewModel.pages[pageIndex]
         guard let currentPageID = viewModel.displayingPageIDs.first,
-              let currentIndex = viewModel.pages.index(id: currentPageID),
-              pageIndex != currentIndex
+            let currentIndex = viewModel.pages.index(id: currentPageID),
+            pageIndex != currentIndex
         else {
             return
         }
@@ -361,7 +362,7 @@ private extension ReaderViewController {
         viewModel.displayingPageIDs = [page.id]
     }
 
-    func updateToolbarView(indices: String, pageCount: Int) {
+    fileprivate func updateToolbarView(indices: String, pageCount: Int) {
         let toolbarView = ReaderToolbarView(
             indices: indices,
             pageCount: pageCount,
@@ -375,7 +376,7 @@ private extension ReaderViewController {
         toolbarHostingController.rootView = toolbarView
     }
 
-    func makeGalleryViewController() -> ReaderPageGalleryViewController {
+    fileprivate func makeGalleryViewController() -> ReaderPageGalleryViewController {
         let galleryViewController = ReaderPageGalleryViewController(model: viewModel)
         galleryViewController.modalPresentationStyle = .pageSheet
         galleryViewController.$selectedPageID

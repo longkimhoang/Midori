@@ -39,9 +39,9 @@ public struct LocalizedString: Equatable, Codable, Sendable, CustomDebugStringCo
 
 // MARK: - Language Code
 
-public extension LocalizedString {
+extension LocalizedString {
     /// The language code.
-    struct LanguageCode: RawRepresentable, Hashable, Sendable {
+    public struct LanguageCode: RawRepresentable, Hashable, Sendable {
         public let rawValue: String
 
         public init(rawValue: String) {
@@ -50,8 +50,8 @@ public extension LocalizedString {
     }
 }
 
-public extension LocalizedString.LanguageCode {
-    init(_ rawValue: String) {
+extension LocalizedString.LanguageCode {
+    public init(_ rawValue: String) {
         self.init(rawValue: rawValue)
     }
 }
@@ -76,19 +76,19 @@ extension LocalizedString.LanguageCode: Codable {
 
 // MARK: - Getting the localized value
 
-public extension LocalizedString {
+extension LocalizedString {
     /// Returns whether the localized string contains the language specified.
-    func contains(language: LanguageCode) -> Bool {
+    public func contains(language: LanguageCode) -> Bool {
         localizedVariants.keys.contains(language)
     }
 
     /// Returns the value for the given language, or the value for the default variant if not found.
-    subscript(language: LanguageCode) -> String {
+    public subscript(language: LanguageCode) -> String {
         localizedVariants[language] ?? defaultVariant.value
     }
 
     /// Returns the value for the given locale, or the value for the default variant if not found.
-    subscript(locale: Locale) -> String {
+    public subscript(locale: Locale) -> String {
         let language = LanguageCode(rawValue: locale.identifier)
         return self[language]
     }

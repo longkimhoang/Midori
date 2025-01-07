@@ -10,15 +10,15 @@ import Foundation
 import IdentifiedCollections
 import MidoriStorage
 
-public extension HomeViewModel {
-    struct Manga: Identifiable, Equatable, Sendable {
+extension HomeViewModel {
+    public struct Manga: Identifiable, Equatable, Sendable {
         public let id: UUID
         public let title: String
         public let subtitle: String?
         public let coverImageURL: URL?
     }
 
-    struct Chapter: Identifiable, Equatable, Sendable {
+    public struct Chapter: Identifiable, Equatable, Sendable {
         public struct MangaInfo: Equatable, Sendable {
             public let id: UUID
             public let title: String
@@ -31,7 +31,7 @@ public extension HomeViewModel {
         public let coverImageURL: URL?
     }
 
-    struct HomeData: Equatable {
+    public struct HomeData: Equatable {
         public var popularMangas: IdentifiedArrayOf<Manga>
         public var latestChapters: IdentifiedArrayOf<Chapter>
         public var recentlyAddedMangas: IdentifiedArrayOf<Manga>
@@ -51,7 +51,7 @@ public extension HomeViewModel {
         }
     }
 
-    enum NavigationDestination: Equatable {
+    public enum NavigationDestination: Equatable {
         case mangaDetail(UUID)
         case reader(UUID)
     }

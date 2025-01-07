@@ -20,9 +20,9 @@ public protocol Relationship<Referenced>: Identifiable, Decodable, Sendable {
     var attributes: Referenced.Attributes? { get }
 }
 
-public extension Relationship {
+extension Relationship {
     /// The referenced entity, if constructable.
-    var referenced: Referenced? {
+    public var referenced: Referenced? {
         attributes.map { Referenced(id: id, attributes: $0) }
     }
 }

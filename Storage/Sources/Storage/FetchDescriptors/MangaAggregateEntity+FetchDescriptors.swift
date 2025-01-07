@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-public extension MangaAggregateEntity {
-    static func withMangaID(_ mangaID: UUID, scanlationGroupID: UUID) -> FetchDescriptor<MangaAggregateEntity> {
+extension MangaAggregateEntity {
+    public static func withMangaID(_ mangaID: UUID, scanlationGroupID: UUID) -> FetchDescriptor<MangaAggregateEntity> {
         var descriptor = FetchDescriptor<MangaAggregateEntity>()
         descriptor.predicate = #Predicate {
             $0.manga?.id == mangaID && $0.scanlationGroup?.id == scanlationGroupID

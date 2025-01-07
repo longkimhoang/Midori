@@ -7,9 +7,9 @@
 
 import Foundation
 
-public extension Entity {
+extension Entity {
     /// Returns a relationship with the specified type, if available.
-    func relationship<T: Relationship>(_: T.Type = T.self) -> T? {
+    public func relationship<T: Relationship>(_: T.Type = T.self) -> T? {
         relationships.lazy.compactMap { $0 as? T }.first
     }
 }

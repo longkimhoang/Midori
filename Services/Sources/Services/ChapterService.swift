@@ -21,8 +21,8 @@ public struct ChapterService: Sendable {
     }
 }
 
-public extension ChapterService {
-    func syncChapterPages(for chapterID: UUID) async throws {
+extension ChapterService {
+    public func syncChapterPages(for chapterID: UUID) async throws {
         try await syncChapterPages(chapterID)
     }
 }
@@ -34,8 +34,8 @@ extension ChapterService: TestDependencyKey {
     )
 }
 
-public extension DependencyValues {
-    var chapterService: ChapterService {
+extension DependencyValues {
+    public var chapterService: ChapterService {
         get { self[ChapterService.self] }
         set { self[ChapterService.self] = newValue }
     }

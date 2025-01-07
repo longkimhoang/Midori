@@ -7,8 +7,9 @@
 
 import Foundation
 import Get
-@testable import MangaDexAPIClient
 import Testing
+
+@testable import MangaDexAPIClient
 
 @Suite struct APIClientTests {
     @Test(arguments: MangaDexServer.allCases)

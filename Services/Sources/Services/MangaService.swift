@@ -37,24 +37,24 @@ public struct MangaService: Sendable {
     }
 }
 
-public extension MangaService {
-    func syncManga(id: UUID) async throws {
+extension MangaService {
+    public func syncManga(id: UUID) async throws {
         try await syncMangaWithID(id)
     }
 
-    func syncRecentlyAddedMangas(limit: Int, offset: Int = 0) async throws {
+    public func syncRecentlyAddedMangas(limit: Int, offset: Int = 0) async throws {
         try await syncRecentlyAddedMangas(limit, offset)
     }
 
-    func syncMangaFeed(id: UUID, limit: Int, offset: Int = 0) async throws {
+    public func syncMangaFeed(id: UUID, limit: Int, offset: Int = 0) async throws {
         try await syncMangaFeed(id, limit, offset)
     }
 
-    func syncMangaAggregate(mangaID: UUID, scanlationGroupID: UUID) async throws {
+    public func syncMangaAggregate(mangaID: UUID, scanlationGroupID: UUID) async throws {
         try await syncMangaAggregate(mangaID, scanlationGroupID)
     }
 
-    func syncUserFollowedFeed(limit: Int, offset: Int = 0) async throws {
+    public func syncUserFollowedFeed(limit: Int, offset: Int = 0) async throws {
         try await syncUserFollowedFeed(limit, offset)
     }
 }
@@ -70,8 +70,8 @@ extension MangaService: TestDependencyKey {
     )
 }
 
-public extension DependencyValues {
-    var mangaService: MangaService {
+extension DependencyValues {
+    public var mangaService: MangaService {
         get { self[MangaService.self] }
         set { self[MangaService.self] = newValue }
     }

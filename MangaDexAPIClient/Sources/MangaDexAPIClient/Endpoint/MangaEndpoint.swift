@@ -8,9 +8,9 @@
 import Foundation
 import Get
 
-public extension MangaDexAPI {
+extension MangaDexAPI {
     /// Manga resource
-    struct Manga: Sendable {
+    public struct Manga: Sendable {
         static let basePath = "manga"
         let path: String
 
@@ -22,8 +22,8 @@ public extension MangaDexAPI {
 
 // MARK: - Manga Reference
 
-public extension MangaDexAPI.Manga {
-    enum Reference: String, EndpointReference, Sendable {
+extension MangaDexAPI.Manga {
+    public enum Reference: String, EndpointReference, Sendable {
         case manga
         case cover = "cover_art"
         case author
@@ -41,15 +41,15 @@ public struct GetMangaListResponse: Decodable, Sendable {
     public let data: [Manga]
 }
 
-public extension MangaDexAPI.Manga {
-    enum ListSortOptions: String, Sendable {
+extension MangaDexAPI.Manga {
+    public enum ListSortOptions: String, Sendable {
         case latestUploadChapter
         case followedCount
         case createdAt
     }
 
     /// Get manga list
-    static func list(
+    public static func list(
         pagination: Pagination,
         order: [ListSortOptions: SortOrder] = [:],
         includes: [Reference] = [.artist, .author, .cover],
@@ -63,10 +63,11 @@ public extension MangaDexAPI.Manga {
         query.append(contentsOf: includes.queryItems)
 
         if let createdAtSince {
-            query.append(URLQueryItem(
-                name: "createdAtSince",
-                value: createdAtSince.formatted(.mangaDexAPIDate)
-            ))
+            query.append(
+                URLQueryItem(
+                    name: "createdAtSince",
+                    value: createdAtSince.formatted(.mangaDexAPIDate)
+                ))
         }
 
         if let ids {
@@ -87,9 +88,9 @@ public struct GetMangaResponse: Decodable, Sendable {
     public let data: Manga
 }
 
-public extension MangaDexAPI.Manga {
+extension MangaDexAPI.Manga {
     /// Get manga
-    func get(includes: [Reference] = [.artist, .author, .cover]) -> Request<GetMangaResponse> {
+    public func get(includes: [Reference] = [.artist, .author, .cover]) -> Request<GetMangaResponse> {
         var query: [URLQueryItem] = []
         query.append(contentsOf: includes.queryItems)
 
@@ -105,9 +106,9 @@ public struct GetMangaFeedResponse: Decodable, Sendable {
     public let data: [Chapter]
 }
 
-public extension MangaDexAPI.Manga {
+extension MangaDexAPI.Manga {
     /// Get manga feed
-    func feed(
+    public func feed(
         pagination: Pagination,
         includes: [MangaDexAPI.Chapter.Reference] = [.scanlationGroup]
     ) -> Request<GetMangaFeedResponse> {
@@ -121,8 +122,8 @@ public extension MangaDexAPI.Manga {
 
 // MARK: - Get Manga volumes & chapters
 
-public extension MangaDexAPI.Manga {
-    func aggregate(groups: [UUID] = []) -> Request<MangaAggregate> {
+extension MangaDexAPI.Manga {
+    public func aggregate(groups: [UUID] = []) -> Request<MangaAggregate> {
         var query: [URLQueryItem] = []
         query.append(contentsOf: groups.queryItems(name: "groups[]"))
 

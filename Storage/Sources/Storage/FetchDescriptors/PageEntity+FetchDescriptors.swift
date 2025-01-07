@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-public extension PageEntity {
-    static func withChapterID(_ chapterID: UUID, quality: Quality) -> FetchDescriptor<PageEntity> {
+extension PageEntity {
+    public static func withChapterID(_ chapterID: UUID, quality: Quality) -> FetchDescriptor<PageEntity> {
         var descriptor = FetchDescriptor<PageEntity>()
         descriptor.predicate = #Predicate {
             $0.chapter?.id == chapterID && $0.qualityRepresentation == quality.rawValue

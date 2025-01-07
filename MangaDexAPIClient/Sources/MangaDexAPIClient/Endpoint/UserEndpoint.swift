@@ -8,8 +8,8 @@
 import Foundation
 import Get
 
-public extension MangaDexAPI {
-    struct User: Sendable {}
+extension MangaDexAPI {
+    public struct User: Sendable {}
 }
 
 // MARK: - Get logged in user
@@ -18,8 +18,8 @@ public struct GetLoggedInUserResponse: Decodable, Sendable {
     public let data: User
 }
 
-public extension MangaDexAPI.User {
-    static func me() -> Request<GetLoggedInUserResponse> {
+extension MangaDexAPI.User {
+    public static func me() -> Request<GetLoggedInUserResponse> {
         Request(path: "/user/me")
     }
 }
@@ -32,8 +32,8 @@ public struct GetUserFollowedMangaFeedResponse: Decodable, Sendable {
     public let data: [Chapter]
 }
 
-public extension MangaDexAPI.User {
-    static func followedMangaFeed(
+extension MangaDexAPI.User {
+    public static func followedMangaFeed(
         pagination: Pagination,
         order: [MangaDexAPI.Chapter.ListSortOptions: SortOrder] = [:],
         includes: [MangaDexAPI.Chapter.Reference] = [.scanlationGroup]

@@ -9,8 +9,8 @@ import Foundation
 import IdentifiedCollections
 import MidoriStorage
 
-public extension ReaderViewModel {
-    struct Manga: Equatable {
+extension ReaderViewModel {
+    public struct Manga: Equatable {
         public let id: UUID
         public let title: String
         public let coverImageURL: URL?
@@ -22,12 +22,12 @@ public extension ReaderViewModel {
         }
     }
 
-    struct ScanlationGroup: Equatable {
+    public struct ScanlationGroup: Equatable {
         public let id: UUID
         public let name: String
     }
 
-    struct Chapter: Equatable {
+    public struct Chapter: Equatable {
         public let title: String
         public let manga: Manga
         public let scanlationGroup: ScanlationGroup
@@ -39,7 +39,7 @@ public extension ReaderViewModel {
         }
     }
 
-    struct Page: Identifiable, Equatable, Sendable {
+    public struct Page: Identifiable, Equatable, Sendable {
         public let id: String
         public let imageURL: URL
 
@@ -49,7 +49,7 @@ public extension ReaderViewModel {
         }
     }
 
-    struct Aggregate: Equatable, Sendable {
+    public struct Aggregate: Equatable, Sendable {
         public enum VolumeIdentifier: Hashable, Sendable {
             case none
             case volume(String)
@@ -69,20 +69,21 @@ public extension ReaderViewModel {
     }
 }
 
-public extension ReaderViewModel.Chapter {
-    init?(_ entity: ChapterEntity) {
+extension ReaderViewModel.Chapter {
+    public init?(_ entity: ChapterEntity) {
         guard let manga = entity.manga, let scanlationGroup = entity.scanlationGroup else {
             return nil
         }
 
-        title = switch (entity.chapter, entity.title) {
-        case let (_, .some(title)):
-            title
-        case let (.some(chapter), _):
-            String(localized: "Chapter \(chapter)", bundle: .module)
-        default:
-            String(localized: "Oneshot", bundle: .module)
-        }
+        title =
+            switch (entity.chapter, entity.title) {
+            case let (_, .some(title)):
+                title
+            case let (.some(chapter), _):
+                String(localized: "Chapter \(chapter)", bundle: .module)
+            default:
+                String(localized: "Oneshot", bundle: .module)
+            }
         self.manga = ReaderViewModel.Manga(
             id: manga.id,
             title: manga.title,
@@ -92,8 +93,8 @@ public extension ReaderViewModel.Chapter {
     }
 }
 
-public extension ReaderViewModel.Page {
-    init?(_ entity: PageEntity) {
+extension ReaderViewModel.Page {
+    public init?(_ entity: PageEntity) {
         guard let chapter = entity.chapter else {
             return nil
         }
@@ -103,8 +104,8 @@ public extension ReaderViewModel.Page {
     }
 }
 
-public extension ReaderViewModel.Aggregate {
-    init(_ entity: MangaAggregateEntity) {
+extension ReaderViewModel.Aggregate {
+    public init(_ entity: MangaAggregateEntity) {
         var volumes = entity.volumes.map { volume in
             var chapters = volume.chapters.map {
                 Chapter(id: $0.id, chapter: $0.chapter)

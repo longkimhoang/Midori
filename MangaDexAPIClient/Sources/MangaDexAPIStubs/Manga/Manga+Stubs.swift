@@ -7,14 +7,14 @@
 
 import Foundation
 
-public extension MangaDexAPIStubs {
-    enum Manga {}
+extension MangaDexAPIStubs {
+    public enum Manga {}
 }
 
 // MARK: - Get Manga list
 
-public extension MangaDexAPIStubs.Manga {
-    enum List {
+extension MangaDexAPIStubs.Manga {
+    public enum List {
         public static let success = Data.fromJSONFile(named: "get_manga_list")
     }
 }

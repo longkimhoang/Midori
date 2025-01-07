@@ -8,9 +8,9 @@
 import Foundation
 import Get
 
-public extension MangaDexAPI {
+extension MangaDexAPI {
     /// Chapter resource
-    struct Chapter: Sendable {
+    public struct Chapter: Sendable {
         static let basePath = "chapter"
         let path: String
 
@@ -22,8 +22,8 @@ public extension MangaDexAPI {
 
 // MARK: - Chapter Reference
 
-public extension MangaDexAPI.Chapter {
-    enum Reference: String, EndpointReference, Sendable {
+extension MangaDexAPI.Chapter {
+    public enum Reference: String, EndpointReference, Sendable {
         case manga
         case scanlationGroup = "scanlation_group"
         case user
@@ -38,8 +38,8 @@ public struct GetChapterListResponse: Decodable, Sendable {
     public let data: [Chapter]
 }
 
-public extension MangaDexAPI.Chapter {
-    enum ListSortOptions: String, Sendable {
+extension MangaDexAPI.Chapter {
+    public enum ListSortOptions: String, Sendable {
         case createdAt
         case updatedAt
         case publishAt
@@ -47,7 +47,7 @@ public extension MangaDexAPI.Chapter {
     }
 
     /// Get manga list
-    static func list(
+    public static func list(
         pagination: Pagination,
         order: [ListSortOptions: SortOrder] = [:],
         includes: [Reference] = [.scanlationGroup]

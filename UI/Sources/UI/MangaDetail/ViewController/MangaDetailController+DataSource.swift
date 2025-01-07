@@ -56,9 +56,11 @@ extension MangaDetailViewController {
                     description: manga.synopsis,
                     rating: manga.rating
                 )
-                .environment(\.expandMangaDescription, .init { [unowned self] in
-                    viewModel.mangaSynopsisExpanded()
-                })
+                .environment(
+                    \.expandMangaDescription,
+                    .init { [unowned self] in
+                        viewModel.mangaSynopsisExpanded()
+                    })
             }
             .margins(.all, 0)
 

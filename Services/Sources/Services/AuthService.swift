@@ -25,8 +25,8 @@ public struct AuthService: Sendable {
     }
 }
 
-public extension AuthService {
-    func signIn(username: String, password: String) async throws -> UUID {
+extension AuthService {
+    public func signIn(username: String, password: String) async throws -> UUID {
         try await signInWithUsernameAndPassword(username, password)
     }
 }
@@ -39,8 +39,8 @@ extension AuthService: TestDependencyKey {
     )
 }
 
-public extension DependencyValues {
-    var authService: AuthService {
+extension DependencyValues {
+    public var authService: AuthService {
         get { self[AuthService.self] }
         set { self[AuthService.self] = newValue }
     }

@@ -23,8 +23,8 @@ extension MangaAggregateViewController {
             [unowned self] collectionView, indexPath, itemIdentifier in
 
             guard let volumeID = dataSource.sectionIdentifier(for: indexPath.section),
-                  let volume = viewModel.aggregate.volumes[id: volumeID],
-                  let chapter = volume.chapters[id: itemIdentifier]
+                let volume = viewModel.aggregate.volumes[id: volumeID],
+                let chapter = volume.chapters[id: itemIdentifier]
             else {
                 return nil
             }
@@ -44,12 +44,13 @@ extension MangaAggregateViewController {
             }
 
             var configuration = UIListContentConfiguration.header()
-            configuration.text = switch volume {
-            case .none:
-                String(localized: "No volume")
-            case let .volume(volume):
-                String(localized: "Volume \(volume)")
-            }
+            configuration.text =
+                switch volume {
+                case .none:
+                    String(localized: "No volume")
+                case let .volume(volume):
+                    String(localized: "Volume \(volume)")
+                }
 
             cell.contentConfiguration = configuration
         }

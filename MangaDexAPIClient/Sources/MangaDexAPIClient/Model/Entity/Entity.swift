@@ -22,14 +22,14 @@ public protocol Entity<Attributes>: Identifiable, Decodable, Sendable {
     init(id: UUID, attributes: Attributes)
 }
 
-public extension Entity {
-    var relationships: RelationshipContainer {
+extension Entity {
+    public var relationships: RelationshipContainer {
         RelationshipContainer()
     }
 }
 
-public extension Entity {
-    subscript<T>(dynamicMember keyPath: KeyPath<Attributes, T>) -> T {
+extension Entity {
+    public subscript<T>(dynamicMember keyPath: KeyPath<Attributes, T>) -> T {
         attributes[keyPath: keyPath]
     }
 }

@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-public extension UserEntity {
-    static func withID(_ id: UUID) -> FetchDescriptor<UserEntity> {
+extension UserEntity {
+    public static func withID(_ id: UUID) -> FetchDescriptor<UserEntity> {
         var descriptor = FetchDescriptor<UserEntity>()
         descriptor.predicate = #Predicate {
             $0.id == id

@@ -41,8 +41,8 @@ extension PersonalAuthClientService: TestDependencyKey {
     public static let testValue: PersonalAuthClientService = .inMemory(storage: .init(nil))
 }
 
-public extension DependencyValues {
-    var personalAuthClientService: PersonalAuthClientService {
+extension DependencyValues {
+    public var personalAuthClientService: PersonalAuthClientService {
         get { self[PersonalAuthClientService.self] }
         set { self[PersonalAuthClientService.self] = newValue }
     }

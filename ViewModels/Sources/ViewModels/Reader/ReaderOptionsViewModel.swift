@@ -20,8 +20,8 @@ public final class ReaderOptionsViewModel: ObservableObject {
     public init() {}
 }
 
-public extension ReaderOptionsViewModel.TransitionStyle {
-    var label: String {
+extension ReaderOptionsViewModel.TransitionStyle {
+    public var label: String {
         switch self {
         case .scroll:
             String(localized: "Scroll", bundle: .module)

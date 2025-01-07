@@ -60,18 +60,21 @@ extension ChapterService: DependencyKey {
             try await client.send(mangaStatisticsRequest).value.statistics
         }.prefix(1)
 
-        guard let (mangas, statistics) = try await combineLatest(
-            mangasResponse, mangaStatisticsResponse
-        ).first(where: { _ in true }) else {
+        guard
+            let (mangas, statistics) = try await combineLatest(
+                mangasResponse, mangaStatisticsResponse
+            ).first(where: { _ in true })
+        else {
             return
         }
 
         let mangaPersistentIDs = try await mangaAPIResponseIngestor.importMangas(mangas, statistics: statistics)
 
-        let chaptersByMangaID: [PersistentIdentifier: [Chapter]] = chapters
+        let chaptersByMangaID: [PersistentIdentifier: [Chapter]] =
+            chapters
             .reduce(into: [:]) { result, chapter in
                 guard let manga = chapter.relationship(MangaRelationship.self),
-                      let mangaPersistentID = mangaPersistentIDs[manga.id]
+                    let mangaPersistentID = mangaPersistentIDs[manga.id]
                 else {
                     return
                 }

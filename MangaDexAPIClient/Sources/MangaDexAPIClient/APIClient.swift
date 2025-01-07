@@ -14,9 +14,9 @@ public enum MangaDexServer: CaseIterable, Sendable {
     case development
 }
 
-public extension APIClient {
+extension APIClient {
     /// Creates a client for MangaDex API.
-    static func mangaDex(
+    public static func mangaDex(
         server: MangaDexServer = .production,
         sessionConfiguration: URLSessionConfiguration = .default
     ) -> Self {
@@ -43,8 +43,8 @@ private enum MangaDexAPIClientDependencyKey: DependencyKey {
     static let liveValue: APIClient = .mangaDex()
 }
 
-public extension DependencyValues {
-    var mangaDexAPIClient: APIClient {
+extension DependencyValues {
+    public var mangaDexAPIClient: APIClient {
         get { self[MangaDexAPIClientDependencyKey.self] }
         set { self[MangaDexAPIClientDependencyKey.self] = newValue }
     }

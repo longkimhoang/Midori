@@ -21,7 +21,7 @@ extension ImagePipeline {
     static let midoriReader: ImagePipeline = {
         var configuration = ImagePipeline.Configuration.withDataCache(
             name: "MidoriReader",
-            sizeLimit: 512 * 1024 * 1024 // 512 MB
+            sizeLimit: 512 * 1024 * 1024  // 512 MB
         )
         configuration.isUsingPrepareForDisplay = true
 

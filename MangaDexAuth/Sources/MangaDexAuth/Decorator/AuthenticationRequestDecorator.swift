@@ -12,8 +12,8 @@ public protocol AuthenticationCredentialProviding: Actor {
     var credential: AuthCredential? { get set }
 }
 
-public extension AuthenticationCredentialProviding {
-    func setCredential(_ credential: AuthCredential) {
+extension AuthenticationCredentialProviding {
+    public func setCredential(_ credential: AuthCredential) {
         self.credential = credential
     }
 }
@@ -67,9 +67,9 @@ private enum AuthenticationRequestDecoratorDependencyKey: DependencyKey {
     }()
 }
 
-public extension DependencyValues {
+extension DependencyValues {
     /// The decorator used to supply authentication information to requests.
-    var authenticationRequestDecorator: any AuthenticationRequestDecorator {
+    public var authenticationRequestDecorator: any AuthenticationRequestDecorator {
         get { self[AuthenticationRequestDecoratorDependencyKey.self] }
         set { self[AuthenticationRequestDecoratorDependencyKey.self] = newValue }
     }
@@ -77,7 +77,7 @@ public extension DependencyValues {
     /// The authentication credential provider.
     ///
     /// Use this value instead of ``authenticationRequestDecorator`` if you only need access to the credential object.
-    var authenticationCredentialProvider: any AuthenticationCredentialProviding {
+    public var authenticationCredentialProvider: any AuthenticationCredentialProviding {
         authenticationRequestDecorator
     }
 }

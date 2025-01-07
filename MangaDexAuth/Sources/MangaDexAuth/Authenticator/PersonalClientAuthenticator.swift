@@ -114,7 +114,8 @@ public struct PersonalClientAuthenticator: Authenticator {
     }
 
     func makeFormData(from entries: KeyValuePairs<String, String>) -> Data {
-        let string = entries
+        let string =
+            entries
             .map { key, value in
                 "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
             }
@@ -127,8 +128,8 @@ extension PersonalClientAuthenticator: DependencyKey {
     public static let liveValue = PersonalClientAuthenticator()
 }
 
-public extension DependencyValues {
-    var personalClientAuthenticator: PersonalClientAuthenticator {
+extension DependencyValues {
+    public var personalClientAuthenticator: PersonalClientAuthenticator {
         get { self[PersonalClientAuthenticator.self] }
         set { self[PersonalClientAuthenticator.self] = newValue }
     }

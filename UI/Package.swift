@@ -13,7 +13,7 @@ let package = Package(
         .library(
             name: "MidoriUI",
             targets: ["MidoriUI"]
-        ),
+        )
     ],
     dependencies: [
         .package(path: "ViewModels"),

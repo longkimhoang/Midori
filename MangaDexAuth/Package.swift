@@ -11,7 +11,7 @@ let package = Package(
         .library(
             name: "MangaDexAuth",
             targets: ["MangaDexAuth"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/kean/Get", from: "2.2.1"),
