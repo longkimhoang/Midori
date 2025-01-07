@@ -41,7 +41,7 @@ extension ChapterService: DependencyKey {
         )
     }
 
-    static func importChapters(_ chapters: [Chapter]) async throws {
+    static func importChapters(_ chapters: [Chapter], markMangasAsFollowed: Bool = false) async throws {
         @Dependency(\.modelContainer) var modelContainer
         @Dependency(\.mangaDexAPIClient) var client
         let mangaAPIResponseIngestor = MangaAPIResponseIngestor(modelContainer: modelContainer)
@@ -68,7 +68,11 @@ extension ChapterService: DependencyKey {
             return
         }
 
-        let mangaPersistentIDs = try await mangaAPIResponseIngestor.importMangas(mangas, statistics: statistics)
+        let mangaPersistentIDs = try await mangaAPIResponseIngestor.importMangas(
+            mangas,
+            statistics: statistics,
+            follows: markMangasAsFollowed ? Set(mangaIDs) : []
+        )
 
         let chaptersByMangaID: [PersistentIdentifier: [Chapter]] =
             chapters

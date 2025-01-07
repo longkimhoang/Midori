@@ -18,7 +18,8 @@ actor MangaAPIResponseIngestor {
     @discardableResult
     func importMangas(
         _ mangas: [Manga],
-        statistics: [UUID: MangaStatistics] = [:]
+        statistics: [UUID: MangaStatistics] = [:],
+        follows: Set<UUID> = []
     ) throws -> [UUID: PersistentIdentifier] {
         for manga in mangas {
             let mangaEntity = MangaEntity(
@@ -32,6 +33,10 @@ actor MangaAPIResponseIngestor {
             if let statistics = statistics[manga.id] {
                 mangaEntity.followCount = statistics.follows
                 mangaEntity.rating = statistics.rating.bayesian
+            }
+
+            if follows.contains(manga.id) {
+                mangaEntity.followed = true
             }
 
             modelContext.insert(mangaEntity)

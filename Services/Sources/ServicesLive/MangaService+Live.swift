@@ -102,7 +102,7 @@ extension MangaService: DependencyKey {
             syncUserFollowedFeed: { limit, offset in
                 let request = MangaDexAPI.User.followedMangaFeed(pagination: .init(limit: limit, offset: offset))
                 let chapters = try await client.send(request).value.data
-                try await ChapterService.importChapters(chapters)
+                try await ChapterService.importChapters(chapters, markMangasAsFollowed: true)
             }
         )
     }

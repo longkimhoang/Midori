@@ -17,11 +17,13 @@ public final class UpdatesViewModel: ObservableObject {
     @Dependency(\.modelContainer) private var modelContainer
     @Dependency(\.mangaService) private var mangaService: MangaService
 
+    private var offset: Int = 0
+
     @Published public var sections: IdentifiedArrayOf<Section> = []
 
     public init() {}
 
-    public func loadFeedFromStorage() throws {
+    public func loadFollowedFeedFromStorage() throws {
         let context = modelContainer.mainContext
         let chapterEntities = try context.fetch(ChapterEntity.followedFeed())
         let chaptersGroupedByMangaID: OrderedDictionary<UUID, [ChapterEntity]> =
@@ -42,6 +44,12 @@ public final class UpdatesViewModel: ObservableObject {
             return Section(mangaInfo: manga, chapters: IdentifiedArray(uniqueElements: chapters))
         }
 
+        self.offset = chapterEntities.count
         self.sections = IdentifiedArray(uniqueElements: sections)
+    }
+
+    public func syncFollowedFeed() async throws {
+        try await mangaService.syncUserFollowedFeed(limit: 100, offset: offset)
+        try loadFollowedFeedFromStorage()
     }
 }
