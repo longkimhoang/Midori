@@ -35,7 +35,7 @@ extension MangaDetailViewController {
             cell.contentConfiguration = UIHostingConfiguration {
                 MangaDetailChapterView(
                     title: chapter.title,
-                    group: chapter.group,
+                    group: chapter.groupName,
                     readableAt: chapter.readableAt
                 )
             }

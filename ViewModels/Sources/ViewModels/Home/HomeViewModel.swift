@@ -31,7 +31,7 @@ public final class HomeViewModel {
         let context = modelContainer.mainContext
         let popularMangas = try context.fetch(MangaEntity.popular()).map(Manga.init)
         let latestChapters = try context.fetch(ChapterEntity.latest(limit: 64))
-            .uniqued(on: \.manga?.id).compactMap(Chapter.init)
+            .uniqued(on: \.manga?.id).compactMap(LatestChapter.init)
         let recentlyAddedMangas = try context.fetch(MangaEntity.recentlyAdded(limit: 15)).map(Manga.init)
 
         data = HomeData(

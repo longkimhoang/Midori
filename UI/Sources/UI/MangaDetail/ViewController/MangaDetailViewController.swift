@@ -12,7 +12,6 @@ import UIKit
 
 final class MangaDetailViewController: UIViewController {
     typealias Manga = MangaDetailViewModel.Manga
-    typealias Chapter = MangaDetailViewModel.Chapter
     typealias Volume = MangaDetailViewModel.Volume
 
     enum SectionIdentifier: Hashable {

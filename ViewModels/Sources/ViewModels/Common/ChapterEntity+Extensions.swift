@@ -33,9 +33,4 @@ extension ChapterEntity {
         let name = components.joined(separator: " - ")
         return name.isEmpty ? String(localized: "Oneshot", bundle: .module) : name
     }
-
-    /// The name of the group that scanlated the chapter, or a generic name if the group is unknown.
-    var groupName: String {
-        scanlationGroup?.name ?? String(localized: "No group", bundle: .module)
-    }
 }

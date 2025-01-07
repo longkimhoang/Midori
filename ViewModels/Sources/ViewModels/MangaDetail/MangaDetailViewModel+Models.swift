@@ -19,13 +19,6 @@ extension MangaDetailViewModel {
         public let rating: Double
     }
 
-    public struct Chapter: Identifiable, Equatable, Sendable {
-        public let id: UUID
-        public let title: String
-        public let group: String
-        public let readableAt: String
-    }
-
     public enum Volume: Hashable, Identifiable, Sendable {
         case none
         case volume(String)
@@ -71,24 +64,6 @@ extension MangaDetailViewModel.Manga {
             synopsis: entity.synopsis.map { $0["en"] },
             coverImageURL: entity.currentCover?.imageURLs[.mediumThumbnail],
             rating: entity.rating
-        )
-    }
-}
-
-extension MangaDetailViewModel.Chapter {
-    init(_ entity: ChapterEntity) {
-        @Dependency(\.date.now) var now
-        let readableAtFormat = Date.AnchoredRelativeFormatStyle(
-            anchor: entity.readableAt,
-            presentation: .numeric,
-            capitalizationContext: .standalone
-        )
-
-        self.init(
-            id: entity.id,
-            title: entity.combinedTitle(includingVolume: false),
-            group: entity.groupName,
-            readableAt: readableAtFormat.format(now)
         )
     }
 }

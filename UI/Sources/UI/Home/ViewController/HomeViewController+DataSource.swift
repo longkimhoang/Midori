@@ -13,7 +13,7 @@ import UIKit
 extension HomeViewController {
     typealias HomeData = HomeViewModel.HomeData
     typealias Manga = HomeViewModel.Manga
-    typealias Chapter = HomeViewModel.Chapter
+    typealias Chapter = HomeViewModel.LatestChapter
 
     func configureDataSource() {
         let popularMangaCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, (Manga, UIColor?)> {
@@ -69,9 +69,9 @@ extension HomeViewController {
 
             var configuration = LatestChapterUIConfiguration()
             configuration.manga = chapter.mangaInfo.title
-            configuration.chapter = chapter.chapter
+            configuration.chapter = chapter.chapter.title
             configuration.coverImage = image
-            configuration.group = chapter.group
+            configuration.group = chapter.groupName
 
             cell.contentConfiguration = configuration
 

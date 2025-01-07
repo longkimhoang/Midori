@@ -18,27 +18,34 @@ extension HomeViewModel {
         public let coverImageURL: URL?
     }
 
-    public struct Chapter: Identifiable, Equatable, Sendable {
+    @dynamicMemberLookup
+    public struct LatestChapter: Identifiable, Equatable, Sendable {
         public struct MangaInfo: Equatable, Sendable {
             public let id: UUID
             public let title: String
         }
 
-        public let id: UUID
+        public let chapter: Chapter
         public let mangaInfo: MangaInfo
-        public let chapter: String
-        public let group: String
         public let coverImageURL: URL?
+
+        public var id: UUID {
+            chapter.id
+        }
+
+        public subscript<T>(dynamicMember keyPath: KeyPath<Chapter, T>) -> T {
+            chapter[keyPath: keyPath]
+        }
     }
 
     public struct HomeData: Equatable {
         public var popularMangas: IdentifiedArrayOf<Manga>
-        public var latestChapters: IdentifiedArrayOf<Chapter>
+        public var latestChapters: IdentifiedArrayOf<LatestChapter>
         public var recentlyAddedMangas: IdentifiedArrayOf<Manga>
 
         public init(
             popularMangas: IdentifiedArrayOf<Manga> = [],
-            latestChapters: IdentifiedArrayOf<Chapter> = [],
+            latestChapters: IdentifiedArrayOf<LatestChapter> = [],
             recentlyAddedMangas: IdentifiedArrayOf<Manga> = []
         ) {
             self.popularMangas = popularMangas
@@ -68,15 +75,15 @@ extension HomeViewModel.Manga {
     }
 }
 
-extension HomeViewModel.Chapter {
+extension HomeViewModel.LatestChapter {
     init?(_ entity: ChapterEntity) {
-        guard let manga = entity.manga else { return nil }
+        guard let manga = entity.manga else {
+            return nil
+        }
 
         self.init(
-            id: entity.id,
+            chapter: .init(entity),
             mangaInfo: .init(id: manga.id, title: manga.title),
-            chapter: entity.combinedTitle(),
-            group: entity.groupName,
             coverImageURL: entity.manga?.currentCover?.imageURLs[.smallThumbnail]
         )
     }
