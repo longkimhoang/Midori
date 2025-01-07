@@ -17,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(path: "Storage"),
         .package(path: "Services"),
+        .package(path: "Models"),
         .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
         .package(url: "https://github.com/apple/swift-collections", from: "1.1.4"),
         .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.0"),
@@ -29,6 +30,7 @@ let package = Package(
             dependencies: [
                 .product(name: "MidoriStorage", package: "Storage"),
                 .product(name: "MidoriServices", package: "Services"),
+                .product(name: "MidoriModels", package: "Models"),
                 .product(name: "Algorithms", package: "swift-algorithms"),
                 .product(name: "Collections", package: "swift-collections"),
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),

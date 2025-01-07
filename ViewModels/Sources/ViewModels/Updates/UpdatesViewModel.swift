@@ -14,4 +14,6 @@ public final class UpdatesViewModel: ObservableObject {
     @Dependency(\.mangaService) private var mangaService: MangaService
 
     public init() {}
+
+    public func loadFeedFromStorage() {}
 }
