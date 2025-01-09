@@ -48,7 +48,7 @@ public final class UpdatesViewModel: ObservableObject {
         self.sections = IdentifiedArray(uniqueElements: sections)
     }
 
-    public func syncFollowedFeed() async throws {
+    public func fetchFollowedFeed() async throws {
         try await mangaService.syncUserFollowedFeed(limit: 100, offset: offset)
         try loadFollowedFeedFromStorage()
     }
