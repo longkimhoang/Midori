@@ -23,8 +23,8 @@ extension MangaAggregateViewController {
             [unowned self] collectionView, indexPath, itemIdentifier in
 
             guard let volumeID = dataSource.sectionIdentifier(for: indexPath.section),
-                let volume = viewModel.aggregate.volumes[id: volumeID],
-                let chapter = volume.chapters[id: itemIdentifier]
+                  let volume = viewModel.aggregate.volumes[id: volumeID],
+                  let chapter = volume.chapters[id: itemIdentifier]
             else {
                 return nil
             }

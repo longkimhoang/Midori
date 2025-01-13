@@ -55,12 +55,12 @@ extension ChapterEntity {
             $0.manga?.followed == true
         }
         descriptor.sortBy = [
-            .init(\.readableAt, order: .reverse)
+            .init(\.readableAt, order: .reverse),
         ]
         descriptor.relationshipKeyPathsForPrefetching = [\.scanlationGroup, \.manga]
         descriptor.fetchLimit = limit
         descriptor.fetchOffset = offset
-        
+
         return descriptor
     }
 }

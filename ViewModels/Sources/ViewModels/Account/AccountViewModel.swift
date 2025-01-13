@@ -27,6 +27,7 @@ public final class AccountViewModel: ObservableObject {
         await personalAuthClientService.saveClientConfiguration(
             .init(clientID: client.clientID, clientSecret: client.clientSecret)
         )
+        try? await initializeAuthState()
     }
 
     public func initializeAuthState() async throws {

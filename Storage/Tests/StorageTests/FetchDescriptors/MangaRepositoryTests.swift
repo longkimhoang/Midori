@@ -78,6 +78,6 @@ struct MangaFetchDescriptorsTests {
         }
 
         #expect(result.count == 2)
-        #expect(result.map(\.id) == Array(mangaIDs[0..<2]))
+        #expect(result.map(\.id) == Array(mangaIDs[0 ..< 2]))
     }
 }

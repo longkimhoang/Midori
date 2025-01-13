@@ -12,7 +12,7 @@ let package = Package(
         .library(
             name: "MidoriApp",
             targets: ["MidoriApp"]
-        )
+        ),
     ],
     dependencies: [
         .package(path: "UI"),

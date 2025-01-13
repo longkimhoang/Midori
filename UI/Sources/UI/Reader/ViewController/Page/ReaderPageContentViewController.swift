@@ -84,7 +84,7 @@ extension ReaderPageContentViewController: UIScrollViewDelegate {
 // MARK: - Private
 
 extension ReaderPageContentViewController {
-    fileprivate func loadImage() {
+    private func loadImage() {
         let request = ImageRequest(page: page)
         cancellable = ImagePipeline.midoriReader.imagePublisher(with: request)
             .handleEvents(
@@ -140,7 +140,7 @@ extension ReaderPageContentViewController {
             }
     }
 
-    @objc fileprivate func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+    @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard gesture.state == .ended else {
             return
         }
@@ -161,7 +161,7 @@ extension ReaderPageContentViewController {
         contentScrollView.zoom(to: CGRect(x: x, y: y, width: width, height: height), animated: true)
     }
 
-    fileprivate func updateImageViewOffset(in scrollView: UIScrollView) {
+    private func updateImageViewOffset(in scrollView: UIScrollView) {
         let height = imageView.bounds.height * scrollView.zoomScale
         let width = imageView.bounds.width * scrollView.zoomScale
 

@@ -25,7 +25,7 @@ public final class UpdatesViewModel: ObservableObject {
 
     public func loadFollowedFeedFromStorage() throws {
         let context = modelContainer.mainContext
-        let chapterEntities = try context.fetch(ChapterEntity.followedFeed())
+        let chapterEntities = try context.fetch(ChapterEntity.followedFeed(limit: 32))
         let chaptersGroupedByMangaID: OrderedDictionary<UUID, [ChapterEntity]> =
             chapterEntities.reduce(into: [:]) { result, chapterEntity in
                 guard let manga = chapterEntity.manga else {
@@ -39,17 +39,21 @@ public final class UpdatesViewModel: ObservableObject {
                 return nil
             }
 
-            let manga = Section.MangaInfo(id: mangaEntity.id, title: mangaEntity.title, coverImageURL: nil)
+            let manga = Section.MangaInfo(
+                id: mangaEntity.id,
+                title: mangaEntity.title,
+                coverImageURL: mangaEntity.currentCover?.imageURLs[.mediumThumbnail]
+            )
             let chapters = chapterEntities.map(Chapter.init)
             return Section(mangaInfo: manga, chapters: IdentifiedArray(uniqueElements: chapters))
         }
 
-        self.offset = chapterEntities.count
+        offset = chapterEntities.count
         self.sections = IdentifiedArray(uniqueElements: sections)
     }
 
     public func fetchFollowedFeed() async throws {
-        try await mangaService.syncUserFollowedFeed(limit: 100, offset: offset)
+        try await mangaService.syncUserFollowedFeed(limit: 32, offset: offset)
         try loadFollowedFeedFromStorage()
     }
 }

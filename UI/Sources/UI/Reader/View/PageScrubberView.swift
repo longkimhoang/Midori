@@ -12,7 +12,7 @@ struct PageScrubberView: View {
     @ObservedObject var viewModel: PageScrubberViewModel
 
     var body: some View {
-        let range = 1...Double(viewModel.numberOfPages)
+        let range = 1 ... Double(viewModel.numberOfPages)
 
         Slider(value: value, in: range) {
             Text("Current page", bundle: .module)

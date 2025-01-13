@@ -67,7 +67,8 @@ extension MangaDexAPI.Manga {
                 URLQueryItem(
                     name: "createdAtSince",
                     value: createdAtSince.formatted(.mangaDexAPIDate)
-                ))
+                )
+            )
         }
 
         if let ids {

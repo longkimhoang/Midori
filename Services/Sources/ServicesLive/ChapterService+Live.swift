@@ -76,15 +76,15 @@ extension ChapterService: DependencyKey {
 
         let chaptersByMangaID: [PersistentIdentifier: [Chapter]] =
             chapters
-            .reduce(into: [:]) { result, chapter in
-                guard let manga = chapter.relationship(MangaRelationship.self),
-                    let mangaPersistentID = mangaPersistentIDs[manga.id]
-                else {
-                    return
-                }
+                .reduce(into: [:]) { result, chapter in
+                    guard let manga = chapter.relationship(MangaRelationship.self),
+                          let mangaPersistentID = mangaPersistentIDs[manga.id]
+                    else {
+                        return
+                    }
 
-                result[mangaPersistentID, default: []].append(chapter)
-            }
+                    result[mangaPersistentID, default: []].append(chapter)
+                }
 
         try await chapterAPIResponseIngestor.importChapters(chaptersByMangaID)
     }

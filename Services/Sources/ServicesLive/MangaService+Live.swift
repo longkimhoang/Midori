@@ -83,8 +83,8 @@ extension MangaService: DependencyKey {
 
                 let context = ModelContext(modelContainer)
                 guard let mangaPersistentID = try context.fetchIdentifiers(MangaEntity.withID(mangaID)).first,
-                    let scanlationGroupPersistentID =
-                        try context.fetchIdentifiers(ScanlationGroupEntity.withID(scanlationGroupID)).first
+                      let scanlationGroupPersistentID =
+                      try context.fetchIdentifiers(ScanlationGroupEntity.withID(scanlationGroupID)).first
                 else {
                     throw MangaServiceError.mangaNotFound
                 }
@@ -100,7 +100,10 @@ extension MangaService: DependencyKey {
                 )
             },
             syncUserFollowedFeed: { limit, offset in
-                let request = MangaDexAPI.User.followedMangaFeed(pagination: .init(limit: limit, offset: offset))
+                let request = MangaDexAPI.User.followedMangaFeed(
+                    pagination: .init(limit: limit, offset: offset),
+                    order: [.readableAt: .descending]
+                )
                 let chapters = try await client.send(request).value.data
                 try await ChapterService.importChapters(chapters, markMangasAsFollowed: true)
             }

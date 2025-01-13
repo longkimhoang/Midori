@@ -36,9 +36,9 @@ extension HomeViewController: UICollectionViewDelegate {
         switch itemIdentifier {
         case let .latestChapter(chapterID):
             guard let chapter = viewModel.data.latestChapters[id: chapterID],
-                let cell = collectionView.cellForItem(at: indexPath),
-                let configuration = cell.contentConfiguration as? LatestChapterUIConfiguration,
-                let serializedIdentifier = try? JSONEncoder().encode(itemIdentifier)
+                  let cell = collectionView.cellForItem(at: indexPath),
+                  let configuration = cell.contentConfiguration as? LatestChapterUIConfiguration,
+                  let serializedIdentifier = try? JSONEncoder().encode(itemIdentifier)
             else {
                 return nil
             }
@@ -118,10 +118,10 @@ extension HomeViewController: UICollectionViewDelegate {
         animator: any UIContextMenuInteractionCommitAnimating
     ) {
         guard let serializedItemIdentifier = configuration.identifier as? String,
-            let itemIdentifier = try? JSONDecoder().decode(
-                ItemIdentifier.self,
-                from: Data(serializedItemIdentifier.utf8)
-            )
+              let itemIdentifier = try? JSONDecoder().decode(
+                  ItemIdentifier.self,
+                  from: Data(serializedItemIdentifier.utf8)
+              )
         else {
             return
         }

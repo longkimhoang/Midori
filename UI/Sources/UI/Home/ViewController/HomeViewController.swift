@@ -30,7 +30,7 @@ final class HomeViewController: UIViewController {
 
     let viewModel: HomeViewModel
     let imagePrefetcher = ImagePrefetcher(pipeline: .midoriApp)
-    nonisolated(unsafe) let context = CIContext()  // CIContext is thread-safe
+    nonisolated(unsafe) let context = CIContext() // CIContext is thread-safe
 
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
@@ -60,8 +60,8 @@ final class HomeViewController: UIViewController {
         collectionView.prefetchDataSource = self
         collectionView.delegate = self
         #if !targetEnvironment(macCatalyst)
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+            collectionView.refreshControl = UIRefreshControl()
+            collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         #endif
 
         view = collectionView

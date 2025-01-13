@@ -12,7 +12,7 @@ let package = Package(
         .library(
             name: "MidoriStorage",
             targets: ["MidoriStorage"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.4.1"),

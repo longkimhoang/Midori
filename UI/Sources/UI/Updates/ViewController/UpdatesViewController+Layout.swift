@@ -9,26 +9,13 @@ import UIKit
 
 extension UpdatesViewController {
     func makeCollectionViewLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(80))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { _, layoutEnvironment in
+            var listConfig = UICollectionLayoutListConfiguration(appearance: .plain)
+            listConfig.headerMode = .firstItemInSection
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(80))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            return NSCollectionLayoutSection.list(using: listConfig, layoutEnvironment: layoutEnvironment)
+        }
 
-        let section = NSCollectionLayoutSection(group: group)
-        section.boundarySupplementaryItems = [makeSectionHeader()]
-
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 16
-
-        return UICollectionViewCompositionalLayout(section: section, configuration: config)
-    }
-
-    func makeSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60))
-        return NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: itemSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top)
+        return UICollectionViewCompositionalLayout(sectionProvider: sectionProvider)
     }
 }

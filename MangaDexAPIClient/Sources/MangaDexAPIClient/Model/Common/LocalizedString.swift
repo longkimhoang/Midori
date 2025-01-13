@@ -13,7 +13,7 @@ public struct LocalizedString: Decodable, Sendable {
     // A lot of localized strings only have 1 variant, so a dictionary is overkill
     enum Storage {
         case single(Variant)
-        case multiple(Variant, [String: String])  // a primary variant and other variants, if any
+        case multiple(Variant, [String: String]) // a primary variant and other variants, if any
     }
 
     let storage: Storage

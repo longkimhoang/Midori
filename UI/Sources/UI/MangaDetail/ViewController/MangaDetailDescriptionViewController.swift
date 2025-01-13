@@ -86,7 +86,8 @@ private struct MangaSynopsisContentView: View {
             OpenURLAction {
                 coordinator.openURL($0)
                 return .handled
-            })
+            }
+        )
     }
 
     var attributedContent: AttributedString {
@@ -125,7 +126,8 @@ private struct MangaSynopsisContentView: View {
         She suddenly pins him against the wall! She also started saying, "Give me a month, and I'll make you fall in love with me…… I'm not going to let you go so easily!"
 
         A one-way romantic comedy in which a handsome and beautiful girl will tempt you every day!
-        """)
+        """
+    )
 
     return UINavigationController(rootViewController: viewController)
 }

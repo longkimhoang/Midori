@@ -19,7 +19,7 @@ final class MangaDexAPIClientDelegate: APIClientDelegate {
         data: Data,
         task _: URLSessionTask
     ) throws {
-        guard (200..<300).contains(response.statusCode) else {
+        guard (200 ..< 300).contains(response.statusCode) else {
             throw MangaDexAPIError(response: response, data: data)
         }
     }

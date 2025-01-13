@@ -60,7 +60,8 @@ extension MangaDetailViewController {
                     \.expandMangaDescription,
                     .init { [unowned self] in
                         viewModel.mangaSynopsisExpanded()
-                    })
+                    }
+                )
             }
             .margins(.all, 0)
 

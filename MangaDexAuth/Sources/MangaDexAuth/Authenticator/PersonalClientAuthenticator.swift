@@ -116,10 +116,10 @@ public struct PersonalClientAuthenticator: Authenticator {
     func makeFormData(from entries: KeyValuePairs<String, String>) -> Data {
         let string =
             entries
-            .map { key, value in
-                "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-            }
-            .joined(separator: "&")
+                .map { key, value in
+                    "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+                }
+                .joined(separator: "&")
         return Data(string.utf8)
     }
 }

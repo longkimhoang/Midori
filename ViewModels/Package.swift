@@ -12,7 +12,7 @@ let package = Package(
         .library(
             name: "MidoriViewModels",
             targets: ["MidoriViewModels"]
-        )
+        ),
     ],
     dependencies: [
         .package(path: "Storage"),

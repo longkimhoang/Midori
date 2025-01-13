@@ -21,7 +21,7 @@ extension ReaderViewController: UIPageViewControllerDelegate {
         let viewControllers = pageViewController.viewControllers ?? []
         viewModel.displayingPageIDs =
             viewControllers
-            .compactMap { $0 as? ReaderPageContentViewController }
-            .map(\.page.id)
+                .compactMap { $0 as? ReaderPageContentViewController }
+                .map(\.page.id)
     }
 }

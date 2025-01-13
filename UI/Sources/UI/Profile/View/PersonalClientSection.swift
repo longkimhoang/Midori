@@ -9,6 +9,7 @@ import MidoriViewModels
 import SwiftUI
 
 struct PersonalClientSection: View {
+    @EnvironmentObject private var accountViewModel: AccountViewModel
     @ObservedObject var viewModel: ProfileViewModel
 
     var body: some View {
@@ -22,6 +23,7 @@ struct PersonalClientSection: View {
 
             NavigationLink {
                 PersonalClientInputForm(viewModel: viewModel)
+                    .environmentObject(accountViewModel)
             } label: {
                 Text("Setup personal client", bundle: .module)
             }

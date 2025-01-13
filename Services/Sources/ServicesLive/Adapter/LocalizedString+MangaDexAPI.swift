@@ -21,6 +21,7 @@ extension MidoriStorage.LocalizedString {
             localizedVariants: NonEmpty(
                 (LanguageCode(defaultVariant.0), defaultVariant.1),
                 localizedVariants
-            ))
+            )
+        )
     }
 }

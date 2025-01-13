@@ -1,1 +1,2 @@
 --maxwidth 120
+--extensionacl on-declarations

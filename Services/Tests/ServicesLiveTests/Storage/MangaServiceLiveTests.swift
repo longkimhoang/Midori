@@ -76,9 +76,10 @@ final class MangaServiceLiveTests {
             let manga = try #require(mangas.first { $0.id == mangaID })
             #expect(
                 manga.title == """
-                    Taida na Akujoku Kizoku ni Tensei shita Ore, Scenario o Bukkowashitara Kikakugai no \
-                    Maryoku de Saikyou ni Natta
-                    """)
+                Taida na Akujoku Kizoku ni Tensei shita Ore, Scenario o Bukkowashitara Kikakugai no \
+                Maryoku de Saikyou ni Natta
+                """
+            )
 
             let author = try #require(manga.author)
             #expect(author.name == "Kikuchi Kousei")

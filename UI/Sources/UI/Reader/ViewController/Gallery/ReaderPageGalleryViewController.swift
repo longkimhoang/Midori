@@ -63,7 +63,7 @@ final class ReaderPageGalleryViewController: UIViewController {
 // MARK: - Layout
 
 extension ReaderPageGalleryViewController {
-    fileprivate func makeCollectionViewLayout() -> UICollectionViewLayout {
+    private func makeCollectionViewLayout() -> UICollectionViewLayout {
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { _, layoutEnvironment in
             let estimatedItemWidth: CGFloat = 180
             let containerWidth = layoutEnvironment.container.effectiveContentSize.width

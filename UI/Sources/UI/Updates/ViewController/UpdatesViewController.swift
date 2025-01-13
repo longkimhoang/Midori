@@ -10,12 +10,17 @@ import MidoriViewModels
 import UIKit
 
 final class UpdatesViewController: UIViewController {
+    enum ItemIdentifier: Hashable {
+        case header(UUID)
+        case item(UUID)
+    }
+
     var collectionView: UICollectionView! {
         view as? UICollectionView
     }
 
     var cancellables: Set<AnyCancellable> = []
-    var dataSource: UICollectionViewDiffableDataSource<UUID, UUID>!
+    var dataSource: UICollectionViewDiffableDataSource<UUID, ItemIdentifier>!
 
     let viewModel: UpdatesViewModel
 
@@ -33,7 +38,7 @@ final class UpdatesViewController: UIViewController {
 
     override func loadView() {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
-        self.view = collectionView
+        view = collectionView
     }
 
     override func viewDidLoad() {

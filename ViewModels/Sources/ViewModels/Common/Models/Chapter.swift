@@ -35,7 +35,7 @@ extension Chapter {
             presentation: .numeric,
             capitalizationContext: .standalone
         )
-        let readableAt = entity.readableAt.formatted(format)
+        let readableAt = now.formatted(format)
 
         self.init(
             id: entity.id,
