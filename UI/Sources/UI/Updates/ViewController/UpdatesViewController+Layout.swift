@@ -12,6 +12,8 @@ extension UpdatesViewController {
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { _, layoutEnvironment in
             var listConfig = UICollectionLayoutListConfiguration(appearance: .plain)
             listConfig.headerMode = .firstItemInSection
+            listConfig.separatorConfiguration.topSeparatorVisibility = .visible
+            listConfig.separatorConfiguration.bottomSeparatorVisibility = .hidden
 
             return NSCollectionLayoutSection.list(using: listConfig, layoutEnvironment: layoutEnvironment)
         }

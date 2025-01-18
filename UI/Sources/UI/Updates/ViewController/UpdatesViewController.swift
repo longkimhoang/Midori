@@ -38,6 +38,7 @@ final class UpdatesViewController: UIViewController {
 
     override func loadView() {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
+        collectionView.delegate = self
         view = collectionView
     }
 
